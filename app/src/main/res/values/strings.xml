@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DemoApp</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+</resources>
