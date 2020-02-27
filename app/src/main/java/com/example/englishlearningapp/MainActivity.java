@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.englishlearningapp.activity.LoginActivity;
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     MaterialButton nextButton;
     Spinner spinnerLang;
+    ImageView imgLogo;
     String[] languages = new String[]{"Tiếng Việt", "English"};
 
     @Override
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
+
+        imgLogo.setImageResource(R.mipmap.ic_launcher);
 
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
@@ -70,5 +75,6 @@ public class MainActivity extends AppCompatActivity {
     private void MappingView() {
         nextButton = findViewById(R.id.home_next_button);
         spinnerLang = (Spinner) findViewById(R.id.spinner_language);
+        imgLogo = (ImageView) findViewById(R.id.imageViewLogo);
     }
 }
