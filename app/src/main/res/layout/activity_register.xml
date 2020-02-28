@@ -11,11 +11,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="register"
+        android:layout_marginBottom="40dp"
+        android:text="@string/register"
         android:textAllCaps="true"
-        android:textSize="50sp"
         android:textColor="#FA0000"
-        android:layout_marginBottom="40dp"/>
+        android:textSize="50sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,38 +84,35 @@
             style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next"/>
+            android:text="@string/register" />
     </RelativeLayout>
 
     <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login with Email"
         android:layout_marginHorizontal="10dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
-    </com.google.android.material.button.MaterialButton>
+        android:text="@string/login_with_account"></com.google.android.material.button.MaterialButton>
 
     <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login with Google"
         android:layout_marginHorizontal="10dp"
-        app:iconSize="20dp"
+        android:text="@string/login_with_google"
         app:icon="@drawable/google_icon"
         app:iconGravity="end"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
-    </com.google.android.material.button.MaterialButton>
+        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>
 
     <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login with Facebook"
         android:layout_marginHorizontal="10dp"
-        app:iconSize="20dp"
+        android:text="@string/login_with_facebook"
         app:icon="@drawable/facebook_icon"
         app:iconGravity="end"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
-    </com.google.android.material.button.MaterialButton>
+        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>
 
 
 </LinearLayout>

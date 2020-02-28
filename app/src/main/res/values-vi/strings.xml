@@ -3,4 +3,8 @@
     <string name="app_name">DemoApp</string>
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="login_with_account">Đăng nhập bằng tài khoản</string>
+    <string name="login_with_google">Đăng nhập bằng Google</string>
+    <string name="login_with_facebook">Đăng nhập bằng Facebook</string>
 </resources>
