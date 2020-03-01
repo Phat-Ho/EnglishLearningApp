@@ -32,7 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            style="@style/Widget.TextInputLayout">
+            style="@style/Widget.TextInputLayout"
+            android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -61,7 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             app:errorEnabled="true"
-            style="@style/Widget.TextInputLayout">
+            style="@style/Widget.TextInputLayout"
+            android:hint="@string/password">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password_edit_text"
