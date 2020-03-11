@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText registerPassword;
     MaterialButton registerButton;
     ProgressBar registerProgressBar;
-    String REGISTER_URL = "http://192.168.1.62/android/register.php";
+    String REGISTER_URL = "http://127.0.0.1:80/webservice/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
