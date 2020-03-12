@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +84,7 @@ public class SearchFragment extends Fragment {
 
     EditText edtSearch;
     TextView txtViewTranslatedWord;
+    ProgressBar pgBarTranslate;
     String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
 
     @Override
@@ -90,7 +92,10 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         edtSearch = view.findViewById(R.id.editTextSearch);
+        pgBarTranslate = view.findViewById(R.id.progressBarTranslate);
         txtViewTranslatedWord = view.findViewById(R.id.textViewTranslatedWord);
+
+        pgBarTranslate.setVisibility(View.GONE);
         edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -106,6 +111,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void getTranslatedWord(){
+        pgBarTranslate.setVisibility(View.VISIBLE);
         final String key = "trnsl.1.1.20200311T182743Z.a0f2a10aa284e86b.503d45acafbe1fe322301fb49be3039cafbb1fa5";
         final String text = edtSearch.getText().toString().trim();
         final String lang = "vi";
@@ -119,8 +125,10 @@ public class SearchFragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray textArray = jsonObject.getJSONArray("text");
                             for (int i = 0; i < textArray.length(); i++){
-                                stringBuilder.append(textArray.getString(i) + "\n");
+                                String translatedWord = textArray.getString(i);
+                                stringBuilder.append(translatedWord.substring(0,1).toUpperCase() + translatedWord.substring(1) + "\n");
                             }
+                            pgBarTranslate.setVisibility(View.GONE);
                             txtViewTranslatedWord.setText(stringBuilder.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
