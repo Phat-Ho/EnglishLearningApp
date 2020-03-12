@@ -36,13 +36,27 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.name.setText((String) subjectNames.get(position));
         holder.image.setImageResource((Integer) subjectImages.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked " + subjectNames.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "You clicked " + subjectNames.get(position), Toast.LENGTH_SHORT).show();
+                switch (position){
+                    case 0:
+                        Toast.makeText(context, "Học theo chủ đề", Toast.LENGTH_SHORT).show(); break;
+                    case 1:
+                        Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
+                    case 2:
+                        Toast.makeText(context, "Nghe", Toast.LENGTH_SHORT).show(); break;
+                    case 3:
+                        Toast.makeText(context, "Viết", Toast.LENGTH_SHORT).show(); break;
+                    case 4:
+                        Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show(); break;
+                    case 5:
+                        Toast.makeText(context, "Thi đấu", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
