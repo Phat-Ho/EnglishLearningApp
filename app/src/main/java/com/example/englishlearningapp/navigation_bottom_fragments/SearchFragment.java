@@ -1,13 +1,22 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.englishlearningapp.R;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -56,10 +65,35 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    EditText edtSearch;
+    TextView txtViewTranslatedWord;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        edtSearch = view.findViewById(R.id.editTextSearch);
+        txtViewTranslatedWord = view.findViewById(R.id.textViewTranslatedWord);
+        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    txtViewTranslatedWord.setText(edtSearch.getText().toString());
+                    hideSoftKeyBoard();
+                    return true;
+                }
+                return false;
+            }
+        });
+        return view;
+    }
+
+    private void hideSoftKeyBoard() {
+        View v = getActivity().getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        }
     }
 }
