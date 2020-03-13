@@ -1,6 +1,7 @@
 package com.example.englishlearningapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.SubjectActivity;
 
 import java.util.ArrayList;
 
@@ -45,7 +48,9 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 //                Toast.makeText(context, "You clicked " + subjectNames.get(position), Toast.LENGTH_SHORT).show();
                 switch (position){
                     case 0:
-                        Toast.makeText(context, "Học theo chủ đề", Toast.LENGTH_SHORT).show(); break;
+                        Intent subjectIntent = new Intent(context, SubjectActivity.class);
+                        context.startActivity(subjectIntent);
+                        break;
                     case 1:
                         Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
                     case 2:
@@ -66,6 +71,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     public int getItemCount() {
         return subjectNames.size();
     }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         // init the item view's
         TextView name;

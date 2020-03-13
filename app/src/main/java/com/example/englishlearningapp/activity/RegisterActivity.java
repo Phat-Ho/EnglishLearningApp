@@ -103,5 +103,4 @@ public class RegisterActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
 }
