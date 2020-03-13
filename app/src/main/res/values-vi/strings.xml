@@ -17,4 +17,8 @@
     <string name="writing">Viết</string>
     <string name="testing">Test</string>
     <string name="competition">Thi đấu</string>
+    <string name="name">Tên</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="date_of_birth">Ngày sinh</string>
+    <string name="logout">Đăng xuất</string>
 </resources>
