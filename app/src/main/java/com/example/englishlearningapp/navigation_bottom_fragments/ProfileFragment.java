@@ -58,24 +58,13 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    TextView txtProfile;
-    Button btnProfile;
-    Integer counter = 0;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        txtProfile = view.findViewById(R.id.textViewProfile);
-        btnProfile = view.findViewById(R.id.buttonProfile);
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                counter += 1;
-                txtProfile.setText(counter.toString());
-            }
-        });
         return view;
     }
 }
