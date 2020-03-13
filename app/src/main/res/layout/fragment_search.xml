@@ -14,13 +14,11 @@
         android:drawableLeft="@drawable/ic_search"
         android:singleLine="true"
         android:imeOptions="actionSearch"/>
-    <TextView
-        android:id="@+id/textViewTranslatedWord"
+    <ListView
+        android:id="@+id/listViewTranslatedWords"
         android:layout_below="@id/editTextSearch"
-        android:layout_marginLeft="10dp"
-        android:textSize="30sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
     <ProgressBar
         android:id="@+id/progressBarTranslate"
         android:layout_width="wrap_content"

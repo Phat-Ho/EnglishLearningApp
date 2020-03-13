@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +86,7 @@ public class SearchFragment extends Fragment {
     }
 
     EditText edtSearch;
-    TextView txtViewTranslatedWord;
+    ListView lvTranslatedWords;
     ProgressBar pgBarTranslate;
     String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
 
@@ -93,7 +96,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         edtSearch = view.findViewById(R.id.editTextSearch);
         pgBarTranslate = view.findViewById(R.id.progressBarTranslate);
-        txtViewTranslatedWord = view.findViewById(R.id.textViewTranslatedWord);
+        lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
 
         pgBarTranslate.setVisibility(View.GONE);
         edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -121,15 +124,16 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            StringBuilder stringBuilder = new StringBuilder();
+                            ArrayList<String> textArray = new ArrayList<>();
                             JSONObject jsonObject = new JSONObject(response);
-                            JSONArray textArray = jsonObject.getJSONArray("text");
-                            for (int i = 0; i < textArray.length(); i++){
-                                String translatedWord = textArray.getString(i);
-                                stringBuilder.append(translatedWord.substring(0,1).toUpperCase() + translatedWord.substring(1) + "\n");
+                            JSONArray textJsonArray = jsonObject.getJSONArray("text");
+                            for (int i = 0; i < textJsonArray.length(); i++){
+                                String translatedWord = textJsonArray.getString(i);
+                                textArray.add(translatedWord);
                             }
                             pgBarTranslate.setVisibility(View.GONE);
-                            txtViewTranslatedWord.setText(stringBuilder.toString());
+                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, textArray);
+                            lvTranslatedWords.setAdapter(adapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
