@@ -119,6 +119,9 @@ public class SearchFragment extends Fragment {
         final String key = "trnsl.1.1.20200311T182743Z.a0f2a10aa284e86b.503d45acafbe1fe322301fb49be3039cafbb1fa5";
         final String text = edtSearch.getText().toString().trim();
         final String lang = "vi";
+        if (text.equals("")){
+            pgBarTranslate.setVisibility(View.GONE);
+        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -127,6 +130,7 @@ public class SearchFragment extends Fragment {
                         try {
                             final ArrayList<String> textArray = new ArrayList<>();
                             JSONObject jsonObject = new JSONObject(response);
+                            Integer requestCode = jsonObject.getInt("code");
                             JSONArray textJsonArray = jsonObject.getJSONArray("text");
                             for (int i = 0; i < textJsonArray.length(); i++){
                                 String translatedWord = textJsonArray.getString(i);
