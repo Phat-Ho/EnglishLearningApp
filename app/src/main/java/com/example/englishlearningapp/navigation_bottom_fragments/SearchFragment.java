@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -124,7 +125,7 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            ArrayList<String> textArray = new ArrayList<>();
+                            final ArrayList<String> textArray = new ArrayList<>();
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray textJsonArray = jsonObject.getJSONArray("text");
                             for (int i = 0; i < textJsonArray.length(); i++){
@@ -134,6 +135,12 @@ public class SearchFragment extends Fragment {
                             pgBarTranslate.setVisibility(View.GONE);
                             ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, textArray);
                             lvTranslatedWords.setAdapter(adapter);
+                            lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Toast.makeText(getActivity(), "You choose " + textArray.get(position), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
