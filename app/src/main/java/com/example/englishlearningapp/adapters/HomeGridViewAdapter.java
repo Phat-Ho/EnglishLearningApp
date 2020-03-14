@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.activity.SubjectActivity;
 
 import java.util.ArrayList;
@@ -58,6 +59,8 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 3:
                         Toast.makeText(context, "Viết", Toast.LENGTH_SHORT).show(); break;
                     case 4:
+                        Intent scheduleIntent = new Intent(context, ScheduleActivity.class);
+                        context.startActivity(scheduleIntent);
                         Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show(); break;
                     case 5:
                         Toast.makeText(context, "Thi đấu", Toast.LENGTH_SHORT).show();

@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.SubjectActivity"></activity>
+        <activity android:name=".activity.ScheduleActivity"></activity>
+        <activity android:name=".activity.SubjectActivity" />
         <activity android:name=".MainHomeActivity" />
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.LoginActivity" />

@@ -38,4 +38,11 @@
         <item name="android:paddingRight">10dp</item>
     </style>
 
+    <style name="Widget.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/levelTextColor</item>
+    </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_stroke</item>
+    </style>
 </resources>

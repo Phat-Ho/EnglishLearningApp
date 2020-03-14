@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ScheduleActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/schedule_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:title="Lộ trình"
+        app:titleTextColor="@color/black">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/schedule_save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lưu"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"/>
+        </FrameLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <Spinner
+                android:id="@+id/schedule_spinner_days_of_week"
+                android:layout_width="158dp"
+                android:layout_height="37dp"
+                style="@style/SpinnerTheme"
+                android:spinnerMode="dropdown"
+                android:layout_marginVertical="10dp"/>
+
+            <CheckBox
+                android:id="@+id/checkBox10"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:text="CheckBox"
+                tools:text="Học từ vựng mới"
+                style="@style/Widget.CheckBox"/>
+
+            <CheckBox
+                android:id="@+id/checkBox11"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:text="Ôn từ vựng"
+                style="@style/Widget.CheckBox"/>
+
+            <CheckBox
+                android:id="@+id/checkBox12"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:text="Nghe"
+                style="@style/Widget.CheckBox"/>
+
+            <CheckBox
+                android:id="@+id/checkBox13"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:text="Làm bài test"
+                style="@style/Widget.CheckBox"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="10dp">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/text_view_stroke"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:padding="3dp"
+                    android:text="Bắt đầu" />
+
+                <Spinner
+                    android:id="@+id/schedule_spinner_hours"
+                    android:layout_width="205dp"
+                    android:layout_height="35dp"
+                    style="@style/SpinnerTheme"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp"
+                    android:text="Back"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/subject_bottom_nav"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@color/navigation_item_color"
+            app:itemTextColor="@color/navigation_item_color"
+            app:menu="@menu/navigation_bottom_menu"/>
+
+    </FrameLayout>
+</LinearLayout>
