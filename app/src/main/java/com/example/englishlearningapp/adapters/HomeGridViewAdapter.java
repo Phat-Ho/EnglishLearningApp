@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.ScheduleActivity;
-import com.example.englishlearningapp.activity.SubjectActivity;
+import com.example.englishlearningapp.fragments.SubjectsFragment;
+import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 
 import java.util.ArrayList;
 
@@ -24,11 +25,14 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     ArrayList subjectNames;
     ArrayList subjectImages;
     Context context;
+    SubjectsFragment subjectsFragment = new SubjectsFragment();
+    HomeFragment homeFragment;
 
-    public HomeGridViewAdapter(Context context, ArrayList subjectNames, ArrayList subjectImages) {
+    public HomeGridViewAdapter(Context context, ArrayList subjectNames, ArrayList subjectImages, HomeFragment homeFragment) {
         this.context = context;
         this.subjectNames = subjectNames;
         this.subjectImages = subjectImages;
+        this.homeFragment = homeFragment;
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,8 +53,10 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 //                Toast.makeText(context, "You clicked " + subjectNames.get(position), Toast.LENGTH_SHORT).show();
                 switch (position){
                     case 0:
-                        Intent subjectIntent = new Intent(context, SubjectActivity.class);
-                        context.startActivity(subjectIntent);
+                        /*Intent subjectIntent = new Intent(context, SubjectActivity.class);
+                        context.startActivity(subjectIntent);*/
+                        MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
+                        mainHomeActivity.showFragment(subjectsFragment, true);
                         break;
                     case 1:
                         Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
@@ -86,4 +92,5 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
             image = (ImageView) itemView.findViewById(R.id.imageViewHomeItem);
         }
     }
+
 }

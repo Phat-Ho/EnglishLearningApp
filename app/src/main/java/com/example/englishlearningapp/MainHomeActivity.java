@@ -36,32 +36,33 @@ public class MainHomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.navigation_home:
-                        fm.beginTransaction().hide(activeFragment).show(homeFragment).commit();
-                        activeFragment = homeFragment;
+                        showFragment(homeFragment, false);
                         return true;
                     case R.id.navigation_search:
-                        fm.beginTransaction().hide(activeFragment).show(searchFragment).commit();
-                        activeFragment = searchFragment;
+                        showFragment(searchFragment, false);
                         return true;
                     case R.id.navigation_friends:
-                        fm.beginTransaction().hide(activeFragment).show(friendsFragment).commit();
-                        activeFragment = friendsFragment;
+                        showFragment(friendsFragment, false);
                         return true;
                     case R.id.navigation_profile:
-                        fm.beginTransaction().hide(activeFragment).show(profileFragment).commit();
-                        activeFragment = profileFragment;
+                        showFragment(profileFragment, false);
                         return true;
                 }
                 return false;
             }
         });
-        setActiveFragment();
+        setHomeFragment();
     }
 
-    private void setActiveFragment(){
-        fm.beginTransaction().add(R.id.container, profileFragment, "profile").hide(profileFragment).commit();
-        fm.beginTransaction().add(R.id.container, friendsFragment, "friends").hide(friendsFragment).commit();
-        fm.beginTransaction().add(R.id.container, searchFragment, "search").hide(searchFragment).commit();
+    private void setHomeFragment(){
         fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+    }
+
+    public void showFragment(Fragment fragToShow, Boolean addToBackStack){
+        if(addToBackStack){
+            fm.beginTransaction().replace(R.id.container, fragToShow).addToBackStack(null).commit();
+        }else{
+            fm.beginTransaction().replace(R.id.container, fragToShow).commit();
+        }
     }
 }

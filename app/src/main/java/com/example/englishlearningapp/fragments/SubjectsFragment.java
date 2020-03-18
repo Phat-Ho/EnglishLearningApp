@@ -1,39 +1,60 @@
-package com.example.englishlearningapp.activity;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.englishlearningapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.SubjectAdapter;
 import com.example.englishlearningapp.models.Subject;
-import com.example.englishlearningapp.navigation_bottom_fragments.FriendsFragment;
-import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
-import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
-import com.example.englishlearningapp.navigation_bottom_fragments.SearchFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class SubjectActivity extends AppCompatActivity {
+public class SubjectsFragment extends Fragment {
+
     TextView subjectScore;
     TextView subjectLevel;
     RecyclerView subjectRecyclerView;
     ArrayList<Subject> subjectArrayList;
     SubjectAdapter subjectAdapter;
 
+    public SubjectsFragment() {
+        //Require an empty constructor
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_subject);
-        MappingView();
-        InitSubjectRecyclerView();
-        GetSubjectData();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_subject, container, false);
+        subjectScore = view.findViewById(R.id.subject_score);
+        subjectLevel = view.findViewById(R.id.subject_level);
+        subjectRecyclerView = view.findViewById(R.id.subject_recyclerview);
+        if(subjectRecyclerView == null){
+            Log.d("SubjectRecyclerView1", " == null");
+        }
+        return view;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(subjectRecyclerView != null){
+            InitSubjectsRecyclerView();
+            GetSubjectData();
+        }
+        else{
+            Log.d("SubjectRecyclerView", " == null");
+        }
     }
 
     private void GetSubjectData() {
@@ -44,7 +65,7 @@ public class SubjectActivity extends AppCompatActivity {
         subjectAdapter.notifyDataSetChanged();
     }
 
-    private void InitSubjectRecyclerView() {
+    private void InitSubjectsRecyclerView() {
         subjectArrayList = new ArrayList<>();
 
         //init Adapter
@@ -52,16 +73,10 @@ public class SubjectActivity extends AppCompatActivity {
         subjectRecyclerView.setHasFixedSize(true);
 
         //Set up layout
-        GridLayoutManager layoutManager = new GridLayoutManager(SubjectActivity.this, 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         subjectRecyclerView.setLayoutManager(layoutManager);
 
         //Attach adapter
         subjectRecyclerView.setAdapter(subjectAdapter);
-    }
-
-    private void MappingView() {
-        subjectLevel = findViewById(R.id.subject_level);
-        subjectScore = findViewById(R.id.subject_score);
-        subjectRecyclerView = findViewById(R.id.subject_recyclerview);
     }
 }

@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recylerViewHome);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        HomeGridViewAdapter adapter = new HomeGridViewAdapter(getActivity(), subjectNames, subjectImages);
+        HomeGridViewAdapter adapter = new HomeGridViewAdapter(getActivity(), subjectNames, subjectImages, this);
         recyclerView.setAdapter(adapter);
         return view;
     }
