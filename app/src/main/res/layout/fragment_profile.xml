@@ -7,7 +7,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewAvatar"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
@@ -22,7 +22,7 @@
         android:id="@+id/imageButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignBottom="@+id/imageViewAvatar"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="0dp"
         app:srcCompat="@android:drawable/ic_menu_camera" />
@@ -31,7 +31,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/imageViewAvatar"
         android:layout_alignParentStart="true"
         android:layout_marginStart="45dp"
         android:layout_marginTop="30dp"
@@ -80,10 +80,10 @@
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/imageViewAvatar"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
@@ -95,10 +95,10 @@
         android:text="Barrack Obama" />
 
     <EditText
-        android:id="@+id/profile_email"
+        android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/editTextName"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
@@ -110,10 +110,10 @@
         android:text="obama@gmail.com" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/editTextEmail"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
@@ -125,10 +125,10 @@
         android:text="123456789" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editTextBirthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText3"
+        android:layout_below="@+id/editTextPhoneNumber"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
@@ -140,7 +140,7 @@
         android:text="04/08/1961" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonSignOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView4"
