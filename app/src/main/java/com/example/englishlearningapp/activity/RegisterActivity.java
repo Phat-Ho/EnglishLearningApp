@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.utils.WebService;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -32,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     MaterialButton registerButton;
     ProgressBar registerProgressBar;
     TextInputLayout registerTextInputPassword;
-    String REGISTER_URL = "http://192.168.1.62/english/register.php";
+    String REGISTER_URL = WebService.REGISTER_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

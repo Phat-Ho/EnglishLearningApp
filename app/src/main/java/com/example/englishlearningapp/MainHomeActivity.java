@@ -55,7 +55,12 @@ public class MainHomeActivity extends AppCompatActivity {
     }
 
     private void setHomeFragment(){
-        fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+        if(homeFragment.isAdded()){
+            fm.beginTransaction().show(homeFragment);
+        }else{
+            fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+        }
+
     }
 
     public void showFragment(Fragment fragToShow, Boolean addToBackStack){

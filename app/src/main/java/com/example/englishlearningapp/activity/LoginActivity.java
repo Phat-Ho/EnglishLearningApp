@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.utils.WebService;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout textInputLayout;
     public static String email = "";
     public static int userID = -1;
-    public static String LOGIN_URL = "http://192.168.1.62/english/getuser.php";
+    public String LOGIN_URL = WebService.LOGIN_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
