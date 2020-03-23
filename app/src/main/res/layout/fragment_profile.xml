@@ -95,7 +95,7 @@
         android:text="Barrack Obama" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/profile_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText"

@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText registerPassword;
     MaterialButton registerButton;
     ProgressBar registerProgressBar;
-    String REGISTER_URL = "http://127.0.0.1:80/webservice/register.php";
+    TextInputLayout registerTextInputPassword;
+    String REGISTER_URL = "http://192.168.1.62/english/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,53 +56,69 @@ public class RegisterActivity extends AppCompatActivity {
         registerPassword = findViewById(R.id.register_password);
         registerButton = findViewById(R.id.register_button);
         registerProgressBar = findViewById(R.id.register_progressbar);
+        registerTextInputPassword = findViewById(R.id.register_text_input);
     }
 
     private void Register(){
-        registerProgressBar.setVisibility(View.VISIBLE);
-        registerButton.setVisibility(View.GONE);
-
         final String email = registerEmail.getText().toString().trim();
         final String password = registerPassword.getText().toString().trim();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("Json Response", response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-
-                    if(success.equals("true")){
-                        Toast.makeText(RegisterActivity.this, "Register Success!", Toast.LENGTH_SHORT).show();
+        //Kiểm chứng email và password
+        if(email.isEmpty()){
+            registerEmail.setError("Hãy nhập email!");
+        }else{
+            if(password.length() < 8){
+                registerTextInputPassword.setError("Password phải nhiều hơn 8 kí tự");
+            }else{
+                registerProgressBar.setVisibility(View.VISIBLE);
+                registerButton.setVisibility(View.GONE);
+                //Bắt đầu gọi webservice để thực hiện đăng kí thông qua thư viện Volley
+                RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Json Response", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+                            String message = jsonObject.getString("message");
+                            if(success.equals("true")){
+                                Toast.makeText(RegisterActivity.this, "Register Success!", Toast.LENGTH_SHORT).show();
+                            }else{
+                                if(message.equals("email existence")){
+                                    registerEmail.setError("Đã tồn tại email!");
+                                }
+                            }
+                            registerProgressBar.setVisibility(View.GONE);
+                            registerButton.setVisibility(View.VISIBLE);
+                        } catch (JSONException e) {
+                            Log.d("Register Fail: ", e.getMessage());
+                            Toast.makeText(RegisterActivity.this, "Register Fail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            registerProgressBar.setVisibility(View.GONE);
+                            registerButton.setVisibility(View.VISIBLE);
+                        }
                     }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(RegisterActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        registerProgressBar.setVisibility(View.GONE);
+                        registerButton.setVisibility(View.VISIBLE);
+                    }
+                }){
+                    //Truyền params cho url qua phương thức POST
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put("email", email);
+                        params.put("password", password);
 
-                    registerProgressBar.setVisibility(View.GONE);
-                    registerButton.setVisibility(View.VISIBLE);
-                } catch (JSONException e) {
-                    Toast.makeText(RegisterActivity.this, "Register Fail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    registerProgressBar.setVisibility(View.GONE);
-                    registerButton.setVisibility(View.VISIBLE);
-                }
+                        return params;
+                    }
+                };
+                requestQueue.add(stringRequest);
+                //Kết thúc gọi webservice
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(RegisterActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                registerProgressBar.setVisibility(View.GONE);
-                registerButton.setVisibility(View.VISIBLE);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
-
-                return params;
-            }
-        };
-        requestQueue.add(stringRequest);
+        }
     }
 }

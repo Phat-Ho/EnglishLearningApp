@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.LoginActivity;
 
 
 /**
@@ -22,6 +24,8 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    TextView txtProfileEmail;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,7 +68,14 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        txtProfileEmail = view.findViewById(R.id.profile_email);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        txtProfileEmail.setText(LoginActivity.email);
     }
 }

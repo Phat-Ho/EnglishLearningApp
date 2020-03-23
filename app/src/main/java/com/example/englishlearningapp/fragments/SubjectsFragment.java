@@ -38,9 +38,6 @@ public class SubjectsFragment extends Fragment {
         subjectScore = view.findViewById(R.id.subject_score);
         subjectLevel = view.findViewById(R.id.subject_level);
         subjectRecyclerView = view.findViewById(R.id.subject_recyclerview);
-        if(subjectRecyclerView == null){
-            Log.d("SubjectRecyclerView1", " == null");
-        }
         return view;
     }
 

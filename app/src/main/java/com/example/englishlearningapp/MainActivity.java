@@ -21,7 +21,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    MaterialButton nextButton;
+    MaterialButton nextButton, btnLogin;
     Spinner spinnerLang;
     ImageView imgLogo;
     String[] languages = new String[]{"Tiếng Việt", "English"};
@@ -56,8 +56,17 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, MainHomeActivity.class);
                 startActivity(intent);
+                finish();
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
                 finish();
             }
         });
@@ -76,5 +85,6 @@ public class MainActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.home_next_button);
         spinnerLang = (Spinner) findViewById(R.id.spinner_language);
         imgLogo = (ImageView) findViewById(R.id.imageViewLogo);
+        btnLogin = findViewById(R.id.home_login_button);
     }
 }
