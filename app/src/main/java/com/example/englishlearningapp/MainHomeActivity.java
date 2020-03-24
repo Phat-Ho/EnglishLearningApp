@@ -3,6 +3,7 @@ package com.example.englishlearningapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -36,16 +37,16 @@ public class MainHomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.navigation_home:
-                        showFragment(homeFragment, false);
+                        showFragment(homeFragment);
                         return true;
                     case R.id.navigation_search:
-                        showFragment(searchFragment, false);
+                        showFragment(searchFragment);
                         return true;
                     case R.id.navigation_friends:
-                        showFragment(friendsFragment, false);
+                        showFragment(friendsFragment);
                         return true;
                     case R.id.navigation_profile:
-                        showFragment(profileFragment, false);
+                        showFragment(profileFragment);
                         return true;
                 }
                 return false;
@@ -54,20 +55,23 @@ public class MainHomeActivity extends AppCompatActivity {
         setHomeFragment();
     }
 
-    private void setHomeFragment(){
-        if(homeFragment.isAdded()){
-            fm.beginTransaction().show(homeFragment);
-        }else{
-            fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+    @Override
+    public void onBackPressed() {
+        if(activeFragment == homeFragment){
+            finish();
+        }else {
+            activeFragment = homeFragment;
+            fm.beginTransaction().replace(R.id.container, homeFragment).commit();
+            bottomNavigation.setSelectedItemId(R.id.navigation_home);
         }
-
     }
 
-    public void showFragment(Fragment fragToShow, Boolean addToBackStack){
-        if(addToBackStack){
-            fm.beginTransaction().replace(R.id.container, fragToShow).addToBackStack(null).commit();
-        }else{
-            fm.beginTransaction().replace(R.id.container, fragToShow).commit();
-        }
+    private void setHomeFragment(){
+        fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+    }
+
+    public void showFragment(Fragment fragToShow){
+        fm.beginTransaction().replace(R.id.container, fragToShow).commit();
+        activeFragment = fragToShow;
     }
 }

@@ -56,7 +56,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         /*Intent subjectIntent = new Intent(context, SubjectActivity.class);
                         context.startActivity(subjectIntent);*/
                         MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
-                        mainHomeActivity.showFragment(subjectsFragment, true);
+                        mainHomeActivity.showFragment(subjectsFragment);
                         break;
                     case 1:
                         Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
