@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.activity.LoginActivity;
 import com.google.android.material.button.MaterialButton;
@@ -42,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0){
                     setLocale("vi");
+                    btnLogin.setText("Đăng nhập");
                 } else {
                     setLocale("en");
+                    btnLogin.setText("Sign in");
                 }
             }
 
