@@ -30,6 +30,7 @@ public class MainHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
+        setHomeFragment();
 
         bottomNavigation = findViewById(R.id.navigation_bottom);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -52,7 +53,6 @@ public class MainHomeActivity extends AppCompatActivity {
                 return false;
             }
         });
-        setHomeFragment();
     }
 
     @Override

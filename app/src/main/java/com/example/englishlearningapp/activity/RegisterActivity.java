@@ -1,9 +1,13 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -50,6 +54,15 @@ public class RegisterActivity extends AppCompatActivity {
                 Register();
             }
         });
+        registerPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(registerPassword.getText().toString().length() >= 8){
+                    registerTextInputPassword.setError(null);
+                }
+                return false;
+            }
+        });
     }
 
     private void MappingView() {
@@ -84,7 +97,17 @@ public class RegisterActivity extends AppCompatActivity {
                             String success = jsonObject.getString("success");
                             String message = jsonObject.getString("message");
                             if(success.equals("true")){
-                                Toast.makeText(RegisterActivity.this, "Register Success!", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+                                alertDialog.setTitle("Đăng kí thành công");
+                                alertDialog.setMessage("Chuyển qua màn hình đăng nhập");
+                                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(loginIntent);
+                                    }
+                                });
+                                alertDialog.show();
                             }else{
                                 if(message.equals("email existence")){
                                     registerEmail.setError("Đã tồn tại email!");
