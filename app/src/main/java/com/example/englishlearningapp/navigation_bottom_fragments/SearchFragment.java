@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -103,6 +104,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 moveToMeaningFragment(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
+                hideSoftKeyBoard();
                 Toast.makeText(getActivity(), "You click " + completeWordsData.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -127,7 +129,7 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    private void moveToMeaningFragment(String html, String word){
+    private void moveToMeaningFragment(String html, String word) {
         MeaningFragment meaningFragment = new MeaningFragment();
         Bundle args = new Bundle();
         args.putString("html", html);
@@ -140,9 +142,9 @@ public class SearchFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    private void loadDatabase(String word){
+    private void loadDatabase(String word) {
         databaseAccess.open();
-        if (word.equals("")){
+        if (word.equals("")) {
             completeWordsData = databaseAccess.getWords(word);
             adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, completeWordsData);
             lvTranslatedWords.setAdapter(adapter);
@@ -156,5 +158,13 @@ public class SearchFragment extends Fragment {
         databaseAccess.close();
     }
 
+    private void hideSoftKeyBoard() {
+        View v = getActivity().getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
+        }
+
+    }
 }
