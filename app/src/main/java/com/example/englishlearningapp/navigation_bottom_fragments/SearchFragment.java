@@ -5,45 +5,25 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -95,43 +75,30 @@ public class SearchFragment extends Fragment {
 
     AutoCompleteTextView edtSearch;
     ListView lvTranslatedWords;
-    List<Word> words;
+    ArrayList<Word> words;
+    ArrayList<Word> completeWordsData;
     DatabaseAccess databaseAccess;
     ArrayAdapter adapter;
 
-    @Override
-    public void onResume() {
-        Log.d("AAA", "onResume");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Log.d("AAA", "onPause");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("AAA", "onStop");
-        super.onStop();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         Log.d("AAA", "onCreateView");
+
         edtSearch = view.findViewById(R.id.editTextSearch);
         lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
+        words = new ArrayList<>();
 
         loadDatabase(edtSearch.getText().toString().trim());
+
 
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "You click " + words.get(position).getWord(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You click " + completeWordsData.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -158,16 +125,18 @@ public class SearchFragment extends Fragment {
     private void loadDatabase(String word){
         databaseAccess.open();
         if (word.equals("")){
-            words = databaseAccess.getWords(word);
-            adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, words);
+            completeWordsData = databaseAccess.getWords(word);
+            adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, completeWordsData);
             lvTranslatedWords.setAdapter(adapter);
         } else {
-            words = databaseAccess.getWords(word);
+            completeWordsData = databaseAccess.getWords(word);
+            words = completeWordsData;
             adapter.clear();
-            adapter.addAll(words);
+            adapter.addAll(completeWordsData);
             adapter.notifyDataSetChanged();
         }
         databaseAccess.close();
     }
+
 
 }

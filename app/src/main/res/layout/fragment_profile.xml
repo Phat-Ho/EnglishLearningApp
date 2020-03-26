@@ -28,7 +28,7 @@
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewRowItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageViewAvatar"
@@ -44,7 +44,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/textViewRowItem"
         android:layout_alignParentStart="true"
         android:layout_marginStart="45dp"
         android:layout_marginTop="30dp"
@@ -88,7 +88,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/textView"
+        android:layout_toEndOf="@+id/textViewRowItem"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
