@@ -55,19 +55,9 @@ public class MainHomeActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        if(activeFragment == homeFragment){
-            finish();
-        }else {
-            activeFragment = homeFragment;
-            fm.beginTransaction().replace(R.id.container, homeFragment).commit();
-            bottomNavigation.setSelectedItemId(R.id.navigation_home);
-        }
-    }
 
     private void setHomeFragment(){
-        fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
+        fm.beginTransaction().add(R.id.container, searchFragment, "search").commit();
     }
 
     public void showFragment(Fragment fragToShow){

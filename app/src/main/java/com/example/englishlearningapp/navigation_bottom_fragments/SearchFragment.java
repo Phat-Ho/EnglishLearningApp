@@ -2,6 +2,8 @@ package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -27,6 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +40,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -80,100 +86,88 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("AAA", "onCreate");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
-    EditText edtSearch;
+    AutoCompleteTextView edtSearch;
     ListView lvTranslatedWords;
-    ProgressBar pgBarTranslate;
-    String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
+    List<Word> words;
+    DatabaseAccess databaseAccess;
+    ArrayAdapter adapter;
+
+    @Override
+    public void onResume() {
+        Log.d("AAA", "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("AAA", "onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("AAA", "onStop");
+        super.onStop();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        Log.d("AAA", "onCreateView");
         edtSearch = view.findViewById(R.id.editTextSearch);
-        pgBarTranslate = view.findViewById(R.id.progressBarTranslate);
         lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
+        databaseAccess = DatabaseAccess.getInstance(getActivity());
 
-        pgBarTranslate.setVisibility(View.GONE);
-        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        loadDatabase(edtSearch.getText().toString().trim());
+
+        lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    getTranslatedWord();
-                    hideSoftKeyBoard();
-                    return true;
-                }
-                return false;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "You click " + words.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loadDatabase(edtSearch.getText().toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return view;
     }
 
-    private void getTranslatedWord(){
-        pgBarTranslate.setVisibility(View.VISIBLE);
-        final String key = "trnsl.1.1.20200311T182743Z.a0f2a10aa284e86b.503d45acafbe1fe322301fb49be3039cafbb1fa5";
-        final String text = edtSearch.getText().toString().trim();
-        final String lang = "vi";
-        if (text.equals("")){
-            pgBarTranslate.setVisibility(View.GONE);
+    private void loadDatabase(String word){
+        databaseAccess.open();
+        if (word.equals("")){
+            words = databaseAccess.getWords(word);
+            adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, words);
+            lvTranslatedWords.setAdapter(adapter);
+        } else {
+            words = databaseAccess.getWords(word);
+            adapter.clear();
+            adapter.addAll(words);
+            adapter.notifyDataSetChanged();
         }
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            final ArrayList<String> textArray = new ArrayList<>();
-                            JSONObject jsonObject = new JSONObject(response);
-                            Integer requestCode = jsonObject.getInt("code");
-                            JSONArray textJsonArray = jsonObject.getJSONArray("text");
-                            for (int i = 0; i < textJsonArray.length(); i++){
-                                String translatedWord = textJsonArray.getString(i);
-                                textArray.add(translatedWord);
-                            }
-                            pgBarTranslate.setVisibility(View.GONE);
-                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, textArray);
-                            lvTranslatedWords.setAdapter(adapter);
-                            lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Toast.makeText(getActivity(), "You choose " + textArray.get(position), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("AAA", error.toString());
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("key", key);
-                params.put("text", text);
-                params.put("lang", lang);
-                return params;
-            }
-        };
-        requestQueue.add(stringRequest);
+        databaseAccess.close();
     }
 
-    private void hideSoftKeyBoard() {
-        View v = getActivity().getWindow().getCurrentFocus();
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-        }
-    }
 }
