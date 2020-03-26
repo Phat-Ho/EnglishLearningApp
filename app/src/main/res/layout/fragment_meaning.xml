@@ -3,13 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MeaningFragment">
+    tools:context=".fragments.MeaningFragment"
+    android:id="@+id/meaningContainer"
+    android:background="@color/colorWhite">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textViewMeaning"
+    <ImageButton
+        android:id="@+id/imageButtonPronounce"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_volume"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <ScrollView
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textViewMeaning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/hello_blank_fragment" />
+
+    </ScrollView>
+
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,8 +18,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.fragments.MeaningFragment;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
@@ -82,7 +87,7 @@ public class SearchFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         Log.d("AAA", "onCreateView");
@@ -94,10 +99,10 @@ public class SearchFragment extends Fragment {
 
         loadDatabase(edtSearch.getText().toString().trim());
 
-
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                moveToMeaningFragment(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
                 Toast.makeText(getActivity(), "You click " + completeWordsData.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -120,6 +125,19 @@ public class SearchFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void moveToMeaningFragment(String html, String word){
+        MeaningFragment meaningFragment = new MeaningFragment();
+        Bundle args = new Bundle();
+        args.putString("html", html);
+        args.putString("word", word);
+        meaningFragment.setArguments(args);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.searchContainer, meaningFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void loadDatabase(String word){

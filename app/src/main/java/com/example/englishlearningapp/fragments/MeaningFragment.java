@@ -1,14 +1,21 @@
 package com.example.englishlearningapp.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.speech.tts.TextToSpeech;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
+
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,10 +63,41 @@ public class MeaningFragment extends Fragment {
         }
     }
 
+    TextView txtMeaning;
+    ImageButton imgBtnPronounce;
+    TextToSpeech tts;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meaning, container, false);
+        View view = inflater.inflate(R.layout.fragment_meaning, container, false);
+
+        txtMeaning = view.findViewById(R.id.textViewMeaning);
+        imgBtnPronounce = view.findViewById(R.id.imageButtonPronounce);
+        tts = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR){
+                    tts.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
+        String html = getArguments().getString("html");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            txtMeaning.setText(Html.fromHtml(html));
+        }
+
+        final String word = getArguments().getString("word");
+        imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "");
+            }
+        });
+        return view;
     }
 }
