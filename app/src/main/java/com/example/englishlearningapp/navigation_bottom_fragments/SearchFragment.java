@@ -14,22 +14,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.englishlearningapp.MainHomeActivity;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.fragments.MeaningFragment;
+import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -103,7 +97,8 @@ public class SearchFragment extends Fragment {
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                moveToMeaningFragment(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
+                databaseAccess.addHistory(completeWordsData.get(position).getId());
+                moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
                 hideSoftKeyBoard();
                 Toast.makeText(getActivity(), "You click " + completeWordsData.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
@@ -129,17 +124,11 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    private void moveToMeaningFragment(String html, String word) {
-        MeaningFragment meaningFragment = new MeaningFragment();
-        Bundle args = new Bundle();
-        args.putString("html", html);
-        args.putString("word", word);
-        meaningFragment.setArguments(args);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.searchContainer, meaningFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    private void moveToMeaningActivity(String html, String word) {
+        Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
+        meaningIntent.putExtra("html", html);
+        meaningIntent.putExtra("word", word);
+        startActivity(meaningIntent);
     }
 
     private void loadDatabase(String word) {
@@ -155,7 +144,6 @@ public class SearchFragment extends Fragment {
             adapter.addAll(completeWordsData);
             adapter.notifyDataSetChanged();
         }
-        databaseAccess.close();
     }
 
     private void hideSoftKeyBoard() {
@@ -163,7 +151,6 @@ public class SearchFragment extends Fragment {
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
         }
 
     }

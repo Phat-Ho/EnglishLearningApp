@@ -3,6 +3,7 @@ package com.example.englishlearningapp.models;
 import androidx.annotation.NonNull;
 
 public class Word {
+    private int id;
     private String word;
     private String description;
     private String pronounce;
@@ -24,11 +25,23 @@ public class Word {
         this.pronounce = pronounce;
     }
 
-    public Word(String word, String description, String pronounce, String html) {
+    public Word() {
+    }
+
+    public Word(int id, String word, String description, String pronounce, String html) {
+        this.id = id;
         this.word = word;
         this.description = description;
         this.pronounce = pronounce;
         this.html = html;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getWord() {
