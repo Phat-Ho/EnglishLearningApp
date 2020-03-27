@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MeaningFragment"
     android:id="@+id/meaningContainer"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    android:paddingBottom="56dp">
 
     <!-- TODO: Update blank fragment layout -->
     <ImageButton

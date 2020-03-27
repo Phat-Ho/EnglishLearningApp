@@ -61,7 +61,7 @@ public class DatabaseAccess {
      */
     public ArrayList<Word> getWords(String word) {
         ArrayList<Word> list = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE word LIKE '" + word + "%'" + "LIMIT 3000", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE word LIKE '" + word + "%'" + "LIMIT 4000", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             list.add(new Word(cursor.getString(1),

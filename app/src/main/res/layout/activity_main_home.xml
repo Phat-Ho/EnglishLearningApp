@@ -18,7 +18,8 @@
             android:background="@color/colorPrimary"
             app:itemIconTint="@color/navigation_item_color"
             app:itemTextColor="@color/navigation_item_color"
-            app:menu="@menu/navigation_bottom_menu"/>
+            app:menu="@menu/navigation_bottom_menu"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
