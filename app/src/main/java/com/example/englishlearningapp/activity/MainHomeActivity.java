@@ -1,4 +1,4 @@
-package com.example.englishlearningapp;
+package com.example.englishlearningapp.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.navigation_bottom_fragments.FriendsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;

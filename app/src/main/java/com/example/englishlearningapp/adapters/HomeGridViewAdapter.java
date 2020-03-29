@@ -12,10 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.englishlearningapp.MainHomeActivity;
+import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.HistoryActivity;
-import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.fragments.SubjectsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 

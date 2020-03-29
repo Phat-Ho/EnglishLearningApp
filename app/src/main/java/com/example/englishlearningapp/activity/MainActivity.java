@@ -1,42 +1,55 @@
-package com.example.englishlearningapp;
+package com.example.englishlearningapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.example.englishlearningapp.activity.LoginActivity;
+import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
-import com.example.englishlearningapp.utils.DatabaseOpenHelper;
 import com.google.android.material.button.MaterialButton;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     MaterialButton nextButton, btnLogin;
     Spinner spinnerLang;
     ImageView imgLogo;
     String[] languages = new String[]{"Tiếng Việt", "English"};
+    AlarmManager alarmManager;
+    DatabaseAccess db;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
-
+        prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("index", 0);
+        editor.apply();
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
-
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
 
@@ -75,6 +88,21 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        //Gọi hàm thông báo lặp lại mỗi 10 giây
+        long timeInMillis = 10000;
+        setRepeatAlarm(timeInMillis);
+    }
+
+    private void setRepeatAlarm(long timeInMillis) {
+        Intent receiverIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+        calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
+        calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
     }
 
     public void setLocale(String localeCode){
