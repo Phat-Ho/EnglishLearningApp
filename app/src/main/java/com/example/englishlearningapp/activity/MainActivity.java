@@ -95,11 +95,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRepeatAlarm(long timeInMillis) {
+        db.open();
         if(db.getHistoryWords().size() > 0){
             int arrayIndex = prefs.getInt("index", 0);
             int id = 0;
             if(AlarmReceiver.historyWords == null){
-                db.open();
                 ArrayList<Word> historyWord = db.getHistoryWords();
                 id = historyWord.get(arrayIndex).getId();
             }else{
