@@ -108,4 +108,8 @@ public class DatabaseAccess {
         database.insert("history", null, value);
         return id;
     }
+
+    public int removeHistory(int id){
+        return database.delete("history", "id = " + id, null);
+    }
 }

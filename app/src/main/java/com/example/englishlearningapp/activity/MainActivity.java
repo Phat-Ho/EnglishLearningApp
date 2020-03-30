@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.button.MaterialButton;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
+        db = DatabaseAccess.getInstance(MainActivity.this);
         prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("index", 0);
@@ -93,8 +95,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRepeatAlarm(long timeInMillis) {
+        int arrayIndex = prefs.getInt("index", 0);
+        int id = 0;
+        if(AlarmReceiver.historyWords == null){
+            db.open();
+            ArrayList<Word> historyWord = db.getHistoryWords();
+            id = historyWord.get(arrayIndex).getId();
+        }else{
+            id = AlarmReceiver.historyWords.get(arrayIndex).getId();
+        }
+
         Intent receiverIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, id, receiverIntent, 0);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());

@@ -25,7 +25,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
     NotificationManager notificationManager;
     NotificationCompat.Builder notiBuilder;
-    public ArrayList<Word> historyWords;
+    public static ArrayList<Word> historyWords;
     DatabaseAccess db;
     public static final String NOTIFICATION_CHANNEL_ID = "4655";
     public static final String NOTIFICATION_CHANNEL_NAME = "my_channel";
@@ -47,6 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             String html = historyWords.get(arrayIndex).getHtml();
             String word = historyWords.get(arrayIndex).getWord();
+            int id = historyWords.get(arrayIndex).getId();
 
             //Implement notification channel
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -61,9 +62,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             //Start Meaning activity when click on notification
             Intent meaningIntent = new Intent(context, MeaningActivity.class);
+            meaningIntent.putExtra("id", id);
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
-            PendingIntent meaningPendingIntent = PendingIntent.getActivity(context, 0, meaningIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent meaningPendingIntent = PendingIntent.getActivity(context, id, meaningIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Build notification
             notiBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).setContentTitle(word)
