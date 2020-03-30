@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.button.MaterialButton;
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Gọi hàm thông báo lặp lại mỗi 10 giây
-        long timeInMillis = 10000;
+        long timeInMillis = 1000; //1 second
         setRepeatAlarm(timeInMillis);
     }
 

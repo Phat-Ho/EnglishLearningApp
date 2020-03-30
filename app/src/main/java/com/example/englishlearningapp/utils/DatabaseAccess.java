@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseAccess {
 
-    private DatabaseOpenHelper openHelper;
+    private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseAccess instance;
 
@@ -55,6 +55,10 @@ public class DatabaseAccess {
         if (database != null) {
             this.database.close();
         }
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
     }
 
     /**

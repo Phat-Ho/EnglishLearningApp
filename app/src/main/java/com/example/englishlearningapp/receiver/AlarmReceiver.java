@@ -38,43 +38,47 @@ public class AlarmReceiver extends BroadcastReceiver {
         db = DatabaseAccess.getInstance(context);
         db.open();
         historyWords = db.getHistoryWords();
-        Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
-        //Get an instance of notification manager
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String html = historyWords.get(arrayIndex).getHtml();
-        String word = historyWords.get(arrayIndex).getWord();
-
-        //Implement notification channel
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            notificationManager.createNotificationChannel(notificationChannel);
+        if(arrayIndex >= historyWords.size()){
+            return;
         }
+        if(historyWords !=null){
+            Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
+            //Get an instance of notification manager
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            String html = historyWords.get(arrayIndex).getHtml();
+            String word = historyWords.get(arrayIndex).getWord();
 
-        //Start Meaning activity when click on notification
-        Intent meaningIntent = new Intent(context, MeaningActivity.class);
-        meaningIntent.putExtra("html", html);
-        meaningIntent.putExtra("word", word);
-        PendingIntent meaningPendingIntent = PendingIntent.getActivity(context, 0, meaningIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            //Implement notification channel
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.enableVibration(true);
+                notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
 
-        //Build notification
-        notiBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).setContentTitle(word)
-                                                                .setContentIntent(meaningPendingIntent)
-                                                                .setSmallIcon(R.mipmap.ic_launcher);
-        notificationManager.notify((int) System.currentTimeMillis(), notiBuilder.build());
+            //Start Meaning activity when click on notification
+            Intent meaningIntent = new Intent(context, MeaningActivity.class);
+            meaningIntent.putExtra("html", html);
+            meaningIntent.putExtra("word", word);
+            PendingIntent meaningPendingIntent = PendingIntent.getActivity(context, 0, meaningIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        //Increase history index in SharedPrefs
-        arrayIndex++;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("index", arrayIndex);
-        editor.apply();
+            //Build notification
+            notiBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).setContentTitle(word)
+                    .setContentIntent(meaningPendingIntent)
+                    .setSmallIcon(R.mipmap.ic_launcher);
+            notificationManager.notify((int) System.currentTimeMillis(), notiBuilder.build());
 
-        if(arrayIndex == historyWords.size()){
-            context.unregisterReceiver(this);
+            //Increase history index in SharedPrefs
+            arrayIndex++;
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("index", arrayIndex);
+            editor.apply();
+        }else{
+            Log.d(TAG, "onReceive: no history data");
+            return;
         }
     }
 }
