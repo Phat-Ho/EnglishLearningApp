@@ -75,8 +75,7 @@ public class HistoryFragment extends Fragment {
                         int id = wordList.get(position).getId();
                         databaseAccess.open();
                         if(databaseAccess.removeHistory(id)>0){
-                            wordList.clear();
-                            wordList.addAll(databaseAccess.getHistoryWords());
+                            wordList.remove(position);
                             arrayAdapter.notifyDataSetChanged();
                         }
                     }

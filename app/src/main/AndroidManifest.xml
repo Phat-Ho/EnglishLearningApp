@@ -20,7 +20,8 @@
             android:enabled="true"
             android:exported="true"></receiver>
 
-        <activity android:name=".activity.MeaningActivity" />
+        <activity android:name=".activity.MeaningActivity"
+                    android:launchMode="singleTop"/>
         <activity android:name=".activity.HistoryActivity" />
         <activity android:name=".activity.ScheduleActivity" />
         <activity android:name=".activity.MainHomeActivity" />

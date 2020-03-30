@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
             id = AlarmReceiver.historyWords.get(arrayIndex).getId();
         }
 
-        Intent receiverIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, id, receiverIntent, 0);
+        Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());

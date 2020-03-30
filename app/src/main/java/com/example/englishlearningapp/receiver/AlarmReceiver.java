@@ -13,7 +13,6 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.MainActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -61,14 +60,17 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
 
             //Start Meaning activity when click on notification
-            Intent meaningIntent = new Intent(context, MeaningActivity.class);
+            Intent meaningIntent = new Intent(context.getApplicationContext(), MeaningActivity.class);
             meaningIntent.putExtra("id", id);
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
-            PendingIntent meaningPendingIntent = PendingIntent.getActivity(context, id, meaningIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent
+                                                                            , PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Build notification
-            notiBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).setContentTitle(word)
+            notiBuilder = new NotificationCompat.Builder(context.getApplicationContext(), NOTIFICATION_CHANNEL_ID).setContentTitle(word)
                     .setContentIntent(meaningPendingIntent)
                     .setSmallIcon(R.mipmap.ic_launcher);
             notificationManager.notify((int) System.currentTimeMillis(), notiBuilder.build());

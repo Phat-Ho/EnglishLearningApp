@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 
@@ -26,8 +27,30 @@ public class MeaningActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meaning);
         MappingView();
         SetMeaningData();
-
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.hasExtra("word")){
+            String html = intent.getStringExtra("html");
+            final String word = intent.getStringExtra("word");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                txtMeaning.setText(Html.fromHtml(html));
+            }
+
+            imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "");
+                }
+            });
+        }
+    }
+
+
 
     private void SetMeaningData() {
         Intent intent = getIntent();
