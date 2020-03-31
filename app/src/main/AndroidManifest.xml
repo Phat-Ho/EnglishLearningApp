@@ -3,6 +3,7 @@
     package="com.example.englishlearningapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -19,7 +20,8 @@
             android:enabled="true"
             android:exported="true"></receiver>
 
-        <activity android:name=".activity.MeaningActivity" />
+        <activity android:name=".activity.MeaningActivity"
+                    android:launchMode="singleTop"/>
         <activity android:name=".activity.HistoryActivity" />
         <activity android:name=".activity.ScheduleActivity" />
         <activity android:name=".activity.MainHomeActivity" />

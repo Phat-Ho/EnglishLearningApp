@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseAccess {
 
-    private DatabaseOpenHelper openHelper;
+    private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseAccess instance;
 
@@ -55,6 +55,10 @@ public class DatabaseAccess {
         if (database != null) {
             this.database.close();
         }
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
     }
 
     /**
@@ -103,5 +107,9 @@ public class DatabaseAccess {
         value.put("id", id);
         database.insert("history", null, value);
         return id;
+    }
+
+    public int removeHistory(int id){
+        return database.delete("history", "id = " + id, null);
     }
 }

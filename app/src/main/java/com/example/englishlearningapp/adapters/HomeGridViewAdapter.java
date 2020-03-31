@@ -71,8 +71,10 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         //Navigate to History Activity
                         Intent historyIntent = new Intent(context, HistoryActivity.class);
                         context.startActivity(historyIntent);
+                        break;
                     case 5:
                         Toast.makeText(context, "Thi đấu", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         });

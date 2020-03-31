@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
+        db = DatabaseAccess.getInstance(MainActivity.this);
         prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("index", 0);
@@ -90,19 +90,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Gọi hàm thông báo lặp lại mỗi 10 giây
-        long timeInMillis = 10000;
+        long timeInMillis = 1000; //1 second
         setRepeatAlarm(timeInMillis);
     }
 
     private void setRepeatAlarm(long timeInMillis) {
-        Intent receiverIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        db.open();
+        if(db.getHistoryWords().size() > 0){
+            int arrayIndex = prefs.getInt("index", 0);
+            int id = 0;
+            if(AlarmReceiver.historyWords == null){
+                ArrayList<Word> historyWord = db.getHistoryWords();
+                id = historyWord.get(arrayIndex).getId();
+            }else{
+                id = AlarmReceiver.historyWords.get(arrayIndex).getId();
+            }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-        calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-        calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
+            Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
+            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
+        }else{
+            return;
+        }
+
     }
 
     public void setLocale(String localeCode){
