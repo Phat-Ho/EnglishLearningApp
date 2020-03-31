@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.SettingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/buttonSaveSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="Save" />
+
+        <TextView
+            android:id="@+id/textViewWordReminderEnabled"
+            android:textSize="24sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/buttonSaveSetting"
+            android:text="Word Reminder Enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switchWordReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonSaveSetting"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="55dp" />
+
+        <TextView
+            android:id="@+id/textViewNumberOfWordsDay"
+            android:textSize="24sp"
+            android:text="Number of Words/Day"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/textViewWordReminderEnabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_below="@+id/switchWordReminder"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="55dp"
+            android:layout_alignParentEnd="true"
+            android:text="1"
+            android:id="@+id/editTextNumberOfWords"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+
+        <TextView
+            android:id="@+id/textViewNumberOfAlarm"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/textViewNumberOfWordsDay"
+            android:textSize="24sp"
+            android:text="Number of Alarm/Word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_below="@+id/editTextNumberOfWords"
+            android:gravity="center"
+            android:layout_marginEnd="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            android:text="1"
+            android:id="@+id/editTextNumberOfAlarm"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+
+        <TextView
+            android:id="@+id/textViewSelectTimeOfAlarm"
+            android:layout_below="@id/textViewNumberOfAlarm"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="24sp"
+            android:text="Select time of Alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ListView
+            android:layout_marginTop="20dp"
+            android:id="@+id/listViewTimeOfAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewSelectTimeOfAlarm" />
+
+        <Button
+            android:id="@+id/buttonAddAlarm"
+            android:text="Add"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/listViewTimeOfAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/textViewSelectWords"
+            android:text="Select Words"
+            android:textSize="24sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/buttonAddAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/buttonFromHistory"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/textViewSelectWords"
+            android:text="From History"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/buttonNewWord"
+            android:layout_toRightOf="@id/buttonFromHistory"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/textViewSelectWords"
+            android:text="New"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+
+</FrameLayout>

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.HistoryActivity;
+import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.fragments.SubjectsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 
@@ -27,6 +28,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     Context context;
     SubjectsFragment subjectsFragment = new SubjectsFragment();
     HomeFragment homeFragment;
+    SettingFragment settingFragment = new SettingFragment();
 
     public HomeGridViewAdapter(Context context, ArrayList subjectNames, ArrayList subjectImages, HomeFragment homeFragment) {
         this.context = context;
@@ -47,6 +49,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.name.setText((String) subjectNames.get(position));
         holder.image.setImageResource((Integer) subjectImages.get(position));
+        final MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,10 +58,10 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 0:
                         /*Intent subjectIntent = new Intent(context, SubjectActivity.class);
                         context.startActivity(subjectIntent);*/
-                        MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
                         mainHomeActivity.showFragment(subjectsFragment);
                         break;
                     case 1:
+                        mainHomeActivity.showFragment(settingFragment);
                         Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
                     case 2:
                         Toast.makeText(context, "Nghe", Toast.LENGTH_SHORT).show(); break;
