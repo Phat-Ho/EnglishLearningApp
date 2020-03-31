@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -64,16 +65,21 @@ public class AlarmReceiver extends BroadcastReceiver {
             meaningIntent.putExtra("id", id);
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
+            String str = Html.fromHtml(html).toString();
+            String[] splited = str.split("\\r?\\n");
+            String mean = splited[6];
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent
                                                                             , PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Build notification
-            notiBuilder = new NotificationCompat.Builder(context.getApplicationContext(), NOTIFICATION_CHANNEL_ID).setContentTitle(word)
-                    .setContentIntent(meaningPendingIntent)
-                    .setSmallIcon(R.mipmap.ic_launcher);
-            notificationManager.notify((int) System.currentTimeMillis(), notiBuilder.build());
+            notiBuilder = new NotificationCompat.Builder(context.getApplicationContext(), NOTIFICATION_CHANNEL_ID)
+                                            .setContentTitle(word)
+                                            .setContentIntent(meaningPendingIntent)
+                                            .setContentText(mean)
+                                            .setSmallIcon(R.mipmap.ic_launcher);
+            notificationManager.notify(id, notiBuilder.build());
 
             //Increase history index in SharedPrefs
             arrayIndex++;

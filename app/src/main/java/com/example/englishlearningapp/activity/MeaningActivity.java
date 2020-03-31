@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.example.englishlearningapp.R;
 import java.util.Locale;
 
 public class MeaningActivity extends AppCompatActivity {
+    private static final String TAG = "MeaningActivity";
     TextView txtMeaning;
     ImageButton imgBtnPronounce;
     TextToSpeech tts;

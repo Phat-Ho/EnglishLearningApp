@@ -37,7 +37,7 @@ public class SearchFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final String TAG = "SearchFragment";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -67,7 +67,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("AAA", "onCreate");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -86,8 +85,6 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        Log.d("AAA", "onCreateView");
-
         edtSearch = view.findViewById(R.id.editTextSearch);
         lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
@@ -98,10 +95,20 @@ public class SearchFragment extends Fragment {
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                databaseAccess.addHistory(completeWordsData.get(position).getId());
+                ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
+                boolean isSaved = false;
+                for (int i = 0; i < historyWords.size(); i++) {
+                    if(completeWordsData.get(position).getId() == historyWords.get(i).getId()){
+                        isSaved = true;
+                        Log.d(TAG, "Word is saved");
+                        break;
+                    }
+                }
+                if(isSaved == false){
+                    databaseAccess.addHistory(completeWordsData.get(position).getId());
+                }
                 moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
                 hideSoftKeyBoard();
-                Toast.makeText(getActivity(), "You click " + completeWordsData.get(position).getWord(), Toast.LENGTH_SHORT).show();
             }
         });
 

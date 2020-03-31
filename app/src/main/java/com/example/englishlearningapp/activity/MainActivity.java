@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Gọi hàm thông báo lặp lại mỗi 10 giây
+        //Call the function to repeat alarm every second
         long timeInMillis = 1000; //1 second
         setRepeatAlarm(timeInMillis);
     }
@@ -98,16 +98,17 @@ public class MainActivity extends AppCompatActivity {
         db.open();
         if(db.getHistoryWords().size() > 0){
             int arrayIndex = prefs.getInt("index", 0);
-            int id = 0;
+
+            /*int id = 0;
             if(AlarmReceiver.historyWords == null){
                 ArrayList<Word> historyWord = db.getHistoryWords();
                 id = historyWord.get(arrayIndex).getId();
             }else{
                 id = AlarmReceiver.historyWords.get(arrayIndex).getId();
-            }
+            }*/
 
             Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
