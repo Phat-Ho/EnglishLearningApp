@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.HistoryActivity;
+import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.fragments.SubjectsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
@@ -64,7 +65,9 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         mainHomeActivity.showFragment(settingFragment);
                         Toast.makeText(context, "Đọc", Toast.LENGTH_SHORT).show(); break;
                     case 2:
-                        Toast.makeText(context, "Nghe", Toast.LENGTH_SHORT).show(); break;
+                        Intent scheduleIntent = new Intent(context, ScheduleActivity.class);
+                        context.startActivity(scheduleIntent);
+                        break;
                     case 3:
                         Toast.makeText(context, "Viết", Toast.LENGTH_SHORT).show(); break;
                     case 4:
