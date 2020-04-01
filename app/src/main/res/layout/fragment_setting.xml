@@ -6,141 +6,140 @@
     tools:context=".fragments.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/buttonSaveSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="Save" />
-
-        <TextView
-            android:id="@+id/textViewWordReminderEnabled"
-            android:textSize="24sp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/buttonSaveSetting"
-            android:text="Word Reminder Enabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Switch
-            android:id="@+id/switchWordReminder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/buttonSaveSetting"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="55dp" />
-
-        <TextView
-            android:id="@+id/textViewNumberOfWordsDay"
-            android:textSize="24sp"
-            android:text="Number of Words/Day"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/textViewWordReminderEnabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:layout_below="@+id/switchWordReminder"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="55dp"
-            android:layout_alignParentEnd="true"
-            android:text="1"
-            android:id="@+id/editTextNumberOfWords"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
-
-        <TextView
-            android:id="@+id/textViewNumberOfAlarm"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/textViewNumberOfWordsDay"
-            android:textSize="24sp"
-            android:text="Number of Alarm/Word"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:layout_below="@+id/editTextNumberOfWords"
-            android:gravity="center"
-            android:layout_marginEnd="55dp"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentEnd="true"
-            android:text="1"
-            android:id="@+id/editTextNumberOfAlarm"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
-
-        <TextView
-            android:id="@+id/textViewSelectTimeOfAlarm"
-            android:layout_below="@id/textViewNumberOfAlarm"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="24sp"
-            android:text="Select time of Alarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <ListView
-            android:layout_marginTop="20dp"
-            android:id="@+id/listViewTimeOfAlarm"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewSelectTimeOfAlarm" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonAddAlarm"
-            android:text="Add"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/listViewTimeOfAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
 
-        <TextView
-            android:id="@+id/textViewSelectWords"
-            android:text="Select Words"
-            android:textSize="24sp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/buttonAddAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Save" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:weightSum="5">
 
-        <Button
-            android:id="@+id/buttonFromHistory"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/textViewSelectWords"
-            android:text="From History"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Word Reminder Enabled"
+                    android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/buttonNewWord"
-            android:layout_toRightOf="@id/buttonFromHistory"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/textViewSelectWords"
-            android:text="New"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"/>
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="2" />
+            </LinearLayout>
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:weightSum="5">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Number of Words/Day"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:weightSum="5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Number of Alarms/Word"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="1" />
+            </LinearLayout>
+
+            <TextView
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Select time of Alarm"
+                android:textSize="24sp" />
+            <ListView
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:text="Add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView
+                android:padding="10dp"
+                android:textSize="24sp"
+                android:text="Select Words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:text="From History"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:layout_marginLeft="30dp"
+                    android:text="New"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </FrameLayout>
