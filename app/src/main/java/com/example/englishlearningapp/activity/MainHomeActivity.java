@@ -25,7 +25,7 @@ public class MainHomeActivity extends AppCompatActivity {
     final Fragment friendsFragment = new FriendsFragment();
     final Fragment profileFragment = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment activeFragment = homeFragment;
+    Fragment activeFragment = searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class MainHomeActivity extends AppCompatActivity {
     }
 
     public void showFragment(Fragment fragToShow){
-        fm.beginTransaction().replace(R.id.container, fragToShow).commit();
+        fm.beginTransaction().replace(R.id.container, fragToShow).addToBackStack(null).commit();
         activeFragment = fragToShow;
     }
 }
