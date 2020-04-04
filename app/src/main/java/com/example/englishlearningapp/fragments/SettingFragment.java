@@ -1,22 +1,32 @@
 package com.example.englishlearningapp.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.ScheduleActivity;
+import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
+
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,19 +76,48 @@ public class SettingFragment extends Fragment {
 
     Spinner spinnerStartHour, spinnerEndHour;
     ImageButton imgBtnBackToHome;
+    HomeFragment homeFragment;
+    Switch swtReminder;
+    public static boolean notifyIsChecked;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        final View view = inflater.inflate(R.layout.fragment_setting, container, false);
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         imgBtnBackToHome = view.findViewById(R.id.imageButtonBackToHome);
+        homeFragment = new HomeFragment();
+        final MainHomeActivity mainHomeActivity = (MainHomeActivity) getContext();
+        swtReminder = view.findViewById(R.id.switchReminder);
+
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("notify", Context.MODE_PRIVATE);
+        swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
+        Toast.makeText(mainHomeActivity, "" + notifyIsChecked, Toast.LENGTH_SHORT).show();
+        swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", true);
+                    editor.commit();
+                    notifyIsChecked = sharedPreferences.getBoolean("checked", true);
+                    Toast.makeText(mainHomeActivity, "checked", Toast.LENGTH_SHORT).show();
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", false);
+                    editor.commit();
+                    notifyIsChecked = sharedPreferences.getBoolean("checked", false);
+                    Toast.makeText(mainHomeActivity, "unchecked", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         imgBtnBackToHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mainHomeActivity.showFragment(homeFragment);
             }
         });
         InitSpinner();

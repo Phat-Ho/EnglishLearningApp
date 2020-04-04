@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -90,8 +91,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Call the function to repeat alarm every second
-        long timeInMillis = 1000; //1 second
-        setRepeatAlarm(timeInMillis);
+        SettingFragment settingFragment = new SettingFragment();
+        boolean isChecked = settingFragment.notifyIsChecked;
+//        if (isChecked) {
+            long timeInMillis = 1000; //1 second
+            setRepeatAlarm(timeInMillis);
+//        } else {
+
+//        }
     }
 
     private void setRepeatAlarm(long timeInMillis) {
