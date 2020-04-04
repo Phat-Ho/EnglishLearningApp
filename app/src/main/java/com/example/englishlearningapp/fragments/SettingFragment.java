@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -79,6 +80,7 @@ public class SettingFragment extends Fragment {
     HomeFragment homeFragment;
     Switch swtReminder;
     public static boolean notifyIsChecked;
+    public SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,24 +94,23 @@ public class SettingFragment extends Fragment {
         final MainHomeActivity mainHomeActivity = (MainHomeActivity) getContext();
         swtReminder = view.findViewById(R.id.switchReminder);
 
-        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("notify", Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("notify", Context.MODE_PRIVATE);
         swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
-        Toast.makeText(mainHomeActivity, "" + notifyIsChecked, Toast.LENGTH_SHORT).show();
         swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", true);
-                    editor.commit();
+                    editor.apply();
                     notifyIsChecked = sharedPreferences.getBoolean("checked", true);
-                    Toast.makeText(mainHomeActivity, "checked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mainHomeActivity, "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
-                    editor.commit();
+                    editor.apply();
                     notifyIsChecked = sharedPreferences.getBoolean("checked", false);
-                    Toast.makeText(mainHomeActivity, "unchecked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mainHomeActivity, "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -122,6 +123,13 @@ public class SettingFragment extends Fragment {
         });
         InitSpinner();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        notifyIsChecked = sharedPreferences.getBoolean("checked", false);
+        Toast.makeText(getActivity(), "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
     }
 
     private void InitSpinner(){
