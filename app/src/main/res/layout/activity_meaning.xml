@@ -9,12 +9,25 @@
     android:paddingBottom="56dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageButton
-        android:id="@+id/imageButtonPronounce"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_volume"
-        android:layout_width="40dp"
-        android:layout_height="40dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp">
+        <ImageButton
+            android:id="@+id/imageButtonPronounce"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_volume"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <ImageButton
+            android:id="@+id/meaning_search_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_search"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
 
     <ScrollView
         android:layout_marginTop="40dp"
@@ -26,7 +39,7 @@
             android:id="@+id/textViewMeaning"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:text="@string/hello_blank_fragment"/>
 
     </ScrollView>
 

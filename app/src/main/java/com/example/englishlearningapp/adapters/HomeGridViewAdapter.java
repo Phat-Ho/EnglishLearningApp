@@ -63,7 +63,9 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         mainHomeActivity.showFragment(subjectsFragment);
                         break;
                     case 1:
-                        mainHomeActivity.showFragment(settingFragment);
+                        //Navigate to History Activity
+                        Intent historyIntent = new Intent(context, HistoryActivity.class);
+                        context.startActivity(historyIntent);
                         break;
                     case 2:
                         Intent scheduleIntent = new Intent(context, ScheduleActivity.class);
@@ -72,9 +74,6 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 3:
                         Toast.makeText(context, "Viết", Toast.LENGTH_SHORT).show(); break;
                     case 4:
-                        //Navigate to History Activity
-                        Intent historyIntent = new Intent(context, HistoryActivity.class);
-                        context.startActivity(historyIntent);
                         break;
                     case 5:
                         Toast.makeText(context, "Thi đấu", Toast.LENGTH_SHORT).show();

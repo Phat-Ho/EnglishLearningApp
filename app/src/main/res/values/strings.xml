@@ -9,10 +9,10 @@
     <string name="login_with_facebook">Login With Facebook</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Search</string>
-    <string name="navigation_friends">Friends</string>
+    <string name="navigation_setting">Setting</string>
     <string name="navigation_profile">Profile</string>
     <string name="subject_learning">Subject Learning</string>
-    <string name="reading">Reading</string>
+    <string name="history">History</string>
     <string name="listening">Listening</string>
     <string name="writing">Writing</string>
     <string name="testing">Testing</string>

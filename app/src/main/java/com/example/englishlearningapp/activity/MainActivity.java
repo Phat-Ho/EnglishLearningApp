@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Call the function to repeat alarm every second
         boolean isChecked = prefsNotify.getBoolean("checked", true);
-        Toast.makeText(this, "isChecked: " + isChecked, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "isChecked: " + isChecked);
         if (isChecked) {
             long timeInMillis = 1000; //1 second
             setRepeatAlarm(timeInMillis);

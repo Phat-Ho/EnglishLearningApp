@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.FriendsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
@@ -22,10 +23,11 @@ public class MainHomeActivity extends AppCompatActivity {
 
     final Fragment homeFragment = new HomeFragment();
     final Fragment searchFragment = new SearchFragment();
-    final Fragment friendsFragment = new FriendsFragment();
+    //final Fragment friendsFragment = new FriendsFragment();
+    final Fragment settingFragment = new SettingFragment();
     final Fragment profileFragment = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
-//    Fragment activeFragment = searchFragment;
+    Fragment activeFragment = searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,8 @@ public class MainHomeActivity extends AppCompatActivity {
                     case R.id.navigation_search:
                         showFragment(searchFragment);
                         return true;
-                    case R.id.navigation_friends:
-                        showFragment(friendsFragment);
+                    case R.id.navigation_setting:
+                        showFragment(settingFragment);
                         return true;
                     case R.id.navigation_profile:
                         showFragment(profileFragment);
@@ -63,6 +65,16 @@ public class MainHomeActivity extends AppCompatActivity {
 
     public void showFragment(Fragment fragToShow){
         fm.beginTransaction().replace(R.id.container, fragToShow).commit();
-//        activeFragment = fragToShow;
+        activeFragment = fragToShow;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(activeFragment == searchFragment){
+            finish();
+        }else{
+            bottomNavigation.setSelectedItemId(R.id.navigation_search);
+            activeFragment = searchFragment;
+        }
     }
 }

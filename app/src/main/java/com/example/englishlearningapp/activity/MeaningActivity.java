@@ -20,7 +20,7 @@ import java.util.Locale;
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
     TextView txtMeaning;
-    ImageButton imgBtnPronounce;
+    ImageButton imgBtnPronounce, imgBtnSearch;
     TextToSpeech tts;
 
     @Override
@@ -75,12 +75,20 @@ public class MeaningActivity extends AppCompatActivity {
     private void MappingView() {
         txtMeaning = findViewById(R.id.textViewMeaning);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
+        imgBtnSearch = findViewById(R.id.meaning_search_btn);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.ENGLISH);
                 }
+            }
+        });
+        imgBtnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent homeIntent = new Intent(MeaningActivity.this, MainHomeActivity.class);
+                startActivity(homeIntent);
             }
         });
     }
