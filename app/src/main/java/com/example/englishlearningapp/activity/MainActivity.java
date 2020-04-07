@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.SettingFragment;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     String[] languages = new String[]{"Tiếng Việt", "English"};
     AlarmManager alarmManager;
     DatabaseAccess db;
-    SharedPreferences prefs;
+    SharedPreferences prefs, prefsNotify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         MappingView();
         db = DatabaseAccess.getInstance(MainActivity.this);
         prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
+        prefsNotify = getSharedPreferences("notify", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("index", 0);
         editor.apply();
@@ -91,14 +93,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Call the function to repeat alarm every second
-        SettingFragment settingFragment = new SettingFragment();
-        boolean isChecked = settingFragment.notifyIsChecked;
-//        if (isChecked) {
+        boolean isChecked = prefsNotify.getBoolean("checked", true);
+        Toast.makeText(this, "isChecked: " + isChecked, Toast.LENGTH_SHORT).show();
+        if (isChecked) {
             long timeInMillis = 1000; //1 second
             setRepeatAlarm(timeInMillis);
-//        } else {
-
-//        }
+        }
     }
 
     private void setRepeatAlarm(long timeInMillis) {
