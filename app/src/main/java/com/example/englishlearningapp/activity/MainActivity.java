@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
+<<<<<<< HEAD
         db = DatabaseAccess.getInstance(MainActivity.this);
         prefsNotify = getSharedPreferences("switch", MODE_PRIVATE);
         /*prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity{
         editor.putInt("index", 0);
         editor.apply();*/
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+=======
+>>>>>>> 0133c52814b11d983886a9f5043f6a27d8a2a8d8
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+<<<<<<< HEAD
         //Call the function to repeat alarm every second
         /*boolean isChecked = prefsNotify.getBoolean("checked", false);
         Log.d(TAG, "isChecked: " + isChecked);
@@ -142,6 +146,10 @@ public class MainActivity extends AppCompatActivity{
         }
 
     }
+=======
+    }
+
+>>>>>>> 0133c52814b11d983886a9f5043f6a27d8a2a8d8
 
     public void setLocale(String localeCode){
         Locale myLocale = new Locale(localeCode);

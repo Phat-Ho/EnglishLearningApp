@@ -119,11 +119,15 @@ public class SettingFragment extends Fragment {
                     editor.putBoolean("checked", true);
                     editor.apply();
                     notifyIsChecked = sharedPreferences.getBoolean("checked", true);
+<<<<<<< HEAD
                     SharedPreferences.Editor indexEditor = prefs.edit();
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
                     long timeInMillis = 1000; //1 second
                     setRepeatAlarm(timeInMillis);
+=======
+                    Toast.makeText(getContext(), "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
+>>>>>>> 0133c52814b11d983886a9f5043f6a27d8a2a8d8
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -176,5 +180,9 @@ public class SettingFragment extends Fragment {
             return;
         }
 
+<<<<<<< HEAD
     }
+=======
+
+>>>>>>> 0133c52814b11d983886a9f5043f6a27d8a2a8d8
 }
