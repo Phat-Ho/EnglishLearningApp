@@ -54,8 +54,14 @@ public class SettingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     DatabaseAccess db;
-    SharedPreferences prefs, prefsNotify;
+    SharedPreferences prefs;
     AlarmManager alarmManager;
+    Spinner spinnerStartHour, spinnerEndHour;
+    ImageButton imgBtnBackToHome;
+    HomeFragment homeFragment;
+    Switch swtReminder;
+    public static boolean notifyIsChecked;
+    public SharedPreferences sharedPreferences;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -92,13 +98,6 @@ public class SettingFragment extends Fragment {
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
     }
 
-    Spinner spinnerStartHour, spinnerEndHour;
-    ImageButton imgBtnBackToHome;
-    HomeFragment homeFragment;
-    Switch swtReminder;
-    public static boolean notifyIsChecked;
-    public SharedPreferences sharedPreferences;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,18 +117,15 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", true);
                     editor.apply();
-                    notifyIsChecked = sharedPreferences.getBoolean("checked", true);
                     SharedPreferences.Editor indexEditor = prefs.edit();
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
                     long timeInMillis = 1000; //1 second
                     setRepeatAlarm(timeInMillis);
-                    Toast.makeText(getContext(), "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
                     editor.apply();
-                    notifyIsChecked = sharedPreferences.getBoolean("checked", false);
                     Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmManager.cancel(pendingIntent);
@@ -169,9 +165,9 @@ public class SettingFragment extends Fragment {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+            /*calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
             calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
+            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());*/
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
         }else{
             return;

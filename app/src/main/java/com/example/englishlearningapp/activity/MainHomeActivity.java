@@ -80,7 +80,6 @@ public class MainHomeActivity extends AppCompatActivity {
         });
     }
 
-
     private void setHomeFragment(){
         fm.beginTransaction().add(R.id.container, searchFragment, "search").commit();
     }
@@ -115,16 +114,6 @@ public class MainHomeActivity extends AppCompatActivity {
     public void setRepeatAlarm(long timeInMillis) {
         db.open();
         if(db.getHistoryWords().size() > 0){
-            int arrayIndex = prefs.getInt("index", 0);
-
-            /*int id = 0;
-            if(AlarmReceiver.historyWords == null){
-                ArrayList<Word> historyWord = db.getHistoryWords();
-                id = historyWord.get(arrayIndex).getId();
-            }else{
-                id = AlarmReceiver.historyWords.get(arrayIndex).getId();
-            }*/
-
             Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(MainHomeActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -132,7 +121,7 @@ public class MainHomeActivity extends AppCompatActivity {
             calendar.set(Calendar.HOUR_OF_DAY, 16);
             calendar.set(Calendar.MINUTE, 43);
             calendar.set(Calendar.SECOND, 0);
-//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
         }else{
             return;
