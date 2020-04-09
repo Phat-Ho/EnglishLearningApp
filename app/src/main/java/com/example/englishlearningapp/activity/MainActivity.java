@@ -46,13 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
-        db = DatabaseAccess.getInstance(MainActivity.this);
-        prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
-        prefsNotify = getSharedPreferences("notify", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("index", 0);
-        editor.apply();
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
@@ -93,41 +86,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Call the function to repeat alarm every second
-        boolean isChecked = prefsNotify.getBoolean("checked", true);
-        Log.d(TAG, "isChecked: " + isChecked);
-        if (isChecked) {
-            long timeInMillis = 1000; //1 second
-            setRepeatAlarm(timeInMillis);
-        }
     }
 
-    private void setRepeatAlarm(long timeInMillis) {
-        db.open();
-        if(db.getHistoryWords().size() > 0){
-            int arrayIndex = prefs.getInt("index", 0);
-
-            /*int id = 0;
-            if(AlarmReceiver.historyWords == null){
-                ArrayList<Word> historyWord = db.getHistoryWords();
-                id = historyWord.get(arrayIndex).getId();
-            }else{
-                id = AlarmReceiver.historyWords.get(arrayIndex).getId();
-            }*/
-
-            Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
-        }else{
-            return;
-        }
-
-    }
 
     public void setLocale(String localeCode){
         Locale myLocale = new Locale(localeCode);

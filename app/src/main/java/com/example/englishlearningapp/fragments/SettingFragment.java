@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.MainActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
@@ -104,7 +106,7 @@ public class SettingFragment extends Fragment {
                     editor.putBoolean("checked", true);
                     editor.apply();
                     notifyIsChecked = sharedPreferences.getBoolean("checked", true);
-                    Toast.makeText(mainHomeActivity, "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "notifyChecked: "+ notifyIsChecked, Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -140,6 +142,7 @@ public class SettingFragment extends Fragment {
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
     }
+
 
 
 }
