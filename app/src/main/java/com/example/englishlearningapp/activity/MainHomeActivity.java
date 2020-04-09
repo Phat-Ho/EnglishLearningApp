@@ -47,13 +47,13 @@ public class MainHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
 
-        db = DatabaseAccess.getInstance(MainHomeActivity.this);
+        /*db = DatabaseAccess.getInstance(MainHomeActivity.this);
         prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
         prefsNotify = getSharedPreferences("notify", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("index", 0);
         editor.apply();
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);*/
 
         setHomeFragment();
 
@@ -103,13 +103,13 @@ public class MainHomeActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("AAA", "onStop");
+        /*Log.d("AAA", "onStop");
         boolean isChecked = prefsNotify.getBoolean("checked", true);
         Log.d(TAG, "isChecked: " + isChecked);
         if (isChecked) {
             long timeInMillis = 1000; //1 second
             setRepeatAlarm(timeInMillis);
-        }
+        }*/
     }
 
     public void setRepeatAlarm(long timeInMillis) {
