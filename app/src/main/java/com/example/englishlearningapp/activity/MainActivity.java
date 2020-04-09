@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -20,8 +21,10 @@ import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.SettingFragment;
+import com.example.englishlearningapp.interfaces.MyListener;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
+import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.button.MaterialButton;
 
@@ -30,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "MainActivity";
     MaterialButton nextButton, btnLogin;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     AlarmManager alarmManager;
     DatabaseAccess db;
     SharedPreferences prefs, prefsNotify;
+    NetworkChangeReceiver networkChangeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         MappingView();
         db = DatabaseAccess.getInstance(MainActivity.this);
-        prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
-        prefsNotify = getSharedPreferences("notify", MODE_PRIVATE);
+        prefsNotify = getSharedPreferences("switch", MODE_PRIVATE);
+        /*prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("index", 0);
-        editor.apply();
+        editor.apply();*/
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
@@ -94,27 +98,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Call the function to repeat alarm every second
-        boolean isChecked = prefsNotify.getBoolean("checked", true);
+        /*boolean isChecked = prefsNotify.getBoolean("checked", false);
         Log.d(TAG, "isChecked: " + isChecked);
         if (isChecked) {
             long timeInMillis = 1000; //1 second
             setRepeatAlarm(timeInMillis);
-        }
+        }*/
     }
 
-    private void setRepeatAlarm(long timeInMillis) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //initNetworkChangeReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //unregisterReceiver(networkChangeReceiver);
+    }
+
+    private void initNetworkChangeReceiver() {
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        registerReceiver(networkChangeReceiver, intentFilter);
+    }
+
+    public void setRepeatAlarm(long timeInMillis) {
         db.open();
         if(db.getHistoryWords().size() > 0){
-            int arrayIndex = prefs.getInt("index", 0);
-
-            /*int id = 0;
-            if(AlarmReceiver.historyWords == null){
-                ArrayList<Word> historyWord = db.getHistoryWords();
-                id = historyWord.get(arrayIndex).getId();
-            }else{
-                id = AlarmReceiver.historyWords.get(arrayIndex).getId();
-            }*/
-
             Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
