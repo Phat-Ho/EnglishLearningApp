@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -98,6 +99,9 @@ public class SettingFragment extends Fragment {
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
     }
 
+    int startHour = 0;
+    int endHour = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,6 +112,41 @@ public class SettingFragment extends Fragment {
         imgBtnBackToHome = view.findViewById(R.id.imageButtonBackToHome);
         homeFragment = new HomeFragment();
         final MainHomeActivity mainHomeActivity = (MainHomeActivity) getContext();
+
+        spinnerStartHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                startHour = position;
+                if (startHour >= endHour){
+                    endHour = startHour + 1;
+                    spinnerEndHour.setSelection(endHour);
+                    Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerEndHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                endHour = position;
+                if (endHour <= startHour){
+                    endHour = startHour + 1;
+                    spinnerEndHour.setSelection(endHour);
+                    Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         swtReminder = view.findViewById(R.id.switchReminder);
         swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
         swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -120,8 +159,9 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor indexEditor = prefs.edit();
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
+                    Toast.makeText(mainHomeActivity, "start hour: " + startHour + "\nend hour: " + endHour, Toast.LENGTH_SHORT).show();
                     long timeInMillis = 1000; //1 second
-                    setRepeatAlarm(timeInMillis);
+                    setRepeatAlarm(timeInMillis, startHour, endHour);
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -152,17 +192,40 @@ public class SettingFragment extends Fragment {
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
     }
 
-    public void setRepeatAlarm(long timeInMillis) {
+    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour) {
         db.open();
         if(db.getHistoryWords().size() > 0){
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+            
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
             calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
             calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
+
+            //Set startHour
+            Calendar calStart = Calendar.getInstance();
+            calStart.set(Calendar.HOUR_OF_DAY, startHour);
+            calStart.set(Calendar.MINUTE, 0);
+            calStart.set(Calendar.SECOND, 0);
+
+            //Set endHour
+            Calendar calEnd = Calendar.getInstance();
+            calEnd.set(Calendar.HOUR_OF_DAY, endHour);
+            calEnd.set(Calendar.MINUTE, 0);
+            calEnd.set(Calendar.SECOND, 0);
+
+            //Get current hour
+            int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+            //Fire the alarm
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
+
+            //Check if endHour <= currentHour to cancel
+            if (endHour <= currentHour){
+                alarmManager.cancel(pendingIntent);
+            }
         }else{
             return;
         }

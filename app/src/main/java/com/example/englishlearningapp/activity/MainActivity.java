@@ -97,13 +97,6 @@ public class MainActivity extends AppCompatActivity{
                 finish();
             }
         });
-        //Call the function to repeat alarm every second
-        /*boolean isChecked = prefsNotify.getBoolean("checked", false);
-        Log.d(TAG, "isChecked: " + isChecked);
-        if (isChecked) {
-            long timeInMillis = 1000; //1 second
-            setRepeatAlarm(timeInMillis);
-        }*/
     }
 
     @Override
