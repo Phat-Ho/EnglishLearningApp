@@ -10,6 +10,7 @@ public class Server
     public static String host = "http://192.168.1.62/";
     public static String REGISTER_URL = Server.host + "english/register.php";
     public static String LOGIN_URL = Server.host + "english/getuser.php";
+    public static String ADD_HISTORY_URL = Server.host + "english/addHistory.php?";
 
     public static boolean haveNetworkConnection(Context context) {
         boolean haveConnectedWifi = false;

@@ -19,10 +19,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
+import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.Server;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -105,7 +117,7 @@ public class SearchFragment extends Fragment {
                     }
                 }
                 if(isSaved == false){
-                    databaseAccess.addHistory(completeWordsData.get(position).getId());
+                    saveHistory(completeWordsData.get(position).getId());
                 }
                 moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
                 hideSoftKeyBoard();
@@ -130,6 +142,41 @@ public class SearchFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void saveHistory(final int wordID){
+        //Nếu có internet thì add vô server và local với sync status = success
+        if(Server.haveNetworkConnection(getActivity())){
+            String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID;
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String message = jsonObject.getString("message");
+                        if(message.equals("success")){
+                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC);
+                            Toast.makeText(getContext(), "Add to server", Toast.LENGTH_SHORT).show();
+                        }else{
+                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+                            Toast.makeText(getContext(), "Add to local", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getContext(), "Add to local", Toast.LENGTH_SHORT).show();
+                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+                }
+            });
+            requestQueue.add(stringRequest);
+        }else{ //Nếu không có internet thì add vô local với sync status = fail
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+        }
     }
 
     private void moveToMeaningActivity(String html, String word) {

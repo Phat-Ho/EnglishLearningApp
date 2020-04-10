@@ -143,12 +143,6 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        notifyIsChecked = sharedPreferences.getBoolean("checked", false);
-    }
-
     private void InitSpinner(){
         ArrayAdapter<CharSequence> spinnerHoursAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.hours,
@@ -165,9 +159,9 @@ public class SettingFragment extends Fragment {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar calendar = Calendar.getInstance();
-            /*calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
             calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());*/
+            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
         }else{
             return;

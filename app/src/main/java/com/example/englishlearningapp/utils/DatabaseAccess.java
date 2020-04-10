@@ -102,11 +102,26 @@ public class DatabaseAccess {
         return wordList;
     }
 
-    public int addHistory(int id){
+    public int addHistory(int pWordID, int pSyncStatus){
         ContentValues value = new ContentValues();
-        value.put("id", id);
+        value.put("id", pWordID);
+        value.put("sync_status", pSyncStatus);
         database.insert("history", null, value);
-        return id;
+        return pWordID;
+    }
+
+    public Cursor readHistory(){
+        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS};
+        Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
+
+        return cursor;
+    }
+
+    public void updateHistorySyncStatus(int pWordID, int pSyncStatus){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
+        String selection = DatabaseContract.WORD_ID + " = " + pWordID;
+        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
     public int removeHistory(int id){
