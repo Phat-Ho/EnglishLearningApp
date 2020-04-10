@@ -197,7 +197,7 @@ public class SettingFragment extends Fragment {
         if(db.getHistoryWords().size() > 0){
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            
+
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
             calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());

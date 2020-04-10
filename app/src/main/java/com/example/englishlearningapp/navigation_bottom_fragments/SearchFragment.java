@@ -100,6 +100,7 @@ public class SearchFragment extends Fragment {
         edtSearch = view.findViewById(R.id.editTextSearch);
         lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
+        databaseAccess.open();
         words = new ArrayList<>();
 
         loadDatabase(edtSearch.getText().toString().trim());
@@ -157,10 +158,10 @@ public class SearchFragment extends Fragment {
                         String message = jsonObject.getString("message");
                         if(message.equals("success")){
                             databaseAccess.addHistory(wordID, DatabaseContract.SYNC);
-                            Toast.makeText(getContext(), "Add to server", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Add to server", Toast.LENGTH_SHORT).show();
                         }else{
                             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
-                            Toast.makeText(getContext(), "Add to local", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onResponse: " + message);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -169,13 +170,14 @@ public class SearchFragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getContext(), "Add to local", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
                     databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
                 }
             });
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+            Log.d(TAG, "saveHistory: no internet, add to local");
         }
     }
 
@@ -187,7 +189,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void loadDatabase(String word) {
-        databaseAccess.open();
+        /*databaseAccess.open();*/
         if (word.equals("")) {
             completeWordsData = databaseAccess.getWords(word);
             adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, completeWordsData);
@@ -207,6 +209,5 @@ public class SearchFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
-
     }
 }
