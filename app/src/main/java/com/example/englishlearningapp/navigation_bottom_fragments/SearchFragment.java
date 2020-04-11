@@ -36,7 +36,10 @@ import com.example.englishlearningapp.utils.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -148,7 +151,8 @@ public class SearchFragment extends Fragment {
     public void saveHistory(final int wordID){
         //Nếu có internet thì add vô server và local với sync status = success
         if(Server.haveNetworkConnection(getActivity())){
-            String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID;
+            String currentDateTime = getDatetime().replace(" ", "%20"); // Replace 'space' with '$20' to send http request
+            String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID + "&datetime=" + currentDateTime;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
@@ -201,6 +205,12 @@ public class SearchFragment extends Fragment {
             adapter.addAll(completeWordsData);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public String getDatetime(){
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     private void hideSoftKeyBoard() {

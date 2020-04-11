@@ -53,10 +53,6 @@ public class MainActivity extends AppCompatActivity{
         MappingView();
         db = DatabaseAccess.getInstance(MainActivity.this);
         prefsNotify = getSharedPreferences("switch", MODE_PRIVATE);
-        /*prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("index", 0);
-        editor.apply();*/
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
@@ -94,7 +90,6 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
-                finish();
             }
         });
     }

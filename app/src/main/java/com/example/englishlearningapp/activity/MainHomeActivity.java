@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.SearchFragment;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
+import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,9 +40,7 @@ public class MainHomeActivity extends AppCompatActivity {
     final Fragment profileFragment = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment activeFragment = searchFragment;
-    DatabaseAccess db;
-    SharedPreferences prefs, prefsNotify;
-    AlarmManager alarmManager;
+    NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainHomeActivity";
 
     @Override
@@ -47,16 +48,7 @@ public class MainHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
 
-        /*db = DatabaseAccess.getInstance(MainHomeActivity.this);
-        prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
-        prefsNotify = getSharedPreferences("notify", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("index", 0);
-        editor.apply();
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);*/
-
         setHomeFragment();
-
         bottomNavigation = findViewById(R.id.navigation_bottom);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -80,6 +72,24 @@ public class MainHomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initNetworkChangeReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkChangeReceiver);
+    }
+
+    private void initNetworkChangeReceiver() {
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeReceiver, intentFilter);
+    }
+
     private void setHomeFragment(){
         fm.beginTransaction().add(R.id.container, searchFragment, "search").commit();
     }
@@ -99,33 +109,4 @@ public class MainHomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        /*Log.d("AAA", "onStop");
-        boolean isChecked = prefsNotify.getBoolean("checked", true);
-        Log.d(TAG, "isChecked: " + isChecked);
-        if (isChecked) {
-            long timeInMillis = 1000; //1 second
-            setRepeatAlarm(timeInMillis);
-        }*/
-    }
-
-    public void setRepeatAlarm(long timeInMillis) {
-        db.open();
-        if(db.getHistoryWords().size() > 0){
-            Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainHomeActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 16);
-            calendar.set(Calendar.MINUTE, 43);
-            calendar.set(Calendar.SECOND, 0);
-            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
-        }else{
-            return;
-        }
-
-    }
 }
