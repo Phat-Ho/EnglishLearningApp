@@ -3,6 +3,9 @@ package com.example.englishlearningapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -37,13 +41,17 @@ public class LoginActivity extends AppCompatActivity {
     public static String email = "";
     public static int userID = -1;
     public String LOGIN_URL = Server.LOGIN_URL;
-
+    SharedPreferences loginPref;
+    SharedPreferences.Editor loginPrefEditor;
+    NetworkChangeReceiver networkChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         MappingView();
         SetUpEvent();
+        loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
+        networkChangeReceiver = new NetworkChangeReceiver();
     }
 
     private void SetUpEvent() {
@@ -93,13 +101,18 @@ public class LoginActivity extends AppCompatActivity {
                             int userID = jsonObject.getInt("userID");
                             String email = jsonObject.getString("email");
 
-                            //Gán lại cho biến toàn cục để sử dụng sau này
-                            LoginActivity.userID = userID;
-                            LoginActivity.email = email;
+                            //Gán lại cho shared pref
+                            loginPrefEditor = loginPref.edit();
+                            loginPrefEditor.putBoolean("isLogin", true);
+                            loginPrefEditor.putInt("userID", userID);
+                            loginPrefEditor.putString("userEmail", email);
+                            loginPrefEditor.apply();
 
                             //Chuyển qua màn hình MainHome
                             Intent intent = new Intent(LoginActivity.this, MainHomeActivity.class);
                             startActivity(intent);
+                            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                            registerReceiver(networkChangeReceiver, intentFilter);
                             finish();
                         }else{
                             textInputLayout.setError("Sai toàn khoản hoặc mật khẩu");
@@ -133,6 +146,12 @@ public class LoginActivity extends AppCompatActivity {
             requestQueue.add(stringRequest);
             //Kết thúc gọi webservice
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkChangeReceiver);
     }
 
     private void MappingView() {

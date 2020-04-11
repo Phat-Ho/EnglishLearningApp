@@ -3,6 +3,7 @@ package com.example.englishlearningapp.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.provider.ContactsContract;
@@ -24,10 +25,14 @@ import org.json.JSONObject;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
-
+    SharedPreferences loginPref;
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())){
+        loginPref = context.getSharedPreferences("loginState",Context.MODE_PRIVATE);
+        boolean isLogin = loginPref.getBoolean("isLogin", false);
+        int userID = loginPref.getInt("userID", 0);
+        Log.d(TAG, "isLogin: " + isLogin);
+        if(ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()) && isLogin == true){
             boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
             if(noConnectivity){
                 Log.d(TAG, "onReceive: Disconnected");
@@ -44,7 +49,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             final int wordID = cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID));
                             final String dateTime = cursor.getString(cursor.getColumnIndex(DatabaseContract.DATE)).replace(" ", "%20");
                             Log.d(TAG, "datetime: " + dateTime);
-                            String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID + "&datetime=" + dateTime;
+                            String url = Server.ADD_HISTORY_URL + "userid=" + userID + "&wordid=" + wordID + "&datetime=" + dateTime;
                             RequestQueue requestQueue = Volley.newRequestQueue(context);
                             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                                 @Override
@@ -72,6 +77,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     }while (cursor.moveToNext());
                 }
             }
+        }else{
+            Log.d(TAG, "onReceive: no login");
         }
     }
 }

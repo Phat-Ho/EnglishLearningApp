@@ -2,6 +2,7 @@ package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -94,7 +95,7 @@ public class SearchFragment extends Fragment {
     ArrayList<Word> completeWordsData;
     DatabaseAccess databaseAccess;
     ArrayAdapter adapter;
-
+    SharedPreferences loginPref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -105,9 +106,10 @@ public class SearchFragment extends Fragment {
         databaseAccess = DatabaseAccess.getInstance(getActivity());
         databaseAccess.open();
         words = new ArrayList<>();
-
+        loginPref = getActivity().getSharedPreferences("loginState", Context.MODE_PRIVATE);
+        final int userID = loginPref.getInt("userID", 0);
+        final boolean isLogin = loginPref.getBoolean("isLogin", false);
         loadDatabase(edtSearch.getText().toString().trim());
-
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,7 +123,7 @@ public class SearchFragment extends Fragment {
                     }
                 }
                 if(isSaved == false){
-                    saveHistory(completeWordsData.get(position).getId());
+                    saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
                 }
                 moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
                 hideSoftKeyBoard();
@@ -148,11 +150,11 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public void saveHistory(final int wordID){
-        //Nếu có internet thì add vô server và local với sync status = success
-        if(Server.haveNetworkConnection(getActivity())){
+    public void saveHistory(final int wordID, boolean pIsLogin, int pUserID){
+        //Nếu có internet và đã login thì add vô server vào local với sync status = success
+        if(Server.haveNetworkConnection(getActivity()) && pIsLogin == true){
             String currentDateTime = getDatetime().replace(" ", "%20"); // Replace 'space' with '$20' to send http request
-            String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID + "&datetime=" + currentDateTime;
+            String url = Server.ADD_HISTORY_URL + "userid=" + pUserID + "&wordid=" + wordID + "&datetime=" + currentDateTime;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
@@ -162,7 +164,7 @@ public class SearchFragment extends Fragment {
                         String message = jsonObject.getString("message");
                         if(message.equals("success")){
                             databaseAccess.addHistory(wordID, DatabaseContract.SYNC);
-                            Toast.makeText(getActivity(), "Add to server", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onResponse: added to server");
                         }else{
                             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
                             Log.d(TAG, "onResponse: " + message);
@@ -179,9 +181,9 @@ public class SearchFragment extends Fragment {
                 }
             });
             requestQueue.add(stringRequest);
-        }else{ //Nếu không có internet thì add vô local với sync status = fail
+        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
-            Log.d(TAG, "saveHistory: no internet, add to local");
+            Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
 
