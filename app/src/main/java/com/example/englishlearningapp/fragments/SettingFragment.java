@@ -110,6 +110,8 @@ public class SettingFragment extends Fragment {
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         imgBtnBackToHome = view.findViewById(R.id.imageButtonBackToHome);
+        swtReminder = view.findViewById(R.id.switchReminder);
+        swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
         homeFragment = new HomeFragment();
         final MainHomeActivity mainHomeActivity = (MainHomeActivity) getContext();
 
@@ -122,8 +124,6 @@ public class SettingFragment extends Fragment {
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
                 }
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("startHour", startHour);
                 editor.apply();
@@ -144,8 +144,6 @@ public class SettingFragment extends Fragment {
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
                 }
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("endHour", endHour);
                 editor.apply();
@@ -157,8 +155,6 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        swtReminder = view.findViewById(R.id.switchReminder);
-        swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
         swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -118,7 +118,7 @@ public class DatabaseAccess {
     }
 
     public Cursor readHistory(){
-        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS};
+        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
 
         return cursor;

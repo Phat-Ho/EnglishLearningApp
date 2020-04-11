@@ -41,9 +41,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     do{
                         int syncStatus = cursor.getInt(cursor.getColumnIndex(DatabaseContract.SYNC_STATUS));
                         if(syncStatus == DatabaseContract.NOT_SYNC){ //Sync if the history word is not saved to server
-                            final int wordID = cursor.getInt(0);
-                            final String dateTime = cursor.getString(1);
-                            dateTime.replace(" ", "%20");
+                            final int wordID = cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID));
+                            final String dateTime = cursor.getString(cursor.getColumnIndex(DatabaseContract.DATE)).replace(" ", "%20");
                             Log.d(TAG, "datetime: " + dateTime);
                             String url = Server.ADD_HISTORY_URL + "userid=0&wordid=" + wordID + "&datetime=" + dateTime;
                             RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -56,6 +55,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                         if(message.equals("success")){
                                             //Update the sync status of history word
                                             databaseAccess.updateHistorySyncStatus(wordID, DatabaseContract.SYNC);
+                                            Log.d(TAG, "onResponse: Sync success");
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();

@@ -40,7 +40,6 @@ public class MainHomeActivity extends AppCompatActivity {
     final Fragment profileFragment = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment activeFragment = searchFragment;
-    NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainHomeActivity";
 
     @Override
@@ -70,24 +69,6 @@ public class MainHomeActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        initNetworkChangeReceiver();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(networkChangeReceiver);
-    }
-
-    private void initNetworkChangeReceiver() {
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
     }
 
     private void setHomeFragment(){
