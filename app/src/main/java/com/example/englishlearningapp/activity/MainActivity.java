@@ -102,14 +102,14 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        initNetworkChangeReceiver();
+//        initNetworkChangeReceiver();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop:");
-        unregisterReceiver(networkChangeReceiver);
+//        unregisterReceiver(networkChangeReceiver);
     }
 
     private void initNetworkChangeReceiver() {

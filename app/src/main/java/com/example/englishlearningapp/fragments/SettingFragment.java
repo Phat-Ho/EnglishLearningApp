@@ -34,6 +34,7 @@ import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.interfaces.MyListener;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
+import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
 import java.util.Calendar;
@@ -61,7 +62,6 @@ public class SettingFragment extends Fragment {
     ImageButton imgBtnBackToHome;
     HomeFragment homeFragment;
     Switch swtReminder;
-    public static boolean notifyIsChecked;
     public SharedPreferences sharedPreferences;
 
     public SettingFragment() {
@@ -122,6 +122,11 @@ public class SettingFragment extends Fragment {
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
                 }
+                swtReminder.setChecked(false);
+                swtReminder.setChecked(true);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("startHour", startHour);
+                editor.apply();
             }
 
             @Override
@@ -139,6 +144,11 @@ public class SettingFragment extends Fragment {
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
                 }
+                swtReminder.setChecked(false);
+                swtReminder.setChecked(true);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("endHour", endHour);
+                editor.apply();
             }
 
             @Override
@@ -190,6 +200,10 @@ public class SettingFragment extends Fragment {
         spinnerHoursAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
+        int prefsStartHour = sharedPreferences.getInt("startHour", 0);
+        int prefsEndHour = sharedPreferences.getInt("endHour", 1);
+        spinnerStartHour.setSelection(prefsStartHour);
+        spinnerEndHour.setSelection(prefsEndHour);
     }
 
     public void setRepeatAlarm(long timeInMillis, int startHour, int endHour) {
@@ -198,11 +212,11 @@ public class SettingFragment extends Fragment {
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+//            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
+//            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
+//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
 
             //Set startHour
             Calendar calStart = Calendar.getInstance();
@@ -224,7 +238,11 @@ public class SettingFragment extends Fragment {
 
             //Check if endHour <= currentHour to cancel
             if (endHour <= currentHour){
-                alarmManager.cancel(pendingIntent);
+//                alarmManager.cancel(pendingIntent);
+                Intent cancellationIntent = new Intent(getActivity(), CancelAlarmReceiver.class);
+                cancellationIntent.putExtra("key", pendingIntent);
+                PendingIntent cancellationPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, cancellationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calEnd.getTimeInMillis(), timeInMillis, cancellationPendingIntent);
             }
         }else{
             return;
