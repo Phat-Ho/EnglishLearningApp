@@ -53,10 +53,6 @@ public class MainActivity extends AppCompatActivity{
         MappingView();
         db = DatabaseAccess.getInstance(MainActivity.this);
         prefsNotify = getSharedPreferences("switch", MODE_PRIVATE);
-        /*prefs = getSharedPreferences("historyIndex", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("index", 0);
-        editor.apply();*/
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
@@ -94,45 +90,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
-                finish();
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        initNetworkChangeReceiver();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop:");
-        unregisterReceiver(networkChangeReceiver);
-    }
-
-    private void initNetworkChangeReceiver() {
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
-    }
-
-    public void setRepeatAlarm(long timeInMillis) {
-        db.open();
-        if(db.getHistoryWords().size() > 0){
-            Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
-        }else{
-            return;
-        }
-
     }
 
     public void setLocale(String localeCode){

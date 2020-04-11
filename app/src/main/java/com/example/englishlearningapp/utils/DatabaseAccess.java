@@ -5,16 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.models.Word;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class DatabaseAccess {
 
+    private static final String TAG = "Database";
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseAccess instance;
@@ -104,8 +109,10 @@ public class DatabaseAccess {
 
     public int addHistory(int pWordID, int pSyncStatus){
         ContentValues value = new ContentValues();
-        value.put("id", pWordID);
-        value.put("sync_status", pSyncStatus);
+        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
+        value.put(DatabaseContract.DATE, getDatetime());
+        Log.d(TAG, "DateTime: " + getDatetime());
         database.insert("history", null, value);
         return pWordID;
     }
@@ -126,5 +133,11 @@ public class DatabaseAccess {
 
     public int removeHistory(int id){
         return database.delete("history", "id = " + id, null);
+    }
+
+    public String getDatetime(){
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }
