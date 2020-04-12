@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -20,6 +21,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.interfaces.MyListener;
@@ -27,7 +34,13 @@ import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,17 +55,18 @@ public class MainActivity extends AppCompatActivity{
     ImageView imgLogo;
     String[] languages = new String[]{"Tiếng Việt", "English"};
     AlarmManager alarmManager;
-    DatabaseAccess db;
-    SharedPreferences prefs, prefsNotify;
     NetworkChangeReceiver networkChangeReceiver;
+    SharedPreferences loginPref;
+    DatabaseAccess database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MappingView();
-        db = DatabaseAccess.getInstance(MainActivity.this);
-        prefsNotify = getSharedPreferences("switch", MODE_PRIVATE);
+        database = DatabaseAccess.getInstance(this);
+        database.open();
+        loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
@@ -90,8 +104,75 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
+                finish();
             }
         });
+
+        if(loginPref.getBoolean("isLogin", false) == true){
+            syncHistoryRemoteDbToLocalDb();
+        }
+
+    }
+
+    private void syncHistoryRemoteDbToLocalDb() {
+        final int userId = loginPref.getInt("userID", 0);
+        String getHistoryUrl = Server.GET_HISTORY_URL + "userid=" + userId;
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest getHistoryRequest = new StringRequest(Request.Method.GET, getHistoryUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    if(jsonArray.length() > 0){
+                        for(int i =0; i<jsonArray.length(); i++) {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            int syncStatus = Integer.parseInt(jsonObject.get("syncStatus").toString());
+                            if(syncStatus == DatabaseContract.NOT_SYNC){
+                                int wordId = Integer.parseInt(jsonObject.get("wordId").toString());
+                                String date = jsonObject.get("date").toString();
+                                database.addHistory(wordId, DatabaseContract.SYNC, date);
+                                updateRemoteHistory(MainActivity.this, userId, wordId);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        });
+        requestQueue.add(getHistoryRequest);
+    }
+
+    private void updateRemoteHistory(Context context, int userId, int wordId){
+        String updateHistoryUrl = Server.UPDATE_HISTORY_URL + "userid=" + userId + "&wordid=" + wordId;
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest updateHistoryRequest = new StringRequest(Request.Method.GET, updateHistoryUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String message = (String) jsonObject.get("message");
+                    if(message.equals("success")){
+                        Log.d(TAG, "onResponse: sync success remote to local");
+                    }else{
+                        Log.d(TAG, "onResponse: sync fail remote to local");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        });
+        requestQueue.add(updateHistoryRequest);
     }
 
     @Override
@@ -111,23 +192,6 @@ public class MainActivity extends AppCompatActivity{
         networkChangeReceiver = new NetworkChangeReceiver();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeReceiver, intentFilter);
-    }
-
-    public void setRepeatAlarm(long timeInMillis) {
-        db.open();
-        if(db.getHistoryWords().size() > 0){
-            Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
-        }else{
-            return;
-        }
-
     }
 
     public void setLocale(String localeCode){

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 11, 2020 lúc 08:40 AM
+-- Thời gian đã tạo: Th4 12, 2020 lúc 02:29 PM
 -- Phiên bản máy phục vụ: 10.4.11-MariaDB
 -- Phiên bản PHP: 7.4.2
 
@@ -32,15 +32,17 @@ CREATE TABLE `history` (
   `id` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `wordID` int(11) NOT NULL,
-  `date` datetime NOT NULL
+  `date` datetime NOT NULL,
+  `syncStatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Đang đổ dữ liệu cho bảng `history`
 --
 
-INSERT INTO `history` (`id`, `userID`, `wordID`, `date`) VALUES
-(5, 0, 18, '2020-04-11 02:13:59');
+INSERT INTO `history` (`id`, `userID`, `wordID`, `date`, `syncStatus`) VALUES
+(17, 2, 11, '2020-04-12 18:40:59', 1),
+(18, 2, 15, '2020-04-12 19:22:21', 1);
 
 -- --------------------------------------------------------
 
@@ -86,7 +88,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT cho bảng `users`

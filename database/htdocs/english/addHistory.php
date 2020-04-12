@@ -1,11 +1,13 @@
 <?php
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
         require_once "connect.php";
-        $wordID = $_GET['wordid'];
-        $userID = $_GET['userid'];
-        $datetime = $_GET['datetime'];
+        $wordID = $_POST['wordid'];
+        $userID = $_POST['userid'];
+        $datetime = $_POST['datetime'];
+        $syncStatus = $_POST['sync'];
 
-        $addHistoryQuery = "INSERT INTO history (userID, wordID, date) VALUES ('$userID', '$wordID', '$datetime')";
+        $addHistoryQuery = "INSERT INTO history (userID, wordID, date, syncStatus) VALUES ('$userID'
+                                            , '$wordID', '$datetime', '$syncStatus')";
 
         if(mysqli_query($conn, $addHistoryQuery)){
             $result["message"] = "success";

@@ -107,12 +107,11 @@ public class DatabaseAccess {
         return wordList;
     }
 
-    public int addHistory(int pWordID, int pSyncStatus){
+    public int addHistory(int pWordID, int pSyncStatus, String pDate){
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
-        value.put(DatabaseContract.DATE, getDatetime());
-        Log.d(TAG, "DateTime: " + getDatetime());
+        value.put(DatabaseContract.DATE, pDate);
         database.insert("history", null, value);
         return pWordID;
     }

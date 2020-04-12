@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,7 +41,9 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -150,23 +153,23 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public void saveHistory(final int wordID, boolean pIsLogin, int pUserID){
+    public void saveHistory(final int wordID, boolean pIsLogin, final int pUserID){
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pIsLogin == true){
-            String currentDateTime = getDatetime().replace(" ", "%20"); // Replace 'space' with '$20' to send http request
-            String url = Server.ADD_HISTORY_URL + "userid=" + pUserID + "&wordid=" + wordID + "&datetime=" + currentDateTime;
+            final String currentDateTime = getDatetime();
+            String url = Server.ADD_HISTORY_URL;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         String message = jsonObject.getString("message");
                         if(message.equals("success")){
-                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC);
+                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC, currentDateTime);
                             Log.d(TAG, "onResponse: added to server");
                         }else{
-                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
                             Log.d(TAG, "onResponse: " + message);
                         }
                     } catch (JSONException e) {
@@ -177,12 +180,23 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
                 }
-            });
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("userid", String.valueOf(pUserID));
+                    params.put("wordid", String.valueOf(wordID));
+                    params.put("datetime", currentDateTime);
+                    params.put("sync", String.valueOf(DatabaseContract.SYNC));
+
+                    return params;
+                }
+            };
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC);
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
