@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,8 +38,10 @@ import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +62,6 @@ public class SettingFragment extends Fragment {
     SharedPreferences prefs;
     AlarmManager alarmManager;
     Spinner spinnerStartHour, spinnerEndHour;
-    ImageButton imgBtnBackToHome;
     HomeFragment homeFragment;
     Switch swtReminder;
     public SharedPreferences sharedPreferences;
@@ -109,21 +111,50 @@ public class SettingFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_setting, container, false);
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
-        imgBtnBackToHome = view.findViewById(R.id.imageButtonBackToHome);
         swtReminder = view.findViewById(R.id.switchReminder);
         swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
         homeFragment = new HomeFragment();
-        final MainHomeActivity mainHomeActivity = (MainHomeActivity) getContext();
+        InitSpinner();
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        HandleSpinnerEvent();
+        HandleSwitchEvent();
+    }
+
+    private void HandleSwitchEvent() {
+        swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", true);
+                    editor.apply();
+                    SharedPreferences.Editor indexEditor = prefs.edit();
+                    indexEditor.putInt("index", 0);
+                    indexEditor.apply();
+                    long timeInMillis = 1000; //1 second
+                    setRepeatAlarm(timeInMillis, startHour, endHour);
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", false);
+                    editor.apply();
+                    Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(pendingIntent);
+                }
+            }
+        });
+    }
+
+    private void HandleSpinnerEvent() {
         spinnerStartHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 startHour = position;
-                if (startHour >= endHour){
-                    endHour = startHour + 1;
-                    spinnerEndHour.setSelection(endHour);
-                    Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
-                }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("startHour", startHour);
                 editor.apply();
@@ -139,11 +170,6 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 endHour = position;
-                if (endHour <= startHour){
-                    endHour = startHour + 1;
-                    spinnerEndHour.setSelection(endHour);
-                    Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
-                }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("endHour", endHour);
                 editor.apply();
@@ -154,39 +180,6 @@ public class SettingFragment extends Fragment {
 
             }
         });
-
-        swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("checked", true);
-                    editor.apply();
-                    SharedPreferences.Editor indexEditor = prefs.edit();
-                    indexEditor.putInt("index", 0);
-                    indexEditor.apply();
-                    Toast.makeText(mainHomeActivity, "start hour: " + startHour + "\nend hour: " + endHour, Toast.LENGTH_SHORT).show();
-                    long timeInMillis = 1000; //1 second
-                    setRepeatAlarm(timeInMillis, startHour, endHour);
-                } else {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("checked", false);
-                    editor.apply();
-                    Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.cancel(pendingIntent);
-                }
-            }
-        });
-
-        imgBtnBackToHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainHomeActivity.showFragment(homeFragment);
-            }
-        });
-        InitSpinner();
-        return view;
     }
 
     private void InitSpinner(){
@@ -197,7 +190,7 @@ public class SettingFragment extends Fragment {
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
         int prefsStartHour = sharedPreferences.getInt("startHour", 0);
-        int prefsEndHour = sharedPreferences.getInt("endHour", 1);
+        int prefsEndHour = sharedPreferences.getInt("endHour", 23);
         spinnerStartHour.setSelection(prefsStartHour);
         spinnerEndHour.setSelection(prefsEndHour);
     }
@@ -206,13 +199,9 @@ public class SettingFragment extends Fragment {
         db.open();
         if(db.getHistoryWords().size() > 0){
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
+            receiverIntent.putExtra("startHour", startHour);
+            receiverIntent.putExtra("endHour", endHour);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
-//            calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes());
-//            calendar.set(Calendar.SECOND, calendar.getTime().getSeconds());
-//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInMillis, pendingIntent);
 
             //Set startHour
             Calendar calStart = Calendar.getInstance();
@@ -220,26 +209,8 @@ public class SettingFragment extends Fragment {
             calStart.set(Calendar.MINUTE, 0);
             calStart.set(Calendar.SECOND, 0);
 
-            //Set endHour
-            Calendar calEnd = Calendar.getInstance();
-            calEnd.set(Calendar.HOUR_OF_DAY, endHour);
-            calEnd.set(Calendar.MINUTE, 0);
-            calEnd.set(Calendar.SECOND, 0);
-
-            //Get current hour
-            int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
             //Fire the alarm
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
-
-            //Check if endHour <= currentHour to cancel
-            if (endHour <= currentHour){
-//                alarmManager.cancel(pendingIntent);
-                Intent cancellationIntent = new Intent(getActivity(), CancelAlarmReceiver.class);
-                cancellationIntent.putExtra("key", pendingIntent);
-                PendingIntent cancellationPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, cancellationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calEnd.getTimeInMillis(), timeInMillis, cancellationPendingIntent);
-            }
         }else{
             return;
         }

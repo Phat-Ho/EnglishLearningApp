@@ -1,5 +1,6 @@
 package com.example.englishlearningapp.receiver;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +20,7 @@ import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -29,18 +31,41 @@ public class AlarmReceiver extends BroadcastReceiver {
     DatabaseAccess db;
     public static final String NOTIFICATION_CHANNEL_ID = "4655";
     public static final String NOTIFICATION_CHANNEL_NAME = "my_channel";
+    AlarmManager alarmManager;
     @Override
     public void onReceive(Context context, Intent intent) {
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        //Create the same pending intent of alarm manager
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         //Get history words array index to show notification
         SharedPreferences preferences = context.getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         int arrayIndex = preferences.getInt("index", 0);
+
         //Get history word from database
         db = DatabaseAccess.getInstance(context);
         db.open();
         historyWords = db.getHistoryWords();
+
         if(arrayIndex >= historyWords.size()){
+            alarmManager.cancel(pendingIntent);
             return;
         }
+
+        //Turn off notification if meet end hour
+        int endHour = intent.getIntExtra("endHour", 23);
+        Log.d(TAG, "endHour: " + endHour);
+        int startHour = intent.getIntExtra("startHour", 0);
+        Log.d(TAG, "startHour: " + startHour);
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        Log.d(TAG, "currentHour: " + currentHour);
+        Calendar startCalendar = GetTheNextDayCalendar(startHour);
+        if(endHour == currentHour){
+            alarmManager.cancel(pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
+            return;
+        }
+
         if(historyWords !=null){
             Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
             //Get an instance of notification manager
@@ -90,5 +115,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.d(TAG, "onReceive: no history data");
             return;
         }
+    }
+
+    private Calendar GetTheNextDayCalendar(int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar;
     }
 }
