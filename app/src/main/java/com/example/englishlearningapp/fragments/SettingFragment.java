@@ -119,7 +119,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 startHour = position;
-                if (startHour >= endHour){
+                if (startHour >= endHour) {
                     endHour = startHour + 1;
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
@@ -139,7 +139,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 endHour = position;
-                if (endHour <= startHour){
+                if (endHour <= startHour) {
                     endHour = startHour + 1;
                     spinnerEndHour.setSelection(endHour);
                     Toast.makeText(mainHomeActivity, "Giờ kết thúc phải lớn hơn giờ bắt đầu", Toast.LENGTH_SHORT).show();
@@ -158,7 +158,7 @@ public class SettingFragment extends Fragment {
         swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", true);
                     editor.apply();
@@ -189,7 +189,7 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-    private void InitSpinner(){
+    private void InitSpinner() {
         ArrayAdapter<CharSequence> spinnerHoursAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.hours,
                 android.R.layout.simple_spinner_dropdown_item);
@@ -204,7 +204,7 @@ public class SettingFragment extends Fragment {
 
     public void setRepeatAlarm(long timeInMillis, int startHour, int endHour) {
         db.open();
-        if(db.getHistoryWords().size() > 0){
+        if (db.getHistoryWords().size() > 0) {
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -233,14 +233,15 @@ public class SettingFragment extends Fragment {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
 
             //Check if endHour <= currentHour to cancel
-            if (endHour <= currentHour){
+            Intent cancellationIntent = new Intent(getActivity(), CancelAlarmReceiver.class);
+            cancellationIntent.putExtra("key", pendingIntent);
+            PendingIntent cancellationPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, cancellationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calEnd.getTimeInMillis(), timeInMillis, cancellationPendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calEnd.getTimeInMillis(), cancellationPendingIntent);
+//            if (calEnd.getTimeInMillis() <= System.currentTimeMillis()){
 //                alarmManager.cancel(pendingIntent);
-                Intent cancellationIntent = new Intent(getActivity(), CancelAlarmReceiver.class);
-                cancellationIntent.putExtra("key", pendingIntent);
-                PendingIntent cancellationPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, cancellationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calEnd.getTimeInMillis(), timeInMillis, cancellationPendingIntent);
-            }
-        }else{
+//            }
+        } else {
             return;
         }
     }

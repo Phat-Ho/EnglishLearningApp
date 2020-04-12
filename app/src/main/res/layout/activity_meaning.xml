@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MeaningActivity"
     android:id="@+id/meaningContainer"
     android:background="@color/colorWhite"
@@ -19,6 +20,16 @@
             android:src="@drawable/ic_volume"
             android:layout_width="40dp"
             android:layout_height="40dp" />
+
+        <com.like.LikeButton
+            app:icon_type="heart"
+            android:id="@+id/LikeButtonHeart"
+            android:layout_toRightOf="@id/imageButtonPronounce"
+            android:layout_marginTop="10dp"
+            app:icon_size="6dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <ImageButton
             android:id="@+id/meaning_search_btn"
