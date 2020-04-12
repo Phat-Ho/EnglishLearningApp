@@ -106,7 +106,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             Log.d(TAG, "currentHour: " + currentHour);
             Calendar startCalendar = GetTheNextDayCalendar(startHour);
-            if(endHour == currentHour){
+            if(currentHour >= endHour){
                 alarmManager.cancel(pendingIntent);
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
                 return;
