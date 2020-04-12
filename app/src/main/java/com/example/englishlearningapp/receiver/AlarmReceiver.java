@@ -52,20 +52,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        //Turn off notification if meet end hour
-        int endHour = intent.getIntExtra("endHour", 23);
-        Log.d(TAG, "endHour: " + endHour);
-        int startHour = intent.getIntExtra("startHour", 0);
-        Log.d(TAG, "startHour: " + startHour);
-        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        Log.d(TAG, "currentHour: " + currentHour);
-        Calendar startCalendar = GetTheNextDayCalendar(startHour);
-        if(endHour == currentHour){
-            alarmManager.cancel(pendingIntent);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
-            return;
-        }
-
         if(historyWords !=null){
             Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
             //Get an instance of notification manager
@@ -111,6 +97,20 @@ public class AlarmReceiver extends BroadcastReceiver {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("index", arrayIndex);
             editor.apply();
+
+            //Turn off notification if meet end hour
+            int endHour = intent.getIntExtra("endHour", 23);
+            Log.d(TAG, "endHour: " + endHour);
+            int startHour = intent.getIntExtra("startHour", 0);
+            Log.d(TAG, "startHour: " + startHour);
+            int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            Log.d(TAG, "currentHour: " + currentHour);
+            Calendar startCalendar = GetTheNextDayCalendar(startHour);
+            if(currentHour >= endHour){
+                alarmManager.cancel(pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
+                return;
+            }
         }else{
             Log.d(TAG, "onReceive: no history data");
             return;
