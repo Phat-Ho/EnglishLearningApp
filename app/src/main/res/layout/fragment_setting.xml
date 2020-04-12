@@ -29,15 +29,6 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/imageButtonBackToHome"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_arrow_back_black_24dp"
-                    android:text="Back"
-                    android:background="?attr/selectableItemBackground"/>
                 <LinearLayout
                     android:gravity="right"
                     android:layout_width="match_parent"
