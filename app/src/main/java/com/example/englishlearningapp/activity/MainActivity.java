@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void updateRemoteHistory(Context context, int userId, int wordId){
         String updateHistoryUrl = Server.UPDATE_HISTORY_URL + "userid=" + userId + "&wordid=" + wordId;
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
         StringRequest updateHistoryRequest = new StringRequest(Request.Method.GET, updateHistoryUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
