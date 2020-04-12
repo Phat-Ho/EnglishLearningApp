@@ -125,7 +125,7 @@ public class SearchFragment extends Fragment {
                 if(isSaved == false){
                     saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
                 }
-                moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord());
+                moveToMeaningActivity(completeWordsData.get(position).getHtml(), completeWordsData.get(position).getWord(), completeWordsData.get(position).getId());
                 hideSoftKeyBoard();
             }
         });
@@ -187,10 +187,11 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void moveToMeaningActivity(String html, String word) {
+    private void moveToMeaningActivity(String html, String word, int id) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
+        meaningIntent.putExtra("id", id);
         startActivity(meaningIntent);
     }
 

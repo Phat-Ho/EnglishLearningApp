@@ -62,7 +62,8 @@ public class HistoryFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String html = wordList.get(position).getHtml();
                 String word = wordList.get(position).getWord();
-                moveToMeaningActivity(html, word);
+                int wordId = wordList.get(position).getId();
+                moveToMeaningActivity(html, word, wordId);
             }
         });
 
@@ -108,10 +109,11 @@ public class HistoryFragment extends Fragment {
         historyFragmentListView.setAdapter(arrayAdapter);
     }
 
-    private void moveToMeaningActivity(String html, String word) {
+    private void moveToMeaningActivity(String html, String word, int wordId) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
+        meaningIntent.putExtra("id", wordId);
         startActivity(meaningIntent);
     }
 }

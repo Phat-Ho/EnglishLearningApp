@@ -14,9 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MeaningActivity extends AppCompatActivity {
@@ -25,6 +29,7 @@ public class MeaningActivity extends AppCompatActivity {
     ImageButton imgBtnPronounce, imgBtnSearch;
     TextToSpeech tts;
     LikeButton likeBtn;
+    DatabaseAccess databaseAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,8 @@ public class MeaningActivity extends AppCompatActivity {
         if(intent.hasExtra("word")){
             String html = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
+            final int wordId = intent.getIntExtra("id", 0);
+            addToFavorite(intent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
             } else {
@@ -55,7 +62,8 @@ public class MeaningActivity extends AppCompatActivity {
         }
     }
 
-
+    boolean isSaved;
+    String globalWord = "";
 
     private void SetMeaningData() {
         Intent intent = getIntent();
@@ -67,23 +75,18 @@ public class MeaningActivity extends AppCompatActivity {
         }
 
         final String word = intent.getStringExtra("word");
+        globalWord = word;
+        databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
         imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
-        likeBtn.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-                Toast.makeText(MeaningActivity.this, "You liked " + word, Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                Toast.makeText(MeaningActivity.this, "You unliked " + word, Toast.LENGTH_SHORT).show();
-            }
-        });
+        //Compare to set Favorite
+        addToFavorite(intent);
     }
 
     private void MappingView() {
@@ -104,6 +107,41 @@ public class MeaningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent homeIntent = new Intent(MeaningActivity.this, MainHomeActivity.class);
                 startActivity(homeIntent);
+            }
+        });
+    }
+
+    private void addToFavorite(Intent intent){
+        final int wordId = intent.getIntExtra("id", 0);
+
+        ArrayList<Word> favoriteWords = databaseAccess.getFavoriteWords();
+        isSaved = false;
+        for (int i = 0; i < favoriteWords.size(); i++){
+            if (wordId == favoriteWords.get(i).getId()){
+                isSaved = true;
+                Log.d("AAA", "Word is saved");
+                break;
+            }
+        }
+        if (isSaved == false){
+            likeBtn.setLiked(false);
+        } else {
+            likeBtn.setLiked(true);
+        }
+        likeBtn.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                Toast.makeText(MeaningActivity.this, "Added \"" + globalWord + "\" to your Favorite", Toast.LENGTH_SHORT).show();
+                if (isSaved == false) {
+                    databaseAccess.addFavorite(wordId, DatabaseContract.NOT_SYNC);
+                }
+
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                Toast.makeText(MeaningActivity.this, "Removed \"" + globalWord + "\" from you Favorite", Toast.LENGTH_SHORT).show();
+                databaseAccess.removeFavorite(wordId);
             }
         });
     }

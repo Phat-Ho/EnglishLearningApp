@@ -140,4 +140,36 @@ public class DatabaseAccess {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    public int addFavorite(int pWordID, int pSyncStatus){
+        ContentValues value = new ContentValues();
+        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
+        database.insert("favorite", null, value);
+        return pWordID;
+    }
+
+    public ArrayList<Word> getFavoriteWords(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce " +
+                "FROM favorite JOIN av ON favorite.id = av.id";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        return wordList;
+    }
+
+    public int removeFavorite(int id){
+        return database.delete("favorite", "id = " + id, null);
+    }
 }
