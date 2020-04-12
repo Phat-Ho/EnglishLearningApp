@@ -136,7 +136,7 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor indexEditor = prefs.edit();
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
-                    long timeInMillis = 1000; //1 second
+                    long timeInMillis = 3000; //1 second
                     setRepeatAlarm(timeInMillis, startHour, endHour);
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -180,9 +180,33 @@ public class SettingFragment extends Fragment {
 
             }
         });
+
+        swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", true);
+                    editor.apply();
+                    SharedPreferences.Editor indexEditor = prefs.edit();
+                    indexEditor.putInt("index", 0);
+                    indexEditor.apply();
+                    long timeInMillis = 1000; //1 second
+                    setRepeatAlarm(timeInMillis, startHour, endHour);
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("checked", false);
+                    editor.apply();
+                    Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(pendingIntent);
+                }
+            }
+        });
+        InitSpinner();
     }
 
-    private void InitSpinner(){
+    private void InitSpinner() {
         ArrayAdapter<CharSequence> spinnerHoursAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.hours,
                 android.R.layout.simple_spinner_dropdown_item);
@@ -197,7 +221,7 @@ public class SettingFragment extends Fragment {
 
     public void setRepeatAlarm(long timeInMillis, int startHour, int endHour) {
         db.open();
-        if(db.getHistoryWords().size() > 0){
+        if (db.getHistoryWords().size() > 0) {
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             receiverIntent.putExtra("startHour", startHour);
             receiverIntent.putExtra("endHour", endHour);
@@ -211,7 +235,7 @@ public class SettingFragment extends Fragment {
 
             //Fire the alarm
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
-        }else{
+        } else {
             return;
         }
     }

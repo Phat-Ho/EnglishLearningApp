@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.util.Locale;
 
@@ -22,6 +24,7 @@ public class MeaningActivity extends AppCompatActivity {
     TextView txtMeaning;
     ImageButton imgBtnPronounce, imgBtnSearch;
     TextToSpeech tts;
+    LikeButton likeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +73,24 @@ public class MeaningActivity extends AppCompatActivity {
                 tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
+        likeBtn.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                Toast.makeText(MeaningActivity.this, "You liked " + word, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                Toast.makeText(MeaningActivity.this, "You unliked " + word, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void MappingView() {
         txtMeaning = findViewById(R.id.textViewMeaning);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         imgBtnSearch = findViewById(R.id.meaning_search_btn);
+        likeBtn = findViewById(R.id.LikeButtonHeart);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
