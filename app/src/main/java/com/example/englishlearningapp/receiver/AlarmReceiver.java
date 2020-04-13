@@ -46,12 +46,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmWords = (ArrayList<Word>) intent.getSerializableExtra("wordList");
 
         if(arrayIndex >= alarmWords.size()){
+            Log.d(TAG, "onReceive: stop alarm");
             alarmManager.cancel(pendingIntent);
             return;
         }
 
         if(alarmWords !=null){
-            Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
+            Log.d(TAG, "array index: " + arrayIndex);
             //Get an instance of notification manager
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             String html = alarmWords.get(arrayIndex).getHtml();
@@ -102,7 +103,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             Calendar startCalendar = GetTheNextDayCalendar(startHour);
             if(currentHour >= endHour){
+                Log.d(TAG, "onReceive: meet end hour");
                 alarmManager.cancel(pendingIntent);
+                editor.putInt("index", 0);
+                editor.apply();
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
                 return;
             }

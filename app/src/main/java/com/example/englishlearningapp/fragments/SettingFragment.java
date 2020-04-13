@@ -18,12 +18,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -68,7 +70,6 @@ public class SettingFragment extends Fragment {
     SharedPreferences prefs;
     AlarmManager alarmManager;
     Spinner spinnerStartHour, spinnerEndHour;
-    HomeFragment homeFragment;
     Switch swtReminder;
     ListView lvSetting;
     public SharedPreferences sharedPreferences;
@@ -77,6 +78,7 @@ public class SettingFragment extends Fragment {
     SettingListViewAdapter lvAdapter;
     public ArrayList<AlarmType> alarmTypeList;
     int alarmId = 1;
+    boolean isChecked = false;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -111,6 +113,7 @@ public class SettingFragment extends Fragment {
         db.open();
         prefs = getActivity().getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
+        isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmTypeList = new ArrayList<>();
     }
@@ -124,10 +127,9 @@ public class SettingFragment extends Fragment {
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         swtReminder = view.findViewById(R.id.switchReminder);
         lvSetting = view.findViewById(R.id.lv_setting);
-        swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
-        homeFragment = new HomeFragment();
-        InitSpinner();
         SetUpListView();
+        InitSpinner();
+        swtReminder.setChecked(isChecked);
         return view;
     }
 
@@ -161,10 +163,10 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor indexEditor = prefs.edit();
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
-                    long timeInMillis = 3000; //1 second
+                    long timeInMillis = 3000; //3 second
                     ArrayList<Word> wordList = GetAlarmWordList(alarmId);
                     setRepeatAlarm(timeInMillis, startHour, endHour, wordList);
-                } else {
+                }else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
                     editor.apply();
@@ -177,39 +179,11 @@ public class SettingFragment extends Fragment {
     }
 
     private void HandleSpinnerEvent() {
-        spinnerStartHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                startHour = position;
-                swtReminder.setChecked(false);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("startHour", startHour);
-                editor.putBoolean("checked", false);
-                editor.apply();
-            }
+        StartSpinnerListener startSpinnerListener = new StartSpinnerListener();
+        EndSpinnerListener endSpinnerListener = new EndSpinnerListener();
+        spinnerStartHour.setOnItemSelectedListener(startSpinnerListener);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinnerEndHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                endHour = position;
-                swtReminder.setChecked(false);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("endHour", endHour);
-                editor.putBoolean("checked", false);
-                editor.apply();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        spinnerEndHour.setOnItemSelectedListener(endSpinnerListener);
     }
 
     private void InitSpinner() {
@@ -219,8 +193,8 @@ public class SettingFragment extends Fragment {
         spinnerHoursAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
-        int prefsStartHour = sharedPreferences.getInt("startHour", 0);
-        int prefsEndHour = sharedPreferences.getInt("endHour", 23);
+        int prefsStartHour = sharedPreferences.getInt("startHour", 7);
+        int prefsEndHour = sharedPreferences.getInt("endHour", 22);
         spinnerStartHour.setSelection(prefsStartHour);
         spinnerEndHour.setSelection(prefsEndHour);
     }
@@ -275,4 +249,57 @@ public class SettingFragment extends Fragment {
         });
     }
 
+    public class StartSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{
+        boolean userSelect = false;
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            userSelect = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            startHour = position;
+            if(userSelect){
+                swtReminder.setChecked(false);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("checked", false);
+                editor.putInt("startHour", endHour);
+                editor.apply();
+                userSelect = false;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    }
+
+    public class EndSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{
+        boolean userSelect = false;
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            userSelect = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            endHour = position;
+            if(userSelect){
+                swtReminder.setChecked(false);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("checked", false);
+                editor.putInt("endHour", endHour);
+                editor.apply();
+                userSelect = false;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    }
 }

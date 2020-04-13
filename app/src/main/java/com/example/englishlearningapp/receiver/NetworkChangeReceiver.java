@@ -1,11 +1,13 @@
 package com.example.englishlearningapp.receiver;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ import java.util.Map;
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
     SharedPreferences loginPref;
+    boolean isConnected;
     @Override
     public void onReceive(Context context, Intent intent) {
         loginPref = context.getSharedPreferences("loginState",Context.MODE_PRIVATE);
@@ -37,8 +40,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         final int userID = loginPref.getInt("userID", 0);
         Log.d(TAG, "isLogin: " + isLogin);
         if(ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()) && isLogin == true){
-            boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-            if(noConnectivity){
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            isConnected = networkInfo != null && networkInfo.isConnected();
+            if(!isConnected){
                 Log.d(TAG, "onReceive: Disconnected");
             }else{
                 Log.d(TAG, "onReceive: Connected");
@@ -52,10 +57,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         if(syncStatus == DatabaseContract.NOT_SYNC){ //Sync if the history word is not saved to server
                             final int wordID = cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID));
                             final String dateTime = cursor.getString(cursor.getColumnIndex(DatabaseContract.DATE));
-                            Log.d(TAG, "datetime: " + dateTime);
                             String url = Server.ADD_HISTORY_URL;
                             RequestQueue requestQueue = Volley.newRequestQueue(context);
-                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
                                     try {
@@ -65,6 +69,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                             //Update the sync status of history word
                                             databaseAccess.updateHistorySyncStatus(wordID, DatabaseContract.SYNC);
                                             Log.d(TAG, "onResponse: Sync success");
+                                        }else{
+                                            Log.d(TAG, "onResponse: Sync error, response: " + message);
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
