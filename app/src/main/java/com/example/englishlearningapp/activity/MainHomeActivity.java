@@ -3,31 +3,17 @@ package com.example.englishlearningapp.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentManager;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
+;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.SettingFragment;
-import com.example.englishlearningapp.navigation_bottom_fragments.FriendsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.SearchFragment;
-import com.example.englishlearningapp.receiver.AlarmReceiver;
-import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
-import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Calendar;
 
 public class MainHomeActivity extends AppCompatActivity {
 

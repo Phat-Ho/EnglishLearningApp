@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -32,13 +33,16 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MainActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.ScheduleActivity;
+import com.example.englishlearningapp.adapters.SettingListViewAdapter;
 import com.example.englishlearningapp.interfaces.MyListener;
+import com.example.englishlearningapp.models.AlarmType;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.TimeZone;
@@ -64,7 +68,12 @@ public class SettingFragment extends Fragment {
     Spinner spinnerStartHour, spinnerEndHour;
     HomeFragment homeFragment;
     Switch swtReminder;
+    ListView lvSetting;
     public SharedPreferences sharedPreferences;
+    int startHour = 0;
+    int endHour = 0;
+    SettingListViewAdapter lvAdapter;
+    ArrayList<AlarmType> alarmTypeList;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -99,10 +108,8 @@ public class SettingFragment extends Fragment {
         prefs = getActivity().getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmTypeList = new ArrayList<>();
     }
-
-    int startHour = 0;
-    int endHour = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,10 +119,37 @@ public class SettingFragment extends Fragment {
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         swtReminder = view.findViewById(R.id.switchReminder);
+        lvSetting = view.findViewById(R.id.lv_setting);
         swtReminder.setChecked(sharedPreferences.getBoolean("checked", false));
         homeFragment = new HomeFragment();
         InitSpinner();
+        SetUpListView();
         return view;
+    }
+
+    private void SetUpListView() {
+        alarmTypeList.add(new AlarmType(1, "Lịch sử", true));
+        alarmTypeList.add(new AlarmType(2, "Yêu thích", false));
+        lvAdapter = new SettingListViewAdapter(getActivity(), alarmTypeList);
+        lvSetting.setAdapter(lvAdapter);
+        lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Set all isChecked props in alarmTypeList to false
+                for(int i = 0;i<alarmTypeList.size(); i++){
+                    alarmTypeList.get(i).setChecked(false);
+                }
+
+                //Set isChecked props of selected item to true
+                boolean isChecked = alarmTypeList.get(position).isChecked();
+                if(isChecked == true){
+                    return;
+                }else{
+                    alarmTypeList.get(position).setChecked(true);
+                }
+                lvAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
