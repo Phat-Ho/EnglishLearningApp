@@ -98,11 +98,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             //Turn off notification if meet end hour
             int endHour = intent.getIntExtra("endHour", 23);
-            Log.d(TAG, "endHour: " + endHour);
             int startHour = intent.getIntExtra("startHour", 0);
-            Log.d(TAG, "startHour: " + startHour);
             int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            Log.d(TAG, "currentHour: " + currentHour);
             Calendar startCalendar = GetTheNextDayCalendar(startHour);
             if(currentHour >= endHour){
                 alarmManager.cancel(pendingIntent);

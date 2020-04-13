@@ -100,6 +100,7 @@ public class DatabaseAccess {
                 word.setHtml(cursor.getString(2));
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(6));
 
                 wordList.add(word);
             }while (cursor.moveToNext());
