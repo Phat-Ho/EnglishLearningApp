@@ -36,10 +36,12 @@ import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.adapters.SettingListViewAdapter;
 import com.example.englishlearningapp.interfaces.MyListener;
 import com.example.englishlearningapp.models.AlarmType;
+import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -73,7 +75,8 @@ public class SettingFragment extends Fragment {
     int startHour = 0;
     int endHour = 0;
     SettingListViewAdapter lvAdapter;
-    ArrayList<AlarmType> alarmTypeList;
+    public ArrayList<AlarmType> alarmTypeList;
+    int alarmId = 1;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -105,6 +108,7 @@ public class SettingFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         db = DatabaseAccess.getInstance(getActivity());
+        db.open();
         prefs = getActivity().getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -127,36 +131,23 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-    private void SetUpListView() {
-        alarmTypeList.add(new AlarmType(1, "Lịch sử", true));
-        alarmTypeList.add(new AlarmType(2, "Yêu thích", false));
-        lvAdapter = new SettingListViewAdapter(getActivity(), alarmTypeList);
-        lvSetting.setAdapter(lvAdapter);
-        lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Set all isChecked props in alarmTypeList to false
-                for(int i = 0;i<alarmTypeList.size(); i++){
-                    alarmTypeList.get(i).setChecked(false);
-                }
-
-                //Set isChecked props of selected item to true
-                boolean isChecked = alarmTypeList.get(position).isChecked();
-                if(isChecked == true){
-                    return;
-                }else{
-                    alarmTypeList.get(position).setChecked(true);
-                }
-                lvAdapter.notifyDataSetChanged();
-            }
-        });
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         HandleSpinnerEvent();
         HandleSwitchEvent();
+    }
+
+    private ArrayList<Word> GetAlarmWordList(int alarmId) {
+        ArrayList<Word> words = new ArrayList<>();
+        if(alarmId == DatabaseContract.ALARM_HISTORY){
+            words = db.getHistoryWords();
+        }
+        if(alarmId == DatabaseContract.ALARM_FAVORITE){
+            words = db.getFavoriteWords();
+        }
+        return words;
     }
 
     private void HandleSwitchEvent() {
@@ -171,7 +162,8 @@ public class SettingFragment extends Fragment {
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
                     long timeInMillis = 3000; //1 second
-                    setRepeatAlarm(timeInMillis, startHour, endHour);
+                    ArrayList<Word> wordList = GetAlarmWordList(alarmId);
+                    setRepeatAlarm(timeInMillis, startHour, endHour, wordList);
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -189,8 +181,10 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 startHour = position;
+                swtReminder.setChecked(false);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("startHour", startHour);
+                editor.putBoolean("checked", false);
                 editor.apply();
             }
 
@@ -204,8 +198,10 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 endHour = position;
+                swtReminder.setChecked(false);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("endHour", endHour);
+                editor.putBoolean("checked", false);
                 editor.apply();
             }
 
@@ -214,30 +210,6 @@ public class SettingFragment extends Fragment {
 
             }
         });
-
-        swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("checked", true);
-                    editor.apply();
-                    SharedPreferences.Editor indexEditor = prefs.edit();
-                    indexEditor.putInt("index", 0);
-                    indexEditor.apply();
-                    long timeInMillis = 1000; //1 second
-                    setRepeatAlarm(timeInMillis, startHour, endHour);
-                } else {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("checked", false);
-                    editor.apply();
-                    Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.cancel(pendingIntent);
-                }
-            }
-        });
-        InitSpinner();
     }
 
     private void InitSpinner() {
@@ -253,12 +225,12 @@ public class SettingFragment extends Fragment {
         spinnerEndHour.setSelection(prefsEndHour);
     }
 
-    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour) {
-        db.open();
-        if (db.getHistoryWords().size() > 0) {
+    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, ArrayList<Word> wordList) {
+        if (wordList.size() > 0) {
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
             receiverIntent.putExtra("startHour", startHour);
             receiverIntent.putExtra("endHour", endHour);
+            receiverIntent.putExtra("wordList", wordList);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Set startHour
@@ -273,4 +245,34 @@ public class SettingFragment extends Fragment {
             return;
         }
     }
+
+    private void SetUpListView() {
+        alarmTypeList.add(new AlarmType(1, "Lịch sử", true));
+        alarmTypeList.add(new AlarmType(2, "Yêu thích", false));
+        lvAdapter = new SettingListViewAdapter(getActivity(), alarmTypeList);
+        lvSetting.setAdapter(lvAdapter);
+        lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                swtReminder.setChecked(false);
+                //Set all isChecked props in alarmTypeList to false
+                for(int i = 0;i<alarmTypeList.size(); i++){
+                    alarmTypeList.get(i).setChecked(false);
+                }
+
+                //Set isChecked props of selected item to true
+                boolean isChecked = alarmTypeList.get(position).isChecked();
+                if(isChecked == true){
+                    //do nothing
+                    return;
+                }else{
+                    //update alarm type id
+                    alarmId = alarmTypeList.get(position).getAlarmId();
+                    alarmTypeList.get(position).setChecked(true);
+                }
+                lvAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 }

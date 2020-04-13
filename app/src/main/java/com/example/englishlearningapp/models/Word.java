@@ -1,8 +1,13 @@
 package com.example.englishlearningapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
-public class Word {
+import java.io.Serializable;
+
+public class Word implements Serializable {
     private int id;
     private String word;
     private String description;
@@ -63,6 +68,6 @@ public class Word {
     @NonNull
     @Override
     public String toString() {
-        return word + "";
+        return word;
     }
 }
