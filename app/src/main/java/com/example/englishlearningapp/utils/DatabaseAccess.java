@@ -89,7 +89,7 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getHistoryWords(){
         ArrayList<Word> wordList = new ArrayList<>();
-        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date " +
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
                          "FROM history JOIN av ON history.id = av.id";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
@@ -108,10 +108,12 @@ public class DatabaseAccess {
     }
 
     public int addHistory(int pWordID, int pSyncStatus, String pDate){
+        int remembered = 0;
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
         value.put(DatabaseContract.DATE, pDate);
+        value.put(DatabaseContract.REMEMBERED, remembered);
         database.insert("history", null, value);
         return pWordID;
     }
@@ -126,6 +128,13 @@ public class DatabaseAccess {
     public void updateHistorySyncStatus(int pWordID, int pSyncStatus){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
+        String selection = DatabaseContract.WORD_ID + " = " + pWordID;
+        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+    }
+
+    public void updateHistoryRemembered(int pWordID, int remembered){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.REMEMBERED, remembered);
         String selection = DatabaseContract.WORD_ID + " = " + pWordID;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }

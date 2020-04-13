@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
@@ -63,7 +64,8 @@ public class HistoryFragment extends Fragment {
                 String html = wordList.get(position).getHtml();
                 String word = wordList.get(position).getWord();
                 int wordId = wordList.get(position).getId();
-                moveToMeaningActivity(html, word, wordId);
+                int remembered = wordList.get(position).getRemembered();
+                moveToMeaningActivity(html, word, wordId, remembered);
             }
         });
 
@@ -109,11 +111,12 @@ public class HistoryFragment extends Fragment {
         historyFragmentListView.setAdapter(arrayAdapter);
     }
 
-    private void moveToMeaningActivity(String html, String word, int wordId) {
+    private void moveToMeaningActivity(String html, String word, int wordId, int remembered) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", wordId);
+        meaningIntent.putExtra("remembered", remembered);
         startActivity(meaningIntent);
     }
 }

@@ -7,8 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.DatabaseAccess;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,10 +62,37 @@ public class RememberedFragment extends Fragment {
         }
     }
 
+    ListView lvRemembered;
+    ArrayList<Word> rememberedWords, historyWords;
+    ArrayAdapter adapter;
+    DatabaseAccess databaseAccess;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_remembered, container, false);
+        View view = inflater.inflate(R.layout.fragment_remembered, container, false);
+        lvRemembered = view.findViewById(R.id.listViewRemembered);
+        databaseAccess = DatabaseAccess.getInstance(getActivity());
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadRememberedData();
+    }
+
+    private void loadRememberedData(){
+        databaseAccess.open();
+        historyWords = databaseAccess.getHistoryWords();
+        rememberedWords = new ArrayList<>();
+        for (int i = 0; i < historyWords.size(); i++){
+            if (historyWords.get(i).getRemembered() == 1){
+                rememberedWords.add(historyWords.get(i));
+            }
+        }
+        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, rememberedWords);
+        lvRemembered.setAdapter(adapter);
     }
 }

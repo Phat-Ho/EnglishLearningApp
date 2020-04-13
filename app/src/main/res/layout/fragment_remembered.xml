@@ -6,9 +6,9 @@
     tools:context=".fragments.RememberedFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/listViewRemembered"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Remember_fragment" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

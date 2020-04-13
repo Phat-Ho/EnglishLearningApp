@@ -9,6 +9,8 @@ import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ public class MeaningActivity extends AppCompatActivity {
     TextToSpeech tts;
     LikeButton likeBtn;
     DatabaseAccess databaseAccess;
+    CheckBox cbRemembered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class MeaningActivity extends AppCompatActivity {
 
         //Compare to set Favorite
         addToFavorite(intent);
+        addToRemembered();
     }
 
     private void MappingView() {
@@ -94,6 +98,7 @@ public class MeaningActivity extends AppCompatActivity {
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         imgBtnSearch = findViewById(R.id.meaning_search_btn);
         likeBtn = findViewById(R.id.LikeButtonHeart);
+        cbRemembered = findViewById(R.id.checkBoxRemembered);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -111,8 +116,16 @@ public class MeaningActivity extends AppCompatActivity {
         });
     }
 
+    int wordId = 0;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
+    }
+
     private void addToFavorite(Intent intent){
-        final int wordId = intent.getIntExtra("id", 0);
+       wordId = intent.getIntExtra("id", 0);
 
         ArrayList<Word> favoriteWords = databaseAccess.getFavoriteWords();
         isSaved = false;
@@ -144,5 +157,29 @@ public class MeaningActivity extends AppCompatActivity {
                 databaseAccess.removeFavorite(wordId);
             }
         });
+    }
+    private void addToRemembered(){
+        ArrayList<Word> rememberedWords = databaseAccess.getHistoryWords();
+        Intent intent = getIntent();
+        int isRemembered = intent.getIntExtra("remembered", 0);
+        for (int i = 0; i < rememberedWords.size(); i++){
+            if (isRemembered == 1){
+                cbRemembered.setChecked(true);
+            } else {
+                cbRemembered.setChecked(false);
+            }
+        }
+
+        cbRemembered.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    databaseAccess.updateHistoryRemembered(wordId, 1);
+                } else {
+                    databaseAccess.updateHistoryRemembered(wordId, 0);
+                }
+            }
+        });
+
     }
 }

@@ -8,6 +8,7 @@ public class Word {
     private String description;
     private String pronounce;
     private String html;
+    private int remembered;
 
     public String getHtml() {
         return html.toString();
@@ -64,5 +65,13 @@ public class Word {
     @Override
     public String toString() {
         return word + "";
+    }
+
+    public int getRemembered() {
+        return remembered;
+    }
+
+    public void setRemembered(int remembered) {
+        this.remembered = remembered;
     }
 }
