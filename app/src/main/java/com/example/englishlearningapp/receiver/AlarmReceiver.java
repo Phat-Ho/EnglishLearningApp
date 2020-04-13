@@ -27,7 +27,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
     NotificationManager notificationManager;
     NotificationCompat.Builder notiBuilder;
-    public static ArrayList<Word> historyWords;
+    public ArrayList<Word> alarmWords;
     DatabaseAccess db;
     public static final String NOTIFICATION_CHANNEL_ID = "4655";
     public static final String NOTIFICATION_CHANNEL_NAME = "my_channel";
@@ -42,23 +42,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         SharedPreferences preferences = context.getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         int arrayIndex = preferences.getInt("index", 0);
 
-        //Get history word from database
-        db = DatabaseAccess.getInstance(context);
-        db.open();
-        historyWords = db.getHistoryWords();
+        //Get alarm word from intent
+        alarmWords = (ArrayList<Word>) intent.getSerializableExtra("wordList");
 
-        if(arrayIndex >= historyWords.size()){
+        if(arrayIndex >= alarmWords.size()){
             alarmManager.cancel(pendingIntent);
             return;
         }
 
-        if(historyWords !=null){
+        if(alarmWords !=null){
             Log.d(TAG, "setRepeatAlarm: " + arrayIndex);
             //Get an instance of notification manager
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            String html = historyWords.get(arrayIndex).getHtml();
-            String word = historyWords.get(arrayIndex).getWord();
-            int id = historyWords.get(arrayIndex).getId();
+            String html = alarmWords.get(arrayIndex).getHtml();
+            String word = alarmWords.get(arrayIndex).getWord();
+            int id = alarmWords.get(arrayIndex).getId();
 
             //Implement notification channel
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
