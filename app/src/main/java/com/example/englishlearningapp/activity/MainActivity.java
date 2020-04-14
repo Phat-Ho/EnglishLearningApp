@@ -3,6 +3,7 @@ package com.example.englishlearningapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity{
                                 String date = jsonObject.get("date").toString();
                                 database.addHistory(wordId, DatabaseContract.SYNC, date);
                                 updateRemoteHistory(MainActivity.this, userId, wordId);
+                                Log.d(TAG, "onResponse: sync sucess form remote to local");
                             }
                         }
                     }

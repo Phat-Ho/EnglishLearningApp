@@ -45,6 +45,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Get alarm word from intent
         alarmWords = (ArrayList<Word>) intent.getSerializableExtra("wordList");
 
+        if(alarmWords == null){
+            alarmManager.cancel(pendingIntent);
+            return;
+        }
+
         if(arrayIndex >= alarmWords.size()){
             Log.d(TAG, "onReceive: stop alarm");
             alarmManager.cancel(pendingIntent);
