@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import androidx.core.app.NotificationCompat;
 
@@ -23,6 +24,7 @@ import com.example.englishlearningapp.utils.DatabaseContract;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -149,8 +151,14 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private ArrayList<Word> getAlarmWords(int pAlarmId){
         ArrayList<Word> words = null;
+
         if(pAlarmId == DatabaseContract.ALARM_HISTORY){
             words = db.getHistoryWords();
+            for (Word word: new ArrayList<Word>(words)){
+                if (word.getRemembered() == 1){
+                    words.remove(word);
+                }
+            }
         }
         if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
             words = db.getFavoriteWords();
