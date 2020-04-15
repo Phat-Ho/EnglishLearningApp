@@ -43,7 +43,7 @@ public class Word implements Parcelable {
     };
 
     public String getHtml() {
-        return html.toString();
+        return html;
     }
 
     public void setHtml(String html) {
@@ -51,7 +51,7 @@ public class Word implements Parcelable {
     }
 
     public String getPronounce() {
-        return pronounce.toString();
+        return pronounce;
     }
 
     public void setPronounce(String pronounce) {
@@ -75,7 +75,7 @@ public class Word implements Parcelable {
     }
 
     public String getDescription() {
-        return description.toString();
+        return description;
     }
 
     public void setDescription(String description) {

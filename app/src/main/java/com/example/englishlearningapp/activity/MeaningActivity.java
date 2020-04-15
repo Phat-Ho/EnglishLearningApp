@@ -144,7 +144,6 @@ public class MeaningActivity extends AppCompatActivity {
         likeBtn.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
-                Toast.makeText(MeaningActivity.this, "Added \"" + globalWord + "\" to your Favorite", Toast.LENGTH_SHORT).show();
                 if (isSaved == false) {
                     databaseAccess.addFavorite(wordId, DatabaseContract.NOT_SYNC);
                 }

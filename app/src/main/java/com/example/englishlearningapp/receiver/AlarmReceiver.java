@@ -19,6 +19,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,7 +36,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     AlarmManager alarmManager;
     @Override
     public void onReceive(Context context, Intent intent) {
-        alarmWords = new ArrayList<>();
+        db = DatabaseAccess.getInstance(context);
+        db.open();
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         //Create the same pending intent of alarm manager
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -51,13 +53,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         Calendar nextDayCalendar = GetTheNextDayCalendar(startHour);
 
-        //Get alarm word from intent
-        Bundle bundle = intent.getExtras();
-        alarmWords = bundle.getParcelableArrayList("wordList");
+        //Get alarm word from database
+        int alarmId = intent.getIntExtra("alarmId", 1);
+        alarmWords = getAlarmWords(alarmId);
 
         if(alarmWords == null){
             alarmManager.cancel(pendingIntent);
-
+            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
             return;
         }
 
@@ -93,8 +95,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
             String str = Html.fromHtml(html).toString();
-            String[] splited = str.split("\\r?\\n");
-            String mean = splited[6];
+            String[] split = str.split("\\r?\\n");
+            String mean = split[6];
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent
@@ -143,5 +145,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         editor.putInt("index", 0);
         editor.apply();
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
+    }
+
+    private ArrayList<Word> getAlarmWords(int pAlarmId){
+        ArrayList<Word> words = null;
+        if(pAlarmId == DatabaseContract.ALARM_HISTORY){
+            words = db.getHistoryWords();
+        }
+        if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
+            words = db.getFavoriteWords();
+        }
+
+        return words;
     }
 }

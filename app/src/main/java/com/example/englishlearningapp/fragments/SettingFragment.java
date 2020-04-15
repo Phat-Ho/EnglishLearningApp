@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.ParcelableUtil;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -141,17 +143,6 @@ public class SettingFragment extends Fragment {
         HandleSwitchEvent();
     }
 
-    private ArrayList<Word> GetAlarmWordList(int alarmId) {
-        ArrayList<Word> words = new ArrayList<>();
-        if(alarmId == DatabaseContract.ALARM_HISTORY){
-            words = db.getHistoryWords();
-        }
-        if(alarmId == DatabaseContract.ALARM_FAVORITE){
-            words = db.getFavoriteWords();
-        }
-        return words;
-    }
-
     private void HandleSwitchEvent() {
         swtReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -164,8 +155,7 @@ public class SettingFragment extends Fragment {
                     indexEditor.putInt("index", 0);
                     indexEditor.apply();
                     long timeInMillis = 3000; //3 second
-                    ArrayList<Word> wordList = GetAlarmWordList(alarmId);
-                    setRepeatAlarm(timeInMillis, startHour, endHour, wordList);
+                    setRepeatAlarm(timeInMillis, startHour, endHour, alarmId);
                 }else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -199,27 +189,21 @@ public class SettingFragment extends Fragment {
         spinnerEndHour.setSelection(prefsEndHour);
     }
 
-    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, ArrayList<Word> wordList) {
-        if (wordList.size() > 0) {
-            Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
-            Bundle bundle = new Bundle();
-            receiverIntent.putExtra("startHour", startHour);
-            receiverIntent.putExtra("endHour", endHour);
-            bundle.putParcelableArrayList("wordList", wordList);
-            receiverIntent.putExtras(bundle);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, int alarmId) {
+        Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
+        receiverIntent.putExtra("startHour", startHour);
+        receiverIntent.putExtra("endHour", endHour);
+        receiverIntent.putExtra("alarmId", alarmId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            //Set startHour
-            Calendar calStart = Calendar.getInstance();
-            calStart.set(Calendar.HOUR_OF_DAY, startHour);
-            calStart.set(Calendar.MINUTE, 0);
-            calStart.set(Calendar.SECOND, 0);
+        //Set startHour
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(Calendar.HOUR_OF_DAY, startHour);
+        calStart.set(Calendar.MINUTE, 0);
+        calStart.set(Calendar.SECOND, 0);
 
-            //Fire the alarm
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
-        } else {
-            return;
-        }
+        //Fire the alarm
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
     }
 
     private void SetUpListView() {
