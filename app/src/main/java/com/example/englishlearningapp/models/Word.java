@@ -1,19 +1,46 @@
 package com.example.englishlearningapp.models;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-
-public class Word implements Serializable {
+public class Word implements Parcelable {
     private int id;
     private String word;
     private String description;
     private String pronounce;
     private String html;
     private int remembered;
+
+    public Word() {
+    }
+
+    public Word(int id, String word, String description, String pronounce, String html) {
+        this.id = id;
+        this.word = word;
+        this.description = description;
+        this.pronounce = pronounce;
+        this.html = html;
+    }
+
+    protected Word(Parcel in) {
+        id = in.readInt();
+        word = in.readString();
+        description = in.readString();
+        pronounce = in.readString();
+        html = in.readString();
+        remembered = in.readInt();
+    }
+
+    public static final Creator<Word> CREATOR = new Creator<Word>() {
+        @Override
+        public Word createFromParcel(Parcel in) {
+            return new Word(in);
+        }
+
+        @Override
+        public Word[] newArray(int size) {
+            return new Word[size];
+        }
+    };
 
     public String getHtml() {
         return html.toString();
@@ -29,17 +56,6 @@ public class Word implements Serializable {
 
     public void setPronounce(String pronounce) {
         this.pronounce = pronounce;
-    }
-
-    public Word() {
-    }
-
-    public Word(int id, String word, String description, String pronounce, String html) {
-        this.id = id;
-        this.word = word;
-        this.description = description;
-        this.pronounce = pronounce;
-        this.html = html;
     }
 
     public int getId() {
@@ -66,8 +82,6 @@ public class Word implements Serializable {
         this.description = description;
     }
 
-    @NonNull
-    @Override
     public String toString() {
         return word;
     }
@@ -78,5 +92,20 @@ public class Word implements Serializable {
 
     public void setRemembered(int remembered) {
         this.remembered = remembered;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(word);
+        dest.writeString(description);
+        dest.writeString(pronounce);
+        dest.writeString(html);
+        dest.writeInt(remembered);
     }
 }

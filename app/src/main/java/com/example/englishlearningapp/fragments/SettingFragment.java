@@ -202,9 +202,11 @@ public class SettingFragment extends Fragment {
     public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, ArrayList<Word> wordList) {
         if (wordList.size() > 0) {
             Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
+            Bundle bundle = new Bundle();
             receiverIntent.putExtra("startHour", startHour);
             receiverIntent.putExtra("endHour", endHour);
-            receiverIntent.putExtra("wordList", wordList);
+            bundle.putParcelableArrayList("wordList", wordList);
+            receiverIntent.putExtras(bundle);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Set startHour
