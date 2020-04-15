@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     public String LOGIN_URL = Server.LOGIN_URL;
     SharedPreferences loginPref;
     SharedPreferences.Editor loginPrefEditor;
-    NetworkChangeReceiver networkChangeReceiver;
+    NetworkChangeReceiver networkChangeReceiver = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         MappingView();
         SetUpEvent();
         loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
-        networkChangeReceiver = new NetworkChangeReceiver();
     }
 
     private void SetUpEvent() {
@@ -111,7 +110,10 @@ public class LoginActivity extends AppCompatActivity {
                             //Chuyển qua màn hình MainHome
                             Intent intent = new Intent(LoginActivity.this, MainHomeActivity.class);
                             startActivity(intent);
+
+                            //Sync database after login
                             IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                            networkChangeReceiver = new NetworkChangeReceiver();
                             registerReceiver(networkChangeReceiver, intentFilter);
                             finish();
                         }else{
@@ -151,7 +153,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(networkChangeReceiver);
+        if(networkChangeReceiver != null){
+            unregisterReceiver(networkChangeReceiver);
+        }
+
     }
 
     private void MappingView() {
