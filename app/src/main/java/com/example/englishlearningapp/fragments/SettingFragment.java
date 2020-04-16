@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -71,12 +72,13 @@ public class SettingFragment extends Fragment {
     DatabaseAccess db;
     SharedPreferences prefs;
     AlarmManager alarmManager;
-    Spinner spinnerStartHour, spinnerEndHour;
+    Spinner spinnerStartHour, spinnerEndHour, spinnerNumberOfWords;
     Switch swtReminder;
     ListView lvSetting;
     public SharedPreferences sharedPreferences;
     int startHour = 0;
     int endHour = 0;
+    int numberOfWords = 0;
     SettingListViewAdapter lvAdapter;
     public ArrayList<AlarmType> alarmTypeList;
     int alarmId = 1;
@@ -127,6 +129,7 @@ public class SettingFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_setting, container, false);
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
+        spinnerNumberOfWords = view.findViewById(R.id.spinner_number_of_words);
         swtReminder = view.findViewById(R.id.switchReminder);
         lvSetting = view.findViewById(R.id.lv_setting);
         SetUpListView();
@@ -171,9 +174,12 @@ public class SettingFragment extends Fragment {
     private void HandleSpinnerEvent() {
         StartSpinnerListener startSpinnerListener = new StartSpinnerListener();
         EndSpinnerListener endSpinnerListener = new EndSpinnerListener();
+        NumberOfWordsSpinnerListener numberOfWordsSpinnerListener = new NumberOfWordsSpinnerListener();
         spinnerStartHour.setOnItemSelectedListener(startSpinnerListener);
 
         spinnerEndHour.setOnItemSelectedListener(endSpinnerListener);
+        spinnerNumberOfWords.setOnItemSelectedListener(numberOfWordsSpinnerListener);
+
     }
 
     private void InitSpinner() {
@@ -187,6 +193,12 @@ public class SettingFragment extends Fragment {
         int prefsEndHour = sharedPreferences.getInt("endHour", 22);
         spinnerStartHour.setSelection(prefsStartHour);
         spinnerEndHour.setSelection(prefsEndHour);
+
+        ArrayAdapter<CharSequence> spinnerNumberOfWordsAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.numberOfWords,
+                android.R.layout.simple_spinner_dropdown_item);
+        spinnerNumberOfWordsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNumberOfWords.setAdapter(spinnerNumberOfWordsAdapter);
     }
 
     public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, int alarmId) {
@@ -194,6 +206,7 @@ public class SettingFragment extends Fragment {
         receiverIntent.putExtra("startHour", startHour);
         receiverIntent.putExtra("endHour", endHour);
         receiverIntent.putExtra("alarmId", alarmId);
+        receiverIntent.putExtra("numberOfWords", numberOfWords);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Set startHour
@@ -233,6 +246,26 @@ public class SettingFragment extends Fragment {
                 lvAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    public class NumberOfWordsSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{
+        boolean userSelected = false;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            userSelected = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            numberOfWords = position + 1;
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 
     public class StartSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{

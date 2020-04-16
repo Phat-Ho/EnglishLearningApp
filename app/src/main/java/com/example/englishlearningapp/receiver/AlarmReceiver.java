@@ -55,9 +55,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         Calendar nextDayCalendar = GetTheNextDayCalendar(startHour);
 
+        //Get number of words to repeat
+        int numberOfWords = intent.getIntExtra("numberOfWords", 1);
+
         //Get alarm word from database
         int alarmId = intent.getIntExtra("alarmId", 1);
-        alarmWords = getAlarmWords(alarmId);
+        alarmWords = getAlarmWords(alarmId, numberOfWords);
+
 
         if(alarmWords == null){
             alarmManager.cancel(pendingIntent);
@@ -149,21 +153,26 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
 
-    private ArrayList<Word> getAlarmWords(int pAlarmId){
+    private ArrayList<Word> getAlarmWords(int pAlarmId, int numberOfWords){
         ArrayList<Word> words = null;
-
+        ArrayList<Word> historyWords;
         if(pAlarmId == DatabaseContract.ALARM_HISTORY){
-            words = db.getHistoryWords();
-            for (Word word: new ArrayList<Word>(words)){
+            historyWords = db.getHistoryWords();
+            for (Word word: new ArrayList<Word>(historyWords)){
                 if (word.getRemembered() == 1){
-                    words.remove(word);
+                    historyWords.remove(word);
                 }
             }
+            words = historyWords;
+            ArrayList<Word> tmpWords = new ArrayList<>();
+            for (int i = 0; i < numberOfWords; i++){
+                tmpWords.add(words.get(i));
+            }
+            words = tmpWords;
         }
         if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
             words = db.getFavoriteWords();
         }
-
         return words;
     }
 }
