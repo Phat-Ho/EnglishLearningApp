@@ -118,9 +118,21 @@ public class SearchFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
                 boolean isSaved = false;
+                int isRemembered = 0;
+                for (int i = 0; i < historyWords.size(); i++){
+                    if (historyWords.get(i).getRemembered() == 1){
+                        Log.d("AAA", "Nhớ: " + historyWords.get(i).getWord());
+                    } else {
+                        Log.d("AAA", "Không nhớ: " + historyWords.get(i).getWord());
+                    }
+                }
+
+                int remembered = completeWordsData.get(position).getRemembered();
+
                 for (int i = 0; i < historyWords.size(); i++) {
                     if(completeWordsData.get(position).getId() == historyWords.get(i).getId()){
                         isSaved = true;
+                        remembered = historyWords.get(i).getRemembered();
                         Log.d(TAG, "Word is saved");
                         break;
                     }
@@ -128,10 +140,18 @@ public class SearchFragment extends Fragment {
                 if(isSaved == false){
                     saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
                 }
-                moveToMeaningActivity(completeWordsData.get(position).getHtml(),
-                        completeWordsData.get(position).getWord(),
-                        completeWordsData.get(position).getId(),
-                        completeWordsData.get(position).getRemembered());
+                if (remembered == 1){
+                    moveToMeaningActivity(completeWordsData.get(position).getHtml(),
+                            completeWordsData.get(position).getWord(),
+                            completeWordsData.get(position).getId(),
+                            1);
+                } else {
+                    moveToMeaningActivity(completeWordsData.get(position).getHtml(),
+                            completeWordsData.get(position).getWord(),
+                            completeWordsData.get(position).getId(),
+                            0);
+                }
+
                 hideSoftKeyBoard();
             }
         });

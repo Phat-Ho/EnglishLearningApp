@@ -160,15 +160,12 @@ public class MeaningActivity extends AppCompatActivity {
         });
     }
     private void addToRemembered(){
-        ArrayList<Word> rememberedWords = databaseAccess.getHistoryWords();
         Intent intent = getIntent();
         int isRemembered = intent.getIntExtra("remembered", 0);
-        for (int i = 0; i < rememberedWords.size(); i++){
-            if (isRemembered == 1){
-                cbRemembered.setChecked(true);
-            } else {
-                cbRemembered.setChecked(false);
-            }
+        if (isRemembered == 1){
+            cbRemembered.setChecked(true);
+        } else {
+            cbRemembered.setChecked(false);
         }
 
         cbRemembered.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
