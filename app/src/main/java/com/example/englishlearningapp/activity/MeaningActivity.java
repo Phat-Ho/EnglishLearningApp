@@ -2,6 +2,7 @@ package com.example.englishlearningapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
+    private static boolean rememberChange = false;
     TextView txtMeaning;
     ImageButton imgBtnPronounce, imgBtnSearch;
     TextToSpeech tts;
@@ -172,6 +174,7 @@ public class MeaningActivity extends AppCompatActivity {
         cbRemembered.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MeaningActivity.rememberChange = true;
                 if (isChecked){
                     databaseAccess.updateHistoryRemembered(wordId, 1);
                 } else {
@@ -179,6 +182,16 @@ public class MeaningActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        if(rememberChange){
+            setResult(Activity.RESULT_OK, intent);
+        }else{
+            setResult(Activity.RESULT_CANCELED, intent);
+        }
+        finish();
     }
 }

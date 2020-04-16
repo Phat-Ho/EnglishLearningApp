@@ -1,5 +1,6 @@
 package com.example.englishlearningapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -28,11 +30,11 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
+    private static final int MEANING_CODE = 1;
     ListView historyFragmentListView;
     ArrayList<Word> wordList;
     ArrayAdapter arrayAdapter;
     DatabaseAccess databaseAccess;
-    ArrayList<Word> historyWords;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -50,6 +52,17 @@ public class HistoryFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == MEANING_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                wordList = databaseAccess.getHistoryWords();
+                arrayAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -117,6 +130,6 @@ public class HistoryFragment extends Fragment {
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", wordId);
         meaningIntent.putExtra("remembered", remembered);
-        startActivity(meaningIntent);
+        startActivityForResult(meaningIntent, HistoryFragment.MEANING_CODE);
     }
 }
