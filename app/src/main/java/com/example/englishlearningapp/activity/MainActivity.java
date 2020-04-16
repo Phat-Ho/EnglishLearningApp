@@ -46,9 +46,7 @@ public class MainActivity extends AppCompatActivity{
     Spinner spinnerLang;
     ImageView imgLogo;
     String[] languages = new String[]{"Tiếng Việt", "English"};
-    AlarmManager alarmManager;
     NetworkChangeReceiver networkChangeReceiver;
-    SharedPreferences loginPref;
     DatabaseAccess database;
 
     @Override
@@ -58,8 +56,6 @@ public class MainActivity extends AppCompatActivity{
         MappingView();
         database = DatabaseAccess.getInstance(this);
         database.open();
-        loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
@@ -100,91 +96,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        if(loginPref.getBoolean("isLogin", false) == true){
-            syncHistoryRemoteDbToLocalDb();
-        }
-
-    }
-
-    private void syncHistoryRemoteDbToLocalDb() {
-        final int userId = loginPref.getInt("userID", 0);
-        String getHistoryUrl = Server.GET_HISTORY_URL + "userid=" + userId;
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest getHistoryRequest = new StringRequest(Request.Method.GET, getHistoryUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    if(jsonArray.length() > 0){
-                        for(int i =0; i<jsonArray.length(); i++) {
-                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                            int syncStatus = Integer.parseInt(jsonObject.get("syncStatus").toString());
-                            if(syncStatus == DatabaseContract.NOT_SYNC){
-                                int wordId = Integer.parseInt(jsonObject.get("wordId").toString());
-                                String date = jsonObject.get("date").toString();
-                                database.addHistory(wordId, DatabaseContract.SYNC, date);
-                                updateRemoteHistory(MainActivity.this, userId, wordId);
-                                Log.d(TAG, "onResponse: sync sucess form remote to local");
-                            }
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-            }
-        });
-        requestQueue.add(getHistoryRequest);
-    }
-
-    private void updateRemoteHistory(Context context, int userId, int wordId){
-        String updateHistoryUrl = Server.UPDATE_HISTORY_URL + "userid=" + userId + "&wordid=" + wordId;
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        StringRequest updateHistoryRequest = new StringRequest(Request.Method.GET, updateHistoryUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String message = (String) jsonObject.get("message");
-                    if(message.equals("success")){
-                        Log.d(TAG, "onResponse: sync success remote to local");
-                    }else{
-                        Log.d(TAG, "onResponse: sync fail remote to local");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-            }
-        });
-        requestQueue.add(updateHistoryRequest);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        initNetworkChangeReceiver();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop:");
-        unregisterReceiver(networkChangeReceiver);
-    }
-
-    private void initNetworkChangeReceiver() {
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
     }
 
     public void setLocale(String localeCode){
