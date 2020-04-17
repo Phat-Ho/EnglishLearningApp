@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 
 import org.json.JSONException;
@@ -31,13 +32,15 @@ import java.util.Map;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
-    SharedPreferences loginPref;
+    LoginManager loginManager;
     boolean isConnected;
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        loginPref = context.getSharedPreferences("loginState",Context.MODE_PRIVATE);
-        boolean isLogin = loginPref.getBoolean("isLogin", false);
-        final int userID = loginPref.getInt("userID", 0);
+        loginManager = new LoginManager(context);
+        boolean isLogin = loginManager.isLogin();
+        final int userID = loginManager.getUserId();
         Log.d(TAG, "isLogin: " + isLogin);
         if(ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()) && isLogin == true){
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

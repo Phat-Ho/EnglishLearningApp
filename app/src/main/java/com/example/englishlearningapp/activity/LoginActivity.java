@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
     MaterialButton btnLogin, btnRegister;
     TextInputEditText txtEmail, txtPassword;
     ProgressBar loginProgressBar;
@@ -41,16 +44,16 @@ public class LoginActivity extends AppCompatActivity {
     public static String email = "";
     public static int userID = -1;
     public String LOGIN_URL = Server.LOGIN_URL;
-    SharedPreferences loginPref;
-    SharedPreferences.Editor loginPrefEditor;
     NetworkChangeReceiver networkChangeReceiver = null;
+    LoginManager loginManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         MappingView();
         SetUpEvent();
-        loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
+        loginManager = new LoginManager(this);
     }
 
     private void SetUpEvent() {
@@ -87,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         }else{
             loginProgressBar.setVisibility(View.VISIBLE);
             btnLogin.setVisibility(View.GONE);
+            btnRegister.setVisibility(View.GONE);
             //Bắt đầu gọi webservice để thực hiện đăng nhập thông qua thư viện Volley
             RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
@@ -100,31 +104,27 @@ public class LoginActivity extends AppCompatActivity {
                             int userID = jsonObject.getInt("userID");
                             String email = jsonObject.getString("email");
 
-                            //Gán lại cho shared pref
-                            loginPrefEditor = loginPref.edit();
-                            loginPrefEditor.putBoolean("isLogin", true);
-                            loginPrefEditor.putInt("userID", userID);
-                            loginPrefEditor.putString("userEmail", email);
-                            loginPrefEditor.apply();
-
-                            //Chuyển qua màn hình MainHome
-                            Intent intent = new Intent(LoginActivity.this, MainHomeActivity.class);
-                            startActivity(intent);
+                            //Gán lại cho login manager
+                            loginManager.createUserData(null, email, userID);
 
                             //Sync database after login
                             IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
                             networkChangeReceiver = new NetworkChangeReceiver();
                             registerReceiver(networkChangeReceiver, intentFilter);
-                            finish();
+
+                            //Chuyển qua màn hình MainHome
+                            navigateToHomeScreen();
                         }else{
+                            loginProgressBar.setVisibility(View.GONE);
+                            btnLogin.setVisibility(View.VISIBLE);
+                            btnRegister.setVisibility(View.VISIBLE);
                             textInputLayout.setError("Sai toàn khoản hoặc mật khẩu");
                         }
-                        loginProgressBar.setVisibility(View.GONE);
-                        btnLogin.setVisibility(View.VISIBLE);
                     } catch (JSONException e) {
                         Toast.makeText(LoginActivity.this, "Login Fail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         loginProgressBar.setVisibility(View.GONE);
                         btnLogin.setVisibility(View.VISIBLE);
+                        btnRegister.setVisibility(View.VISIBLE);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     loginProgressBar.setVisibility(View.GONE);
                     btnLogin.setVisibility(View.VISIBLE);
+                    btnRegister.setVisibility(View.VISIBLE);
                 }
             }){
                 //Truyền params cho url qua phương thức POST
@@ -167,4 +168,20 @@ public class LoginActivity extends AppCompatActivity {
         loginProgressBar = findViewById(R.id.login_progressbar);
         textInputLayout = findViewById(R.id.login_password_text_input);
     }
+
+    private void navigateToHomeScreen(){
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                loginProgressBar.setVisibility(View.GONE);
+                Intent mainIntent = new Intent(LoginActivity.this, MainHomeActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        };
+
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, 3000);
+    }
+
 }

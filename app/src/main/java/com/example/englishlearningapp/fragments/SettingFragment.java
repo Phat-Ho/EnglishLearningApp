@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment {
     public SharedPreferences sharedPreferences;
     int startHour = 0;
     int endHour = 0;
-    int numberOfWords = 0;
+    int numberOfWords = 1;
     SettingListViewAdapter lvAdapter;
     public ArrayList<AlarmType> alarmTypeList;
     int alarmId = 1;
@@ -227,7 +227,6 @@ public class SettingFragment extends Fragment {
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                swtReminder.setChecked(false);
                 //Set all isChecked props in alarmTypeList to false
                 for(int i = 0;i<alarmTypeList.size(); i++){
                     alarmTypeList.get(i).setChecked(false);
@@ -244,6 +243,8 @@ public class SettingFragment extends Fragment {
                     alarmTypeList.get(position).setChecked(true);
                 }
                 lvAdapter.notifyDataSetChanged();
+                swtReminder.setChecked(false);
+                swtReminder.setChecked(true);
             }
         });
     }
@@ -259,7 +260,12 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            numberOfWords = position + 1;
+            if(userSelected){
+                swtReminder.setChecked(false);
+                swtReminder.setChecked(true);
+                numberOfWords = position + 1;
+                userSelected = false;
+            }
         }
 
         @Override
@@ -281,10 +287,7 @@ public class SettingFragment extends Fragment {
             startHour = position;
             if(userSelect){
                 swtReminder.setChecked(false);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("checked", false);
-                editor.putInt("startHour", endHour);
-                editor.apply();
+                swtReminder.setChecked(true);
                 userSelect = false;
             }
         }
@@ -308,10 +311,7 @@ public class SettingFragment extends Fragment {
             endHour = position;
             if(userSelect){
                 swtReminder.setChecked(false);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("checked", false);
-                editor.putInt("endHour", endHour);
-                editor.apply();
+                swtReminder.setChecked(true);
                 userSelect = false;
             }
         }

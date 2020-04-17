@@ -48,6 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         SharedPreferences preferences = context.getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         int arrayIndex = preferences.getInt("index", 0);
+        Log.d(TAG, "array index: " + arrayIndex);
 
         //Get start and end hours from Shared Preference
         int endHour = intent.getIntExtra("endHour", 23);
@@ -57,6 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Get number of words to repeat
         int numberOfWords = intent.getIntExtra("numberOfWords", 1);
+        Log.d(TAG, "number of words: " + numberOfWords);
 
         //Get alarm word from database
         int alarmId = intent.getIntExtra("alarmId", 1);
@@ -69,15 +71,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        if(arrayIndex >= alarmWords.size()){
+        if(arrayIndex >= alarmWords.size() || arrayIndex >= numberOfWords){
             Log.d(TAG, "onReceive: stop alarm");
             alarmManager.cancel(pendingIntent);
             startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
             return;
-        }
-
-        if(alarmWords !=null){
-            Log.d(TAG, "array index: " + arrayIndex);
+        }else{
             //Get an instance of notification manager
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             String html = alarmWords.get(arrayIndex).getHtml();
@@ -106,14 +105,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent
-                                                                            , PendingIntent.FLAG_UPDATE_CURRENT);
+                    , PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Build notification
             notiBuilder = new NotificationCompat.Builder(context.getApplicationContext(), NOTIFICATION_CHANNEL_ID)
-                                            .setContentTitle(word)
-                                            .setContentIntent(meaningPendingIntent)
-                                            .setContentText(mean)
-                                            .setSmallIcon(R.mipmap.ic_launcher);
+                    .setContentTitle(word)
+                    .setContentIntent(meaningPendingIntent)
+                    .setContentText(mean)
+                    .setSmallIcon(R.mipmap.ic_launcher);
             notificationManager.notify(id, notiBuilder.build());
 
             //Increase history index in SharedPrefs
@@ -128,9 +127,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
                 return;
             }
-        }else{
-            Log.d(TAG, "onReceive: no history data");
-            return;
         }
     }
 
@@ -155,23 +151,24 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private ArrayList<Word> getAlarmWords(int pAlarmId, int numberOfWords){
         ArrayList<Word> words = null;
-        ArrayList<Word> historyWords;
+        ArrayList<Word> arrayList;
         if(pAlarmId == DatabaseContract.ALARM_HISTORY){
-            historyWords = db.getHistoryWords();
-            for (Word word: new ArrayList<Word>(historyWords)){
+            arrayList = db.getHistoryWords();
+            for (Word word: new ArrayList<>(arrayList)){
                 if (word.getRemembered() == 1){
-                    historyWords.remove(word);
+                    arrayList.remove(word);
                 }
             }
-            words = historyWords;
-            ArrayList<Word> tmpWords = new ArrayList<>();
-            for (int i = 0; i < numberOfWords; i++){
-                tmpWords.add(words.get(i));
-            }
-            words = tmpWords;
+            words = arrayList;
         }
         if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
-            words = db.getFavoriteWords();
+            arrayList = db.getFavoriteWords();
+            for (Word word: new ArrayList<>(arrayList)){
+                if (word.getRemembered() == 1){
+                    arrayList.remove(word);
+                }
+            }
+            words = arrayList;
         }
         return words;
     }

@@ -25,6 +25,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 
 import org.json.JSONArray;
@@ -34,7 +35,7 @@ import org.json.JSONObject;
 public class SplashScreen extends AppCompatActivity {
 
     private static final String TAG = "SplashScreen";
-    SharedPreferences loginPref;
+    LoginManager loginManager;
     DatabaseAccess database;
     TextView txtSplash;
     ImageView imgSplash;
@@ -48,9 +49,9 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         database = DatabaseAccess.getInstance(this);
         database.open();
-        loginPref = getSharedPreferences("loginState", MODE_PRIVATE);
+        loginManager = new LoginManager(this);
         MappingView();
-        if(loginPref.getBoolean("isLogin", false)){
+        if(loginManager.isLogin()){
             syncHistoryRemoteDbToLocalDb();
         }
         CloseSplashScreen();
@@ -76,7 +77,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void syncHistoryRemoteDbToLocalDb() {
-        final int userId = loginPref.getInt("userID", 0);
+        final int userId = loginManager.getUserId();
         String getHistoryUrl = Server.GET_HISTORY_URL + "userid=" + userId;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest getHistoryRequest = new StringRequest(Request.Method.GET, getHistoryUrl, new Response.Listener<String>() {
