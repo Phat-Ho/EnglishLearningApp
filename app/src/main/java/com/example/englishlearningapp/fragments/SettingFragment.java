@@ -261,9 +261,9 @@ public class SettingFragment extends Fragment {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if(userSelected){
+                numberOfWords = position + 1;
                 swtReminder.setChecked(false);
                 swtReminder.setChecked(true);
-                numberOfWords = position + 1;
                 userSelected = false;
             }
         }
