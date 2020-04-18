@@ -126,7 +126,7 @@
         android:text="" />
 
     <EditText
-        android:id="@+id/editTextBirthday"
+        android:id="@+id/profile_edt_dob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profile_edt_number"
@@ -138,12 +138,21 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:text="" />
+        android:focusable="false"/>
+
+    <ProgressBar
+        android:id="@+id/profile_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_edt_dob"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextBirthday"
+        android:layout_below="@id/profile_edt_dob"
         android:layout_marginTop="30dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp">

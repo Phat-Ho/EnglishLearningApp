@@ -29,11 +29,13 @@
             android:text="Email"
             style="@style/Widget.TextView"/>
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/register_text_layout_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             style="@style/Widget.TextInputLayout"
-            android:hint="Email">
+            android:hint="Email"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_email"

@@ -11,18 +11,34 @@ public class LoginManager {
     public static final String PREF_NAME = "LOGIN";
     public static final String NAME = "NAME";
     public static final String EMAIL = "EMAIL";
+    public static final String NUMBER = "NUMBER";
     public static final String ID = "USER_ID";
+    public static  final String PASSWORD = "PASSWORD";
+    private static final String DOB = "DOB";
 
     public LoginManager(Context context) {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    public void createUserData(String name, String email, int id){
+    public void createUserData(int id, String name, String email, String password, String number, String dob){
         editor = sharedPreferences.edit();
         editor.putInt(ID, id);
-        editor.putString(NAME, name);
         editor.putString(EMAIL, email);
+        editor.putString(DOB, dob);
+        if(name.equals("null")){
+            editor.putString(NAME, "");
+        }else{
+            editor.putString(NAME, name);
+        }
+
+        if(number.equals("null")){
+            editor.putString(NUMBER, "");
+        }else{
+            editor.putString(NUMBER, number);
+        }
+
+        editor.putString(PASSWORD, password);
         editor.apply();
     }
 
@@ -43,6 +59,18 @@ public class LoginManager {
 
     public int getUserId(){
         return sharedPreferences.getInt(ID, 0);
+    }
+
+    public String getUserPhoneNo(){
+        return  sharedPreferences.getString(NUMBER, null);
+    }
+
+    public String getUserPassword(){
+        return sharedPreferences.getString(PASSWORD, null);
+    }
+
+    public String getUserDob(){
+        return sharedPreferences.getString(DOB, null);
     }
 
     public void logout(){

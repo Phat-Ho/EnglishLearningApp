@@ -30,9 +30,11 @@
             android:text="Email"
             style="@style/Widget.TextView"/>
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/login_email_text_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
+            app:errorEnabled="true"
             style="@style/Widget.TextInputLayout"
             android:hint="Email">
 

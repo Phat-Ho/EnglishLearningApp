@@ -8,8 +8,9 @@ import android.net.NetworkInfo;
 public class Server
 {
     public static String host = "http://192.168.1.62/";
-    public static String REGISTER_URL = Server.host + "english/register.php";
-    public static String LOGIN_URL = Server.host + "english/getuser.php";
+    public static String backend_host = "http://192.168.1.62:5001/";
+    public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
+    public static String LOGIN_URL = backend_host + "api/hash/login?";
     public static String ADD_HISTORY_URL = Server.host + "english/addHistory.php";
     public static String GET_HISTORY_URL = Server.host + "english/getHistoryByUserId.php?";
     public static String UPDATE_HISTORY_URL = Server.host + "english/updateHistorySync.php?";
