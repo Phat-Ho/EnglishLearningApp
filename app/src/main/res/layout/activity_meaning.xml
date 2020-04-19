@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/meaningContainer"
@@ -11,41 +11,13 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp">
-
-        <ImageButton
-            android:id="@+id/imageButtonPronounce"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_volume" />
-
-
-        <com.like.LikeButton
-            android:id="@+id/LikeButtonHeart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/imageButtonPronounce"
-            app:icon_type="heart" />
-
-        <TextView
-            android:id="@+id/textViewRemembered"
-            android:text="Remembered"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/LikeButtonHeart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <CheckBox
-            android:id="@+id/checkBoxRemembered"
-            android:layout_toRightOf="@id/LikeButtonHeart"
-            android:layout_below="@id/textViewRemembered"
-            android:layout_marginLeft="30dp"
-            android:layout_width="50dp"
-            android:layout_height="20dp"/>
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageButton
@@ -59,9 +31,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp">
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWordHtml">
 
         <TextView
             android:id="@+id/textViewMeaning"
@@ -71,5 +46,57 @@
 
     </ScrollView>
 
+    <TextView
+        android:id="@+id/textViewWordHtml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxRemembered" />
 
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/imageButtonPronounce"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_volume"
+        app:layout_constraintStart_toEndOf="@+id/textViewWordHtml"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    <com.like.LikeButton
+        android:id="@+id/LikeButtonHeart"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toRightOf="@id/imageButtonPronounce"
+        app:icon_type="heart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    <TextView
+        android:id="@+id/textViewRemembered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toRightOf="@id/LikeButtonHeart"
+        android:text="Remembered"
+        app:layout_constraintEnd_toStartOf="@+id/LikeButtonHeart"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    <CheckBox
+        android:id="@+id/checkBoxRemembered"
+        android:layout_width="50dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/textViewRemembered"
+        android:layout_marginEnd="20dp"
+        android:layout_toRightOf="@id/LikeButtonHeart"
+        app:layout_constraintEnd_toStartOf="@+id/LikeButtonHeart"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRemembered" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

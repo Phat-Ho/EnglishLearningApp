@@ -29,7 +29,7 @@ import java.util.Locale;
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
     private static boolean rememberChange = false;
-    TextView txtMeaning;
+    TextView txtMeaning, txtWordHtml;
     ImageButton imgBtnPronounce, imgBtnSearch;
     TextToSpeech tts;
     LikeButton likeBtn;
@@ -73,9 +73,12 @@ public class MeaningActivity extends AppCompatActivity {
     private void SetMeaningData() {
         Intent intent = getIntent();
         String html = intent.getStringExtra("html");
+        String wordHtml = intent.getStringExtra("wordHtml");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
             txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
         } else {
+            txtWordHtml.setText(Html.fromHtml(wordHtml));
             txtMeaning.setText(Html.fromHtml(html));
         }
 
@@ -97,6 +100,7 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void MappingView() {
         txtMeaning = findViewById(R.id.textViewMeaning);
+        txtWordHtml = findViewById(R.id.textViewWordHtml);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         imgBtnSearch = findViewById(R.id.meaning_search_btn);
         likeBtn = findViewById(R.id.LikeButtonHeart);
