@@ -118,13 +118,15 @@ public class SearchFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
                 boolean isSaved = false;
-                for (int i = 0; i < historyWords.size(); i++){
-                    if (historyWords.get(i).getRemembered() == 1){
-                        Log.d("AAA", "Nhớ: " + historyWords.get(i).getWord());
-                    } else {
-                        Log.d("AAA", "Không nhớ: " + historyWords.get(i).getWord());
-                    }
-                }
+
+                String t = completeWordsData.get(position).getHtml();
+                int start = t.indexOf("<h1>");
+                int end = t.indexOf("<h2>");
+                String replacement = "";
+                String toBeReplaced = t.substring(start, end);
+                String wordHtml = toBeReplaced;
+                String meaningHtml = t.replace(toBeReplaced, replacement);
+                Log.d("replace", meaningHtml);
 
                 int remembered = completeWordsData.get(position).getRemembered();
 
@@ -140,12 +142,12 @@ public class SearchFragment extends Fragment {
                     saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
                 }
                 if (remembered == 1){
-                    moveToMeaningActivity(completeWordsData.get(position).getHtml(),
+                    moveToMeaningActivity(wordHtml, meaningHtml,
                             completeWordsData.get(position).getWord(),
                             completeWordsData.get(position).getId(),
                             1);
                 } else {
-                    moveToMeaningActivity(completeWordsData.get(position).getHtml(),
+                    moveToMeaningActivity(wordHtml, meaningHtml,
                             completeWordsData.get(position).getWord(),
                             completeWordsData.get(position).getId(),
                             0);
@@ -223,8 +225,9 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void moveToMeaningActivity(String html, String word, int id, int remembered) {
+    private void moveToMeaningActivity(String wordHtml, String html, String word, int id, int remembered) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
+        meaningIntent.putExtra("wordHtml", wordHtml);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", id);

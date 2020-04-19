@@ -52,7 +52,7 @@ import java.util.Map;
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
     private static boolean rememberChange = false;
-    TextView txtMeaning;
+    TextView txtWordHtml;
     ImageButton imgBtnPronounce;
     AutoCompleteTextView txtMeaningSearch;
     Toolbar meaningToolbar;
@@ -128,13 +128,13 @@ public class MeaningActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent.hasExtra("word")){
-            String html = intent.getStringExtra("html");
+            String html = intent.getStringExtra("wordHtml");
             final String word = intent.getStringExtra("word");
             addToFavorite(intent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+                txtWordHtml.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
             } else {
-                txtMeaning.setText(Html.fromHtml(html));
+                txtWordHtml.setText(Html.fromHtml(html));
             }
 
             imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
@@ -151,11 +151,11 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void SetMeaningData() {
         Intent intent = getIntent();
-        String html = intent.getStringExtra("html");
+        String wordHtml = intent.getStringExtra("wordHtml");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+            txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
         } else {
-            txtMeaning.setText(Html.fromHtml(html));
+            txtWordHtml.setText(Html.fromHtml(wordHtml));
         }
 
         final String word = intent.getStringExtra("word");
@@ -176,7 +176,7 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void MappingView() {
         txtMeaningSearch = findViewById(R.id.meaning_auto_complete_search_box);
-        txtMeaning = findViewById(R.id.textViewMeaning);
+        txtWordHtml = findViewById(R.id.textWordHtml);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         likeBtn = findViewById(R.id.LikeButtonHeart);
         cbRemembered = findViewById(R.id.checkBoxRemembered);
