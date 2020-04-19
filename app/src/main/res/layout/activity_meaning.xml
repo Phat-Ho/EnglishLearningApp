@@ -14,7 +14,38 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp">
+
+
+                <com.like.LikeButton
+                    android:id="@+id/LikeButtonHeart"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    app:icon_type="heart" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxRemembered"
+                    android:layout_toLeftOf="@id/LikeButtonHeart"
+                    android:text="Đã nhớ"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="20sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </FrameLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <AutoCompleteTextView
@@ -57,30 +88,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="5dp"
-                    android:layout_marginTop="3dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_volume"
                     app:layout_constraintStart_toEndOf="@+id/textWordHtml"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.like.LikeButton
-                    android:id="@+id/LikeButtonHeart"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_toLeftOf="@id/imageButtonPronounce"
-                    app:icon_type="heart"
-                    app:layout_constraintEnd_toStartOf="@+id/checkBoxRemembered"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxRemembered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đã nhớ"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
