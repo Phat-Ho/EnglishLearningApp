@@ -52,7 +52,7 @@ import java.util.Map;
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
     private static boolean rememberChange = false;
-    TextView txtWordHtml;
+    TextView txtWordHtml, txtContentHtml;
     ImageButton imgBtnPronounce;
     AutoCompleteTextView txtMeaningSearch;
     Toolbar meaningToolbar;
@@ -152,10 +152,13 @@ public class MeaningActivity extends AppCompatActivity {
     private void SetMeaningData() {
         Intent intent = getIntent();
         String wordHtml = intent.getStringExtra("wordHtml");
+        String contentHtml = intent.getStringExtra("html");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
+            txtContentHtml.setText(Html.fromHtml(contentHtml, Html.FROM_HTML_MODE_LEGACY));
         } else {
             txtWordHtml.setText(Html.fromHtml(wordHtml));
+            txtContentHtml.setText(Html.fromHtml(contentHtml));
         }
 
         final String word = intent.getStringExtra("word");
@@ -177,6 +180,7 @@ public class MeaningActivity extends AppCompatActivity {
     private void MappingView() {
         txtMeaningSearch = findViewById(R.id.meaning_auto_complete_search_box);
         txtWordHtml = findViewById(R.id.textWordHtml);
+        txtContentHtml = findViewById(R.id.textViewContentHtml);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         likeBtn = findViewById(R.id.LikeButtonHeart);
         cbRemembered = findViewById(R.id.checkBoxRemembered);
