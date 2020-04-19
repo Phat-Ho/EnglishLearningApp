@@ -118,7 +118,6 @@ public class SearchFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
                 boolean isSaved = false;
-                int isRemembered = 0;
                 for (int i = 0; i < historyWords.size(); i++){
                     if (historyWords.get(i).getRemembered() == 1){
                         Log.d("AAA", "Nhớ: " + historyWords.get(i).getWord());

@@ -1,66 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/meaningContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:paddingBottom="56dp"
+    android:orientation="vertical"
     tools:context=".activity.MeaningActivity">
 
-    <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/meaning_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/imageButtonPronounce"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_volume" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp">
 
-
-        <com.like.LikeButton
-            android:id="@+id/LikeButtonHeart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/imageButtonPronounce"
-            app:icon_type="heart" />
-
-        <TextView
-            android:id="@+id/textViewRemembered"
-            android:text="Remembered"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/LikeButtonHeart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <CheckBox
-            android:id="@+id/checkBoxRemembered"
-            android:layout_toRightOf="@id/LikeButtonHeart"
-            android:layout_below="@id/textViewRemembered"
-            android:layout_marginLeft="30dp"
-            android:layout_width="50dp"
-            android:layout_height="20dp"/>
+                <ImageButton
+                    android:id="@+id/imageButtonPronounce"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_volume" />
 
 
-        <ImageButton
-            android:id="@+id/meaning_search_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_search" />
-    </RelativeLayout>
+                <com.like.LikeButton
+                    android:id="@+id/LikeButtonHeart"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_toLeftOf="@id/imageButtonPronounce"
+                    android:layout_centerVertical="true"
+                    app:icon_type="heart"
+                    android:layout_marginEnd="20dp"/>
 
+                <CheckBox
+                    android:id="@+id/checkBoxRemembered"
+                    android:layout_toLeftOf="@id/LikeButtonHeart"
+                    android:text="Đã nhớ"
+                    android:layout_marginEnd="30dp"
+                    android:textSize="20sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </FrameLayout>
+    </androidx.appcompat.widget.Toolbar>
 
+    <AutoCompleteTextView
+        android:id="@+id/meaning_auto_complete_search_box"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Search box"
+        android:drawableRight="@drawable/ic_search"
+        android:background="@drawable/text_view_stroke"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:paddingHorizontal="15dp"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="40dp">
 
         <TextView
@@ -72,4 +80,4 @@
     </ScrollView>
 
 
-</FrameLayout>
+</LinearLayout>

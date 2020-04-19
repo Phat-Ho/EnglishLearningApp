@@ -1,47 +1,127 @@
 package com.example.englishlearningapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.LoginManager;
+import com.example.englishlearningapp.utils.Server;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
     private static boolean rememberChange = false;
     TextView txtMeaning;
-    ImageButton imgBtnPronounce, imgBtnSearch;
+    ImageButton imgBtnPronounce;
+    AutoCompleteTextView txtMeaningSearch;
+    Toolbar meaningToolbar;
     TextToSpeech tts;
     LikeButton likeBtn;
     DatabaseAccess databaseAccess;
     CheckBox cbRemembered;
+    LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meaning);
         MappingView();
+        SetUpToolbar();
         SetMeaningData();
+        SetAutoCompleteSearchBox();
+        loginManager = new LoginManager(this);
+    }
+
+    private void SetUpToolbar() {
+        setSupportActionBar(meaningToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        meaningToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void SetAutoCompleteSearchBox() {
+        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(MeaningActivity.this, android.R.layout.simple_list_item_1);
+        txtMeaningSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<Word> wordList = databaseAccess.getWords(s.toString());
+                searchBoxAdapter.clear();
+                searchBoxAdapter.addAll(wordList);
+                txtMeaningSearch.setAdapter(searchBoxAdapter);
+                txtMeaningSearch.setThreshold(1);
+                searchBoxAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        txtMeaningSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<Word> word = databaseAccess.getWords(txtMeaningSearch.getText().toString());
+                saveHistory(word.get(0).getId(), loginManager.getUserId());
+                RefreshScreen(word.get(0).getWord(), word.get(0).getHtml());
+            }
+        });
+    }
+
+    private void RefreshScreen(String word, String html) {
+        Intent intent = new Intent(this, MeaningActivity.class);
+        intent.putExtra("word", word);
+        intent.putExtra("html", html);
+        startActivity(intent);
     }
 
     @Override
@@ -50,7 +130,6 @@ public class MeaningActivity extends AppCompatActivity {
         if(intent.hasExtra("word")){
             String html = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
-            final int wordId = intent.getIntExtra("id", 0);
             addToFavorite(intent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtMeaning.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
@@ -96,24 +175,18 @@ public class MeaningActivity extends AppCompatActivity {
     }
 
     private void MappingView() {
+        txtMeaningSearch = findViewById(R.id.meaning_auto_complete_search_box);
         txtMeaning = findViewById(R.id.textViewMeaning);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
-        imgBtnSearch = findViewById(R.id.meaning_search_btn);
         likeBtn = findViewById(R.id.LikeButtonHeart);
         cbRemembered = findViewById(R.id.checkBoxRemembered);
+        meaningToolbar = findViewById(R.id.meaning_toolbar);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.ENGLISH);
                 }
-            }
-        });
-        imgBtnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent homeIntent = new Intent(MeaningActivity.this, MainHomeActivity.class);
-                startActivity(homeIntent);
             }
         });
     }
@@ -179,6 +252,60 @@ public class MeaningActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void saveHistory(final int wordID, final int pUserID){
+        //Nếu có internet và đã login thì add vô server vào local với sync status = success
+        if(Server.haveNetworkConnection(this) && pUserID > 0){
+            final String currentDateTime = getDatetime();
+            String url = Server.ADD_HISTORY_URL;
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String message = jsonObject.getString("message");
+                        if(message.equals("success")){
+                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC, currentDateTime);
+                            Log.d(TAG, "onResponse: added to server");
+                        }else{
+                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                            Log.d(TAG, "onResponse: " + message);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("userid", String.valueOf(pUserID));
+                    params.put("wordid", String.valueOf(wordID));
+                    params.put("datetime", currentDateTime);
+                    params.put("sync", String.valueOf(DatabaseContract.SYNC));
+
+                    return params;
+                }
+            };
+            requestQueue.add(stringRequest);
+        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
+            Log.d(TAG, "saveHistory: no internet or no login, add to local");
+        }
+    }
+
+    public String getDatetime(){
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     @Override
