@@ -24,10 +24,10 @@ public class MainHomeActivity extends AppCompatActivity {
     final Fragment searchFragment = new SearchFragment();
     //final Fragment friendsFragment = new FriendsFragment();
     final Fragment settingFragment = new SettingFragment();
-    //final Fragment profileFragment = new ProfileFragment();
+    final Fragment profileFragment = new ProfileFragment();
     final Fragment historyFavFragment = new HistoryFavoriteFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment activeFragment = searchFragment;
+    Fragment activeFragment = homeFragment;
     private static final String TAG = "MainHomeActivity";
 
     @Override
@@ -44,14 +44,14 @@ public class MainHomeActivity extends AppCompatActivity {
                     case R.id.navigation_home:
                         showFragment(homeFragment);
                         return true;
-                    case R.id.navigation_search:
-                        showFragment(searchFragment);
+                    case R.id.navigation_history:
+                        showFragment(historyFavFragment);
                         return true;
                     case R.id.navigation_setting:
                         showFragment(settingFragment);
                         return true;
                     case R.id.navigation_profile:
-                        showFragment(historyFavFragment);
+                        showFragment(profileFragment);
                         return true;
                 }
                 return false;
@@ -60,7 +60,7 @@ public class MainHomeActivity extends AppCompatActivity {
     }
 
     private void setHomeFragment(){
-        fm.beginTransaction().add(R.id.container, searchFragment, "search").commit();
+        fm.beginTransaction().add(R.id.container, homeFragment, "home").commit();
     }
 
     public void showFragment(Fragment fragToShow){
@@ -70,11 +70,11 @@ public class MainHomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(activeFragment == searchFragment){
+        if(activeFragment == homeFragment){
             finish();
         }else{
-            bottomNavigation.setSelectedItemId(R.id.navigation_search);
-            activeFragment = searchFragment;
+            bottomNavigation.setSelectedItemId(R.id.navigation_history);
+            activeFragment = homeFragment;
         }
     }
 

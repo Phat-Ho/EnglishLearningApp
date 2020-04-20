@@ -1,19 +1,49 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
+import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.LoginManager;
+import com.example.englishlearningapp.utils.Server;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -64,6 +94,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    AutoCompleteTextView txtMeaningSearch;
+    DatabaseAccess databaseAccess;
+    LoginManager loginManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,11 +107,129 @@ public class HomeFragment extends Fragment {
                 getResources().getString(R.string.testing), getResources().getString(R.string.competition)));
         ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.home_ic_1, R.drawable.home_ic_2, R.drawable.home_ic_3, R.drawable.home_ic_4, R.drawable.home_ic_5, R.drawable.home_ic_6));
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
+        databaseAccess = DatabaseAccess.getInstance(getContext());
+        SetAutoCompleteSearchBox();
+        loginManager = new LoginManager(getContext());
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recylerViewHome);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         HomeGridViewAdapter adapter = new HomeGridViewAdapter(getActivity(), subjectNames, subjectImages, this);
         recyclerView.setAdapter(adapter);
         return view;
+    }
+
+    private void SetAutoCompleteSearchBox() {
+        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1);
+        txtMeaningSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<Word> wordList = databaseAccess.getWords(s.toString());
+                searchBoxAdapter.clear();
+                searchBoxAdapter.addAll(wordList);
+                txtMeaningSearch.setAdapter(searchBoxAdapter);
+                txtMeaningSearch.setThreshold(1);
+                searchBoxAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        txtMeaningSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<Word> word = databaseAccess.getWords(txtMeaningSearch.getText().toString());
+                String wordHeader = word.get(0).getWord();
+                String wordHtml = word.get(0).getHtml();
+                int wordId = word.get(0).getId();
+                if(!isHistoryExistence(wordId)){
+                    saveHistory(word.get(0).getId(), loginManager.getUserId());
+                }
+                RefreshScreen(wordHeader, wordHtml, wordId);
+                hideSoftKeyBoard();
+            }
+        });
+    }
+
+    private void RefreshScreen(String word, String html, int wordId) {
+        Intent intent = new Intent(getContext(), MeaningActivity.class);
+        intent.putExtra("word", word);
+        intent.putExtra("html", html);
+        intent.putExtra("id", wordId);
+        startActivity(intent);
+    }
+
+    public void saveHistory(final int wordID, final int pUserID){
+        //Nếu có internet và đã login thì add vô server vào local với sync status = success
+        if(Server.haveNetworkConnection(getContext()) && pUserID > 0){
+            final String currentDateTime = getDatetime();
+            String url = Server.ADD_HISTORY_URL;
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String message = jsonObject.getString("message");
+                        if(message.equals("success")){
+                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC, currentDateTime);
+                        }else{
+                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("userid", String.valueOf(pUserID));
+                    params.put("wordid", String.valueOf(wordID));
+                    params.put("datetime", currentDateTime);
+                    params.put("sync", String.valueOf(DatabaseContract.SYNC));
+
+                    return params;
+                }
+            };
+            requestQueue.add(stringRequest);
+        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
+        }
+    }
+
+    public boolean isHistoryExistence(int wordId){
+        Word word = databaseAccess.getHistoryWordById(wordId);
+        if(word.getId() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public String getDatetime(){
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private void hideSoftKeyBoard() {
+        View v = getActivity().getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

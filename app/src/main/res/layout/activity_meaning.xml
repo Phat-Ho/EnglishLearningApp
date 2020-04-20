@@ -57,7 +57,9 @@
         android:background="@drawable/text_view_stroke"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="15dp"
-        android:paddingHorizontal="15dp"/>
+        android:paddingHorizontal="15dp"
+        android:imeOptions="actionNext"
+        android:inputType="text"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
