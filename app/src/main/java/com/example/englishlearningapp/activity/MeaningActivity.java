@@ -20,7 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -45,7 +44,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -111,16 +109,22 @@ public class MeaningActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> word = databaseAccess.getWords(txtMeaningSearch.getText().toString());
-                saveHistory(word.get(0).getId(), loginManager.getUserId());
-                RefreshScreen(word.get(0).getWord(), word.get(0).getHtml());
+                String wordHeader = word.get(0).getWord();
+                String wordHtml = word.get(0).getHtml();
+                int wordId = word.get(0).getId();
+                if(!isHistoryExistence(wordId)){
+                    saveHistory(word.get(0).getId(), loginManager.getUserId());
+                }
+                RefreshScreen(wordHeader, wordHtml, wordId);
             }
         });
     }
 
-    private void RefreshScreen(String word, String html) {
+    private void RefreshScreen(String word, String html, int wordId) {
         Intent intent = new Intent(this, MeaningActivity.class);
         intent.putExtra("word", word);
         intent.putExtra("html", html);
+        intent.putExtra("id", wordId);
         startActivity(intent);
     }
 
@@ -128,13 +132,21 @@ public class MeaningActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent.hasExtra("word")){
-            String html = intent.getStringExtra("wordHtml");
+            String contentHtml = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
-            addToFavorite(intent);
+            int start = contentHtml.indexOf("<h1>");
+            int end = contentHtml.indexOf("<h2>");
+            String replacement = "";
+            String toBeReplaced = contentHtml.substring(start, end);
+            String wordHtml = toBeReplaced;
+            String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtWordHtml.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+                txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
+                txtContentHtml.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
             } else {
-                txtWordHtml.setText(Html.fromHtml(html));
+                txtWordHtml.setText(Html.fromHtml(wordHtml));
+                txtContentHtml.setText(Html.fromHtml(meaningHtml));
             }
 
             imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
@@ -143,11 +155,12 @@ public class MeaningActivity extends AppCompatActivity {
                     tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "");
                 }
             });
+            addToFavorite(intent);
+            addToRemembered(intent);
         }
     }
 
     boolean isSaved;
-    String globalWord = "";
 
     private void SetMeaningData() {
         Intent intent = getIntent();
@@ -169,7 +182,6 @@ public class MeaningActivity extends AppCompatActivity {
         }
 
         final String word = intent.getStringExtra("word");
-        globalWord = word;
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +193,7 @@ public class MeaningActivity extends AppCompatActivity {
 
         //Compare to set Favorite
         addToFavorite(intent);
-        addToRemembered();
+        addToRemembered(intent);
     }
 
     private void MappingView() {
@@ -202,8 +214,6 @@ public class MeaningActivity extends AppCompatActivity {
         });
     }
 
-    int wordId = 0;
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -211,7 +221,7 @@ public class MeaningActivity extends AppCompatActivity {
     }
 
     private void addToFavorite(Intent intent){
-       wordId = intent.getIntExtra("id", 0);
+        final int wordId = intent.getIntExtra("id", 0);
 
         ArrayList<Word> favoriteWords = databaseAccess.getFavoriteWords();
         isSaved = false;
@@ -238,14 +248,13 @@ public class MeaningActivity extends AppCompatActivity {
 
             @Override
             public void unLiked(LikeButton likeButton) {
-                Toast.makeText(MeaningActivity.this, "Removed \"" + globalWord + "\" from you Favorite", Toast.LENGTH_SHORT).show();
                 databaseAccess.removeFavorite(wordId);
             }
         });
     }
-    private void addToRemembered(){
-        Intent intent = getIntent();
-        int isRemembered = intent.getIntExtra("remembered", 0);
+    private void addToRemembered(Intent intent){
+        final int wordId = intent.getIntExtra("id", 0);
+        int isRemembered = databaseAccess.getHistoryWordById(wordId).getRemembered();
         if (isRemembered == 1){
             cbRemembered.setChecked(true);
         } else {
@@ -310,6 +319,16 @@ public class MeaningActivity extends AppCompatActivity {
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
+        }
+    }
+
+    public boolean isHistoryExistence(int wordId){
+        Word word = databaseAccess.getHistoryWordById(wordId);
+        Log.d(TAG, "history word Id: " + word.getId());
+        if(word.getId() > 0){
+            return true;
+        }else{
+            return false;
         }
     }
 

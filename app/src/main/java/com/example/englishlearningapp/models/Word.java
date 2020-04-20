@@ -11,6 +11,7 @@ public class Word implements Parcelable {
     private int remembered;
 
     public Word() {
+        this.id = 0;
     }
 
     public Word(int id, String word, String description, String pronounce, String html) {

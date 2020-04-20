@@ -87,6 +87,22 @@ public class DatabaseAccess {
         return list;
     }
 
+    public ArrayList<Word> getWordsById(int wordId){
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE id = " + wordId, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(new Word(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(cursor.getColumnIndex("description")),
+                    cursor.getString(cursor.getColumnIndex("pronounce")),
+                    cursor.getString(cursor.getColumnIndex("html"))));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
     public ArrayList<Word> getHistoryWords(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
@@ -105,7 +121,25 @@ public class DatabaseAccess {
                 wordList.add(word);
             }while (cursor.moveToNext());
         }
+        cursor.close();
         return wordList;
+    }
+
+    public Word getHistoryWordById(int wordId){
+        Word word = new Word();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
+                "FROM history JOIN av ON history.id = av.id WHERE av.id = " + wordId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setHtml(cursor.getString(2));
+            word.setDescription(cursor.getString(3));
+            word.setPronounce(cursor.getString(4));
+            word.setRemembered(cursor.getInt(6));
+        }
+        cursor.close();
+        return word;
     }
 
     public int addHistory(int pWordID, int pSyncStatus, String pDate){
