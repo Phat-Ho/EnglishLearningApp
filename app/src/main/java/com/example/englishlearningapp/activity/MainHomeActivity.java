@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.SettingFragment;
+import com.example.englishlearningapp.navigation_bottom_fragments.HistoryFavoriteFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.SearchFragment;
@@ -23,7 +24,8 @@ public class MainHomeActivity extends AppCompatActivity {
     final Fragment searchFragment = new SearchFragment();
     //final Fragment friendsFragment = new FriendsFragment();
     final Fragment settingFragment = new SettingFragment();
-    final Fragment profileFragment = new ProfileFragment();
+    //final Fragment profileFragment = new ProfileFragment();
+    final Fragment historyFavFragment = new HistoryFavoriteFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment activeFragment = searchFragment;
     private static final String TAG = "MainHomeActivity";
@@ -49,7 +51,7 @@ public class MainHomeActivity extends AppCompatActivity {
                         showFragment(settingFragment);
                         return true;
                     case R.id.navigation_profile:
-                        showFragment(profileFragment);
+                        showFragment(historyFavFragment);
                         return true;
                 }
                 return false;
