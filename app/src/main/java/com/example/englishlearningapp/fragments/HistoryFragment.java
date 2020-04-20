@@ -74,18 +74,11 @@ public class HistoryFragment extends Fragment {
         historyFragmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String t = wordList.get(position).getHtml();
-                int start = t.indexOf("<h1>");
-                int end = t.indexOf("<h2>");
-                String replacement = "";
-                String toBeReplaced = t.substring(start, end);
-                String wordHtml = toBeReplaced;
-                String meaningHtml = t.replace(toBeReplaced, replacement);
-
+                String html = wordList.get(position).getHtml();
                 String word = wordList.get(position).getWord();
                 int wordId = wordList.get(position).getId();
                 int remembered = wordList.get(position).getRemembered();
-                moveToMeaningActivity(wordHtml, meaningHtml, word, wordId, remembered);
+                moveToMeaningActivity(html, word, wordId, remembered);
             }
         });
 
@@ -131,9 +124,8 @@ public class HistoryFragment extends Fragment {
         historyFragmentListView.setAdapter(arrayAdapter);
     }
 
-    private void moveToMeaningActivity(String wordHtml, String html, String word, int wordId, int remembered) {
+    private void moveToMeaningActivity(String html, String word, int wordId, int remembered) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
-        meaningIntent.putExtra("wordHtml", wordHtml);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", wordId);

@@ -151,14 +151,21 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void SetMeaningData() {
         Intent intent = getIntent();
-        String wordHtml = intent.getStringExtra("wordHtml");
         String contentHtml = intent.getStringExtra("html");
+
+        int start = contentHtml.indexOf("<h1>");
+        int end = contentHtml.indexOf("<h2>");
+        String replacement = "";
+        String toBeReplaced = contentHtml.substring(start, end);
+        String wordHtml = toBeReplaced;
+        String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
-            txtContentHtml.setText(Html.fromHtml(contentHtml, Html.FROM_HTML_MODE_LEGACY));
+            txtContentHtml.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
         } else {
             txtWordHtml.setText(Html.fromHtml(wordHtml));
-            txtContentHtml.setText(Html.fromHtml(contentHtml));
+            txtContentHtml.setText(Html.fromHtml(meaningHtml));
         }
 
         final String word = intent.getStringExtra("word");

@@ -119,15 +119,7 @@ public class SearchFragment extends Fragment {
                 ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
                 boolean isSaved = false;
 
-                String t = completeWordsData.get(position).getHtml();
-                int start = t.indexOf("<h1>");
-                int end = t.indexOf("<h2>");
-                String replacement = "";
-                String toBeReplaced = t.substring(start, end);
-                String wordHtml = toBeReplaced;
-                String meaningHtml = t.replace(toBeReplaced, replacement);
-                Log.d("replace", meaningHtml);
-
+                String html = completeWordsData.get(position).getHtml();
                 int remembered = completeWordsData.get(position).getRemembered();
 
                 for (int i = 0; i < historyWords.size(); i++) {
@@ -142,12 +134,12 @@ public class SearchFragment extends Fragment {
                     saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
                 }
                 if (remembered == 1){
-                    moveToMeaningActivity(wordHtml, meaningHtml,
+                    moveToMeaningActivity(html,
                             completeWordsData.get(position).getWord(),
                             completeWordsData.get(position).getId(),
                             1);
                 } else {
-                    moveToMeaningActivity(wordHtml, meaningHtml,
+                    moveToMeaningActivity(html,
                             completeWordsData.get(position).getWord(),
                             completeWordsData.get(position).getId(),
                             0);
@@ -225,9 +217,8 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void moveToMeaningActivity(String wordHtml, String html, String word, int id, int remembered) {
+    private void moveToMeaningActivity(String html, String word, int id, int remembered) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
-        meaningIntent.putExtra("wordHtml", wordHtml);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", id);
