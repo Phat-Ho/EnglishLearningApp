@@ -119,8 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
                             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(loginIntent);
+                                    finish();
                                 }
                             });
                             alertDialog.show();

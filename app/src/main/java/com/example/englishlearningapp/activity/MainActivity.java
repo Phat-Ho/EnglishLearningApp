@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity{
         imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
-
+        btnLogin.setVisibility(View.INVISIBLE);
         spinnerLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -87,14 +87,14 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
-                finish();
-            }
-        });
+//        btnLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivity(loginIntent);
+//                finish();
+//            }
+//        });
 
     }
 
