@@ -176,10 +176,11 @@ public class SettingFragment extends Fragment {
         EndSpinnerListener endSpinnerListener = new EndSpinnerListener();
         NumberOfWordsSpinnerListener numberOfWordsSpinnerListener = new NumberOfWordsSpinnerListener();
         spinnerStartHour.setOnItemSelectedListener(startSpinnerListener);
-
+        spinnerStartHour.setOnTouchListener(startSpinnerListener);
         spinnerEndHour.setOnItemSelectedListener(endSpinnerListener);
+        spinnerEndHour.setOnTouchListener(endSpinnerListener);
         spinnerNumberOfWords.setOnItemSelectedListener(numberOfWordsSpinnerListener);
-
+        spinnerNumberOfWords.setOnTouchListener(numberOfWordsSpinnerListener);
     }
 
     private void InitSpinner() {
@@ -210,10 +211,11 @@ public class SettingFragment extends Fragment {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Set startHour
-        Calendar calStart = Calendar.getInstance();
+        Calendar calStart = Calendar.getInstance(TimeZone.getDefault());
         calStart.set(Calendar.HOUR_OF_DAY, startHour);
         calStart.set(Calendar.MINUTE, 0);
         calStart.set(Calendar.SECOND, 0);
+        Log.d(TAG, "startHour: " + calStart.getTimeInMillis());
 
         //Fire the alarm
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calStart.getTimeInMillis(), timeInMillis, pendingIntent);
@@ -286,9 +288,12 @@ public class SettingFragment extends Fragment {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             startHour = position;
             if(userSelect){
+                Log.d(TAG, "start Hour: " + position);
                 swtReminder.setChecked(false);
                 swtReminder.setChecked(true);
                 userSelect = false;
+            }else{
+                Log.d(TAG, "not user select");
             }
         }
 
