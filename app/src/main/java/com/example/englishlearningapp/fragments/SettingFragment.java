@@ -5,53 +5,34 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.MainActivity;
-import com.example.englishlearningapp.activity.MainHomeActivity;
-import com.example.englishlearningapp.activity.ScheduleActivity;
 import com.example.englishlearningapp.adapters.SettingListViewAdapter;
-import com.example.englishlearningapp.interfaces.MyListener;
-import com.example.englishlearningapp.models.AlarmType;
-import com.example.englishlearningapp.models.Word;
-import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
+import com.example.englishlearningapp.models.AlarmType;;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
-import com.example.englishlearningapp.receiver.CancelAlarmReceiver;
+import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
-import com.example.englishlearningapp.utils.ParcelableUtil;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -70,19 +51,15 @@ public class SettingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     DatabaseAccess db;
-    SharedPreferences prefs;
     AlarmManager alarmManager;
     Spinner spinnerStartHour, spinnerEndHour, spinnerNumberOfWords;
     Switch swtReminder;
     ListView lvSetting;
     public SharedPreferences sharedPreferences;
-    int startHour = 0;
-    int endHour = 0;
-    int numberOfWords = 1;
     SettingListViewAdapter lvAdapter;
     public ArrayList<AlarmType> alarmTypeList;
-    int alarmId = 1;
     boolean isChecked = false;
+    AlarmPropsManager alarmPropsManager;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -115,7 +92,7 @@ public class SettingFragment extends Fragment {
         }
         db = DatabaseAccess.getInstance(getActivity());
         db.open();
-        prefs = getActivity().getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
+        alarmPropsManager = new AlarmPropsManager(getActivity());
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -154,11 +131,9 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", true);
                     editor.apply();
-                    SharedPreferences.Editor indexEditor = prefs.edit();
-                    indexEditor.putInt("index", 0);
-                    indexEditor.apply();
+                    alarmPropsManager.setIndex(0);
                     long timeInMillis = 3000; //3 second
-                    setRepeatAlarm(timeInMillis, startHour, endHour, alarmId);
+                    setRepeatAlarm(timeInMillis, alarmPropsManager.getStartHour());
                 }else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", false);
@@ -190,10 +165,9 @@ public class SettingFragment extends Fragment {
         spinnerHoursAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
-        int prefsStartHour = sharedPreferences.getInt("startHour", 7);
-        int prefsEndHour = sharedPreferences.getInt("endHour", 22);
-        spinnerStartHour.setSelection(prefsStartHour);
-        spinnerEndHour.setSelection(prefsEndHour);
+        Log.d(TAG, "InitSpinner: " + alarmPropsManager.getStartHour());
+        spinnerStartHour.setSelection(alarmPropsManager.getStartHour());
+        spinnerEndHour.setSelection(alarmPropsManager.getEndHour());
 
         ArrayAdapter<CharSequence> spinnerNumberOfWordsAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.numberOfWords,
@@ -202,12 +176,8 @@ public class SettingFragment extends Fragment {
         spinnerNumberOfWords.setAdapter(spinnerNumberOfWordsAdapter);
     }
 
-    public void setRepeatAlarm(long timeInMillis, int startHour, int endHour, int alarmId) {
+    public void setRepeatAlarm(long timeInMillis, int startHour) {
         Intent receiverIntent = new Intent(getActivity(), AlarmReceiver.class);
-        receiverIntent.putExtra("startHour", startHour);
-        receiverIntent.putExtra("endHour", endHour);
-        receiverIntent.putExtra("alarmId", alarmId);
-        receiverIntent.putExtra("numberOfWords", numberOfWords);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Set startHour
@@ -222,33 +192,44 @@ public class SettingFragment extends Fragment {
     }
 
     private void SetUpListView() {
-        alarmTypeList.add(new AlarmType(1, "Lịch sử", true));
-        alarmTypeList.add(new AlarmType(2, "Yêu thích", false));
+        Log.d(TAG, "alarm Type: " + alarmPropsManager.getAlarmType());
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, "Lịch sử", false));
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, "Yêu thích", false));
+        if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
+            alarmTypeList.get(0).setChecked(true);
+        }
+        if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
+            alarmTypeList.get(1).setChecked(true);
+        }
         lvAdapter = new SettingListViewAdapter(getActivity(), alarmTypeList);
         lvSetting.setAdapter(lvAdapter);
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Set all isChecked props in alarmTypeList to false
-                for(int i = 0;i<alarmTypeList.size(); i++){
-                    alarmTypeList.get(i).setChecked(false);
-                }
-
-                //Set isChecked props of selected item to true
                 boolean isChecked = alarmTypeList.get(position).isChecked();
-                if(isChecked == true){
+                if(isChecked){
                     //do nothing
-                    return;
                 }else{
-                    //update alarm type id
-                    alarmId = alarmTypeList.get(position).getAlarmId();
+                    //Set all isChecked props in alarmTypeList to false
+                    for(int i = 0;i<alarmTypeList.size(); i++){
+                        alarmTypeList.get(i).setChecked(false);
+                    }
+                    //update alarm type
+                    alarmPropsManager.setAlarmType(position);
+                    //Set isChecked props of selected item to true
                     alarmTypeList.get(position).setChecked(true);
+                    reStartSwitch();
                 }
                 lvAdapter.notifyDataSetChanged();
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
             }
         });
+    }
+
+    public void reStartSwitch(){
+        if(swtReminder.isChecked()){
+            swtReminder.setChecked(false);
+            swtReminder.setChecked(true);
+        }
     }
 
     public class NumberOfWordsSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{
@@ -263,9 +244,8 @@ public class SettingFragment extends Fragment {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if(userSelected){
-                numberOfWords = position + 1;
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
+                alarmPropsManager.setWordNo(position + 1);
+                reStartSwitch();
                 userSelected = false;
             }
         }
@@ -286,11 +266,10 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            startHour = position;
             if(userSelect){
+                alarmPropsManager.setStartHour(position);
                 Log.d(TAG, "start Hour: " + position);
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
+                reStartSwitch();
                 userSelect = false;
             }else{
                 Log.d(TAG, "not user select");
@@ -313,10 +292,9 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            endHour = position;
             if(userSelect){
-                swtReminder.setChecked(false);
-                swtReminder.setChecked(true);
+                alarmPropsManager.setEndHour(position);
+                reStartSwitch();
                 userSelect = false;
             }
         }

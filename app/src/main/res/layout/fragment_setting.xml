@@ -41,13 +41,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:weightSum="5">
+            android:weightSum="5"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Word Reminder Enabled" />
+                android:text="Word Reminder Enabled"
+                android:textSize="24sp"/>
             <Switch
                 android:id="@+id/switchReminder"
                 android:layout_width="wrap_content"
@@ -60,13 +62,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:weightSum="5">
+            android:weightSum="5"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Number of Words"/>
+                android:text="Number of Words"
+                android:textSize="24sp"/>
 
             <Spinner
                 android:id="@+id/spinner_number_of_words"
@@ -75,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"
-                style="@style/SpinnerTheme"/>
+                style="@style/SpinnerTheme" />
         </LinearLayout>
 
         <TextView
@@ -93,7 +97,7 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="Start"
@@ -110,7 +114,8 @@
             android:weightSum="4"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp">
             <Spinner
                 android:id="@+id/spinner_start_hour"
                 android:layout_marginEnd="10dp"

@@ -7,24 +7,21 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -36,45 +33,45 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static final String NOTIFICATION_CHANNEL_ID = "4655";
     public static final String NOTIFICATION_CHANNEL_NAME = "my_channel";
     AlarmManager alarmManager;
+    AlarmPropsManager alarmPropsManager;
     @Override
     public void onReceive(Context context, Intent intent) {
         db = DatabaseAccess.getInstance(context);
         db.open();
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmPropsManager = new AlarmPropsManager(context);
         //Create the same pending intent of alarm manager
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Get history words array index to show notification
-        SharedPreferences preferences = context.getSharedPreferences("historyIndex", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        int arrayIndex = preferences.getInt("index", 0);
+        int arrayIndex = alarmPropsManager.getIndex();
         Log.d(TAG, "array index: " + arrayIndex);
 
         //Get start and end hours from Shared Preference
-        int endHour = intent.getIntExtra("endHour", 23);
-        int startHour = intent.getIntExtra("startHour", 0);
+        int endHour = alarmPropsManager.getEndHour();
+        int startHour = alarmPropsManager.getStartHour();
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         Calendar nextDayCalendar = GetTheNextDayCalendar(startHour);
 
         //Get number of words to repeat
-        int numberOfWords = intent.getIntExtra("numberOfWords", 1);
+        int numberOfWords = alarmPropsManager.getWordNo();
         Log.d(TAG, "number of words: " + numberOfWords);
 
         //Get alarm word from database
-        int alarmId = intent.getIntExtra("alarmId", 1);
+        int alarmId = alarmPropsManager.getAlarmType();
         alarmWords = getAlarmWords(alarmId, numberOfWords);
 
 
         if(alarmWords == null){
             alarmManager.cancel(pendingIntent);
-            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
+            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
             return;
         }
 
         if(arrayIndex >= alarmWords.size() || arrayIndex >= numberOfWords){
             Log.d(TAG, "onReceive: stop alarm");
             alarmManager.cancel(pendingIntent);
-            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
+            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
             return;
         }else{
             //Get an instance of notification manager
@@ -112,19 +109,19 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setContentTitle(word)
                     .setContentIntent(meaningPendingIntent)
                     .setContentText(mean)
-                    .setSmallIcon(R.mipmap.ic_launcher);
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true);
             notificationManager.notify(id, notiBuilder.build());
 
-            //Increase history index in SharedPrefs
+            //Increase index of notification
             arrayIndex++;
-            editor.putInt("index", arrayIndex);
-            editor.apply();
+            alarmPropsManager.setIndex(arrayIndex);
 
             //Turn off notification if meet end hour
             if(currentHour >= endHour){
-                Log.d(TAG, "onReceive: meet end hour");
+                Log.d(TAG, "onReceive: meet end hour, stop alarm");
                 alarmManager.cancel(pendingIntent);
-                startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, editor);
+                startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
                 return;
             }
         }
@@ -141,11 +138,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void startTomorrowAlarm(AlarmManager alarmManager
                                     , PendingIntent pendingIntent
-                                    , Calendar startCalendar
-                                    , SharedPreferences.Editor editor){
-        Log.d(TAG, "startTomorrowAlarm");
-        editor.putInt("index", 0);
-        editor.apply();
+                                    , Calendar startCalendar){
+        Log.d(TAG, "startTomorrowAlarm: " + startCalendar.getTimeInMillis());
+        alarmPropsManager.setIndex(0);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
 
