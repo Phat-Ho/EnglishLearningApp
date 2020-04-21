@@ -170,7 +170,7 @@ public class MeaningActivity extends AppCompatActivity {
         String contentHtml = intent.getStringExtra("html");
 
         int start = contentHtml.indexOf("<h1>");
-        int end = contentHtml.indexOf("<h2>");
+        int end = contentHtml.indexOf("<h3>");
         String replacement = "";
         String toBeReplaced = contentHtml.substring(start, end);
         String wordHtml = toBeReplaced;
