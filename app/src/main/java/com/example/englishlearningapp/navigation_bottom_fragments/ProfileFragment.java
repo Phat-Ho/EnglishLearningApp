@@ -34,6 +34,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.LoginActivity;
 import com.example.englishlearningapp.activity.MainActivity;
 import com.example.englishlearningapp.activity.RegisterActivity;
+import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
@@ -128,9 +129,8 @@ public class ProfileFragment extends Fragment {
                 if(loginManager.isLogin()){
                     loginManager.logout();
                     Toast.makeText(getActivity(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                    LoginFragment loginFragment = new LoginFragment();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, loginFragment).commit();
                 }else{
                     Toast.makeText(getActivity(), "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
                 }
