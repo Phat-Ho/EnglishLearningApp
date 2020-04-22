@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    MaterialButton btnLogin, btnRegister;
+    MaterialButton btnLogin, btnRegister, btnForgotPassword;
     TextInputEditText txtEmail, txtPassword;
     ProgressBar loginProgressBar;
     TextInputLayout textInputLayoutPassword, textInputLayoutEmail;
@@ -110,6 +110,7 @@ public class LoginFragment extends Fragment {
         loginProgressBar = view.findViewById(R.id.progressBarLogin);
         textInputLayoutPassword = view.findViewById(R.id.textInputPassword);
         textInputLayoutEmail = view.findViewById(R.id.textInputEmail);
+        btnForgotPassword = view.findViewById(R.id.buttonForgotPassword);
     }
 
     private void SetUpEvent() {
@@ -133,6 +134,14 @@ public class LoginFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 textInputLayoutPassword.setError(null);
                 return false;
+            }
+        });
+
+        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, forgotPasswordFragment).addToBackStack(null).commit();
             }
         });
     }
@@ -205,9 +214,6 @@ public class LoginFragment extends Fragment {
             @Override
             public void run() {
                 loginProgressBar.setVisibility(View.GONE);
-//                Intent mainIntent = new Intent(getActivity(), MainHomeActivity.class);
-//                startActivity(mainIntent);
-//                getActivity().finish();
                 ProfileFragment profileFragment = new ProfileFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
             }

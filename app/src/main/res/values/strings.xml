@@ -4,9 +4,12 @@
     <string name="password">Password</string>
     <string name="login">Sign in</string>
     <string name="register">Register</string>
+    <string name="create_new_account">Create a new account</string>
     <string name="login_with_account">Login With Account</string>
     <string name="login_with_google">Login With Google</string>
     <string name="login_with_facebook">Login With Facebook</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="or_sign_in_with">Or sign in with </string>
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Search</string>
     <string name="navigation_setting">Setting</string>

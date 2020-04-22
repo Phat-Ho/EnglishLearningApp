@@ -4,9 +4,12 @@
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
+    <string name="create_new_account">Tạo tài khoản mới</string>
     <string name="login_with_account">Đăng nhập bằng tài khoản</string>
     <string name="login_with_google">Đăng nhập bằng Google</string>
     <string name="login_with_facebook">Đăng nhập bằng Facebook</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="or_sign_in_with">Hoặc đăng nhập bằng </string>
     <string name="navigation_home">Trang chủ</string>
     <string name="navigation_search">Tìm kiếm</string>
     <string name="navigation_setting">Cài đặt</string>

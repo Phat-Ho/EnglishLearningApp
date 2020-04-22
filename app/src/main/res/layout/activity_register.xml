@@ -105,25 +105,25 @@
         android:layout_marginHorizontal="10dp"
         android:text="@string/login_with_account"></com.google.android.material.button.MaterialButton>
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/login_with_google"
-        app:icon="@drawable/google_icon"
-        app:iconGravity="end"
-        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:text="@string/login_with_google"-->
+<!--        app:icon="@drawable/google_icon"-->
+<!--        app:iconGravity="end"-->
+<!--        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>-->
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/login_with_facebook"
-        app:icon="@drawable/facebook_icon"
-        app:iconGravity="end"
-        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:text="@string/login_with_facebook"-->
+<!--        app:icon="@drawable/facebook_icon"-->
+<!--        app:iconGravity="end"-->
+<!--        app:iconSize="20dp"></com.google.android.material.button.MaterialButton>-->
 
 
 </LinearLayout>

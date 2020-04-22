@@ -89,29 +89,67 @@
         android:visibility="gone"/>
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="15dp"
-        android:gravity="end">
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:id="@+id/buttonForgotPassword"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSignIn"
             style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="@string/login"/>
 
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center"
+                style="@style/Widget.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/or_sign_in_with"
+                android:textSize="22sp" />
+
+            <ImageButton
+                android:layout_marginLeft="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/google_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+            <ImageButton
+                android:layout_marginLeft="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/facebook_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
+            android:layout_marginTop="10dp"
             android:id="@+id/buttonRegisterLogin"
             style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_toStartOf="@id/buttonSignIn"
-            android:layout_toLeftOf="@id/buttonSignIn"
-            android:text="Đăng kí" />
-    </RelativeLayout>
+            android:text="@string/create_new_account" />
+    </LinearLayout>
 
 </LinearLayout>
