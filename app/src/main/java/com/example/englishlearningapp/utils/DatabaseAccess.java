@@ -3,6 +3,7 @@ package com.example.englishlearningapp.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -194,6 +195,10 @@ public class DatabaseAccess {
         return database.delete("history", "id = " + id, null);
     }
 
+    public long getHistoryWordsCount(){
+        return DatabaseUtils.queryNumEntries(database, DatabaseContract.HISTORY_TABLE);
+    }
+
     public String getDatetime(){
         java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
@@ -230,5 +235,9 @@ public class DatabaseAccess {
 
     public int removeFavorite(int id){
         return database.delete("favorite", "id = " + id, null);
+    }
+
+    public long getFavoriteWordsCount(){
+        return DatabaseUtils.queryNumEntries(database, DatabaseContract.FAVORITE_TABLE);
     }
 }

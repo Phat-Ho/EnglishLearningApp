@@ -199,8 +199,8 @@ public class SettingFragment extends Fragment {
 
     private void SetUpListView() {
         Log.d(TAG, "alarm Type: " + alarmPropsManager.getAlarmType());
-        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, "Lịch sử", false));
-        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, "Yêu thích", false));
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, "Lịch sử (" + db.getHistoryWordsCount() + ")", false));
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, "Yêu thích (" + db.getFavoriteWordsCount() + ")", false));
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
             alarmTypeList.get(0).setChecked(true);
         }
