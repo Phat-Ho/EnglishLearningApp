@@ -14,6 +14,7 @@ public class Server
     public static String ADD_HISTORY_URL = Server.host + "english/addHistory.php";
     public static String GET_HISTORY_URL = Server.host + "english/getHistoryByUserId.php?";
     public static String UPDATE_HISTORY_URL = Server.host + "english/updateHistorySync.php?";
+    public static String CHECK_USER_URL = backend_host + "api/hash/checkUser?";
 
     public static boolean haveNetworkConnection(Context context) {
         boolean haveConnectedWifi = false;
