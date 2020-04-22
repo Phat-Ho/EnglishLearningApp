@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 ;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.fragments.LoginFragment;
@@ -16,7 +14,6 @@ import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HistoryFavoriteFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
-import com.example.englishlearningapp.navigation_bottom_fragments.SearchFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

@@ -7,16 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.HistoryActivity;
-import com.example.englishlearningapp.activity.ScheduleActivity;
-import com.example.englishlearningapp.fragments.SettingFragment;
+import com.example.englishlearningapp.activity.VietnameseActivity;
 import com.example.englishlearningapp.fragments.SubjectsFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 
@@ -29,7 +26,6 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     Context context;
     SubjectsFragment subjectsFragment = new SubjectsFragment();
     HomeFragment homeFragment;
-    SettingFragment settingFragment = new SettingFragment();
 
     public HomeGridViewAdapter(Context context, ArrayList subjectNames, ArrayList subjectImages, HomeFragment homeFragment) {
         this.context = context;
@@ -62,20 +58,9 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         mainHomeActivity.showFragment(subjectsFragment);
                         break;
                     case 1:
-                        //Navigate to History Activity
-                        Intent historyIntent = new Intent(context, HistoryActivity.class);
-                        context.startActivity(historyIntent);
-                        break;
-                    case 2:
-                        Intent scheduleIntent = new Intent(context, ScheduleActivity.class);
-                        context.startActivity(scheduleIntent);
-                        break;
-                    case 3:
-                        Toast.makeText(context, "Viết", Toast.LENGTH_SHORT).show(); break;
-                    case 4:
-                        break;
-                    case 5:
-                        Toast.makeText(context, "Thi đấu", Toast.LENGTH_SHORT).show();
+                        //Navigate to Vietnamese - English Dictionary
+                        Intent vaIntent = new Intent(context, VietnameseActivity.class);
+                        context.startActivity(vaIntent);
                         break;
                 }
             }
@@ -95,8 +80,8 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
         public MyViewHolder(View itemView) {
             super(itemView);
             // get the reference of item view's
-            name = (TextView) itemView.findViewById(R.id.textViewHomeItem);
-            image = (ImageView) itemView.findViewById(R.id.imageViewHomeItem);
+            name = itemView.findViewById(R.id.textViewHomeItem);
+            image = itemView.findViewById(R.id.imageViewHomeItem);
         }
     }
 

@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ArrayList subjectNames = new ArrayList<>(Arrays.asList(getResources().getString(R.string.subject_learning),
-                getResources().getString(R.string.history),
+                getResources().getString(R.string.vietnamese),
                 getResources().getString(R.string.listening), getResources().getString(R.string.writing),
                 getResources().getString(R.string.testing), getResources().getString(R.string.competition)));
         ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.home_ic_1, R.drawable.home_ic_2, R.drawable.home_ic_3, R.drawable.home_ic_4, R.drawable.home_ic_5, R.drawable.home_ic_6));
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
         databaseAccess = DatabaseAccess.getInstance(getContext());
         SetAutoCompleteSearchBox();
         loginManager = new LoginManager(getContext());
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recylerViewHome);
+        RecyclerView recyclerView = view.findViewById(R.id.recylerViewHome);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         HomeGridViewAdapter adapter = new HomeGridViewAdapter(getActivity(), subjectNames, subjectImages, this);

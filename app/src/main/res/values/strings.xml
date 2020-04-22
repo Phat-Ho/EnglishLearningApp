@@ -15,6 +15,7 @@
     <string name="navigation_setting">Setting</string>
     <string name="navigation_profile">Profile</string>
     <string name="subject_learning">Subject Learning</string>
+    <string name="vietnamese">Vietnamese - English</string>
     <string name="history">History</string>
     <string name="listening">Listening</string>
     <string name="writing">Writing</string>
@@ -24,7 +25,4 @@
     <string name="phone_number">Phone Number</string>
     <string name="date_of_birth">Date Of Birth</string>
     <string name="logout">Sign out</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

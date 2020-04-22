@@ -78,6 +78,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             String html = alarmWords.get(arrayIndex).getHtml();
             String word = alarmWords.get(arrayIndex).getWord();
+            String mean = alarmWords.get(arrayIndex).getDescription();
             int id = alarmWords.get(arrayIndex).getId();
 
             //Implement notification channel
@@ -96,9 +97,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             meaningIntent.putExtra("id", id);
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
-            String str = Html.fromHtml(html).toString();
-            String[] split = str.split("\\r?\\n");
-            String mean = split[6];
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent

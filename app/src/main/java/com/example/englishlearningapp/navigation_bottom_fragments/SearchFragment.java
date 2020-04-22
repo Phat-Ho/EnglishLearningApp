@@ -104,11 +104,10 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        edtSearch = view.findViewById(R.id.editTextSearch);
-        lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
+        //edtSearch = view.findViewById(R.id.editTextSearch);
+        //lvTranslatedWords = view.findViewById(R.id.listViewTranslatedWords);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
         databaseAccess.open();
-        words = new ArrayList<>();
         loginPref = getActivity().getSharedPreferences("loginState", Context.MODE_PRIVATE);
         final int userID = loginPref.getInt("userID", 0);
         final boolean isLogin = loginPref.getBoolean("isLogin", false);
@@ -227,14 +226,12 @@ public class SearchFragment extends Fragment {
     }
 
     private void loadDatabase(String word) {
-        /*databaseAccess.open();*/
         if (word.equals("")) {
             completeWordsData = databaseAccess.getWords(word);
             adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, completeWordsData);
             lvTranslatedWords.setAdapter(adapter);
         } else {
             completeWordsData = databaseAccess.getWords(word);
-            words = completeWordsData;
             adapter.clear();
             adapter.addAll(completeWordsData);
             adapter.notifyDataSetChanged();

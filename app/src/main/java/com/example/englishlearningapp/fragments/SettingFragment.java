@@ -171,7 +171,6 @@ public class SettingFragment extends Fragment {
         spinnerHoursAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStartHour.setAdapter(spinnerHoursAdapter);
         spinnerEndHour.setAdapter(spinnerHoursAdapter);
-        Log.d(TAG, "InitSpinner: " + alarmPropsManager.getStartHour());
         spinnerStartHour.setSelection(alarmPropsManager.getStartHour());
         spinnerEndHour.setSelection(alarmPropsManager.getEndHour());
 
@@ -180,6 +179,7 @@ public class SettingFragment extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberOfWordsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberOfWords.setAdapter(spinnerNumberOfWordsAdapter);
+        spinnerNumberOfWords.setSelection(alarmPropsManager.getWordNo() - 1);
     }
 
     public void setRepeatAlarm(long timeInMillis, int startHour) {
@@ -251,6 +251,7 @@ public class SettingFragment extends Fragment {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if(userSelected){
                 alarmPropsManager.setWordNo(position + 1);
+                Log.d(TAG, "onItemSelected: Word No: " + alarmPropsManager.getWordNo());
                 reStartSwitch();
                 userSelected = false;
             }

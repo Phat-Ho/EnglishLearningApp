@@ -125,6 +125,22 @@ public class DatabaseAccess {
         return wordList;
     }
 
+    public ArrayList<Word> getVietnameseWords(String word){
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM va WHERE word LIKE '" + word + "%'" + "LIMIT 100", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(new Word(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(cursor.getColumnIndex("description")),
+                    cursor.getString(cursor.getColumnIndex("pronounce")),
+                    cursor.getString(cursor.getColumnIndex("html"))));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
     public Word getHistoryWordById(int wordId){
         Word word = new Word();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +

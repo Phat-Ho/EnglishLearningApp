@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/searchContainer"
-    android:background="@color/colorWhite"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.VietnameseActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/vn_toolbar"
@@ -19,7 +17,7 @@
         app:titleTextColor="@color/black">
 
     </androidx.appcompat.widget.Toolbar>
-    <AutoCompleteTextView
+    <EditText
         android:id="@+id/vn_edt_search"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
@@ -32,7 +30,7 @@
         android:nextFocusLeft="@id/vn_edt_search"/>
     <ListView
         android:id="@+id/vn_lv_words"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 </LinearLayout>
