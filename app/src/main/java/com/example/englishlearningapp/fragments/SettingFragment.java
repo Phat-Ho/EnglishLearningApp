@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -53,6 +55,7 @@ public class SettingFragment extends Fragment {
     DatabaseAccess db;
     AlarmManager alarmManager;
     Spinner spinnerStartHour, spinnerEndHour, spinnerNumberOfWords;
+    Toolbar settingToolbar;
     Switch swtReminder;
     ListView lvSetting;
     public SharedPreferences sharedPreferences;
@@ -109,6 +112,7 @@ public class SettingFragment extends Fragment {
         spinnerNumberOfWords = view.findViewById(R.id.spinner_number_of_words);
         swtReminder = view.findViewById(R.id.switchReminder);
         lvSetting = view.findViewById(R.id.lv_setting);
+        settingToolbar = view.findViewById(R.id.setting_toolbar);
         SetUpListView();
         InitSpinner();
         swtReminder.setChecked(isChecked);
@@ -119,6 +123,8 @@ public class SettingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(settingToolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         HandleSpinnerEvent();
         HandleSwitchEvent();
     }

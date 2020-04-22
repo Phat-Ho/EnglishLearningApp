@@ -19,10 +19,10 @@ public class LoginManager {
     public LoginManager(Context context) {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this.editor = sharedPreferences.edit();
     }
 
     public void createUserData(int id, String name, String email, String password, String number, String dob){
-        editor = sharedPreferences.edit();
         editor.putInt(ID, id);
         editor.putString(EMAIL, email);
         editor.putString(DOB, dob);
@@ -71,6 +71,21 @@ public class LoginManager {
 
     public String getUserDob(){
         return sharedPreferences.getString(DOB, null);
+    }
+
+    public void setUserName(String userName){
+        editor.putString(NAME, userName);
+        editor.apply();
+    }
+
+    public void setUserPhoneNo(String phoneNo){
+        editor.putString(NUMBER, phoneNo);
+        editor.apply();
+    }
+
+    public void setUserDob(String dob){
+        editor.putString(DOB, dob);
+        editor.apply();
     }
 
     public void logout(){

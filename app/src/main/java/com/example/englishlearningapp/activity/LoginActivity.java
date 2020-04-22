@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         if(email.isEmpty() || password.isEmpty()){
             textInputLayoutPassword.setError("Hãy nhập email và password");
         }else{
-            setLoginProgressBarVisibility(true);
+            setLoginProgressBarVisible(true);
             //Bắt đầu gọi webservice để thực hiện đăng nhập thông qua thư viện Volley
             final RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
             String url = LOGIN_URL + "email=" + email + "&password=" + password;
@@ -95,11 +95,11 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             String authenticated = response.getString("authenticated");
                             if(authenticated.equals("not match")){
-                                setLoginProgressBarVisibility(false);
+                                setLoginProgressBarVisible(false);
                                 textInputLayoutPassword.setError("Sai mật khẩu");
                             }else {
                                 if (authenticated.equals("false")){
-                                    setLoginProgressBarVisibility(false);
+                                    setLoginProgressBarVisible(false);
                                     textInputLayoutEmail.setError("Không tìm thấy user");
                                 }
                             }
@@ -112,8 +112,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Gán lại cho login manager
                             loginManager.createUserData(userId, name, email, password, number, dob);
-
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                             //Sync database after login
                             syncDatabaseRemoteToLocal();
 
@@ -122,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         Toast.makeText(LoginActivity.this, "Login Fail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        setLoginProgressBarVisibility(false);
+                        setLoginProgressBarVisible(false);
                     }
 
                 }
@@ -130,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(LoginActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    setLoginProgressBarVisibility(false);
+                    setLoginProgressBarVisible(false);
                 }
             });
             requestQueue.add(loginRequest);
@@ -164,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginProgressBar.setVisibility(View.GONE);
                 Intent mainIntent = new Intent(LoginActivity.this, MainHomeActivity.class);
                 startActivity(mainIntent);
+                Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                 finish();
             }
         };
@@ -178,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
         registerReceiver(networkChangeReceiver, intentFilter);
     }
 
-    private void setLoginProgressBarVisibility(boolean isVisible){
+    private void setLoginProgressBarVisible(boolean isVisible){
         if(isVisible){
             loginProgressBar.setVisibility(View.VISIBLE);
             btnLogin.setVisibility(View.GONE);

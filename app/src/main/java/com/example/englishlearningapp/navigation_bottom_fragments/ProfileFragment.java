@@ -158,9 +158,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private void UpdateUserData() {
-        String name = edtProfileName.getText().toString();
-        String phoneNo = edtProfilePhoneNo.getText().toString();
-        String dob = edtProfileDOB.getText().toString();
+        final String name = edtProfileName.getText().toString();
+        final String phoneNo = edtProfilePhoneNo.getText().toString();
+        final String dob = edtProfileDOB.getText().toString();
         String email = loginManager.getUserEmail();
         String password = loginManager.getUserPassword();
 
@@ -184,6 +184,10 @@ public class ProfileFragment extends Fragment {
                 int userId = Integer.parseInt(response);
                 Log.d(TAG, "onResponse: " + response);
                 if (userId > 0) {
+                    //Save user info to login manager
+                    loginManager.setUserName(name);
+                    loginManager.setUserPhoneNo(phoneNo);
+                    loginManager.setUserDob(dob);
                     //Delay progress bar 2 seconds
                     setProgressBarDelay(2000, "Lưu thành công");
                 }else{
@@ -228,13 +232,13 @@ public class ProfileFragment extends Fragment {
             String date;
             month++;
             if(month<10 && dayOfMonth <10){
-                date = year + "/0" + month + "/0" + dayOfMonth;
+                date = year + "-0" + month + "-0" + dayOfMonth;
             }else if(month<10){
-                date = year + "/0" + month + "/" + dayOfMonth;
+                date = year + "-0" + month + "-" + dayOfMonth;
             }else if(dayOfMonth<10){
-                date = year + "/" + month + "/0" + dayOfMonth;
+                date = year + "-" + month + "-0" + dayOfMonth;
             }else{
-                date = year + "/" + month + "/" + dayOfMonth;
+                date = year + "-" + month + "-" + dayOfMonth;
             }
             edtProfileDOB.setText(date);
         }

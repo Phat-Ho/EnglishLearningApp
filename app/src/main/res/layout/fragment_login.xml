@@ -11,7 +11,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login"
@@ -100,7 +100,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/forgot_password"
-            android:id="@+id/buttonForgotPassword"/>
+            android:id="@+id/buttonForgotPassword"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSignIn"
