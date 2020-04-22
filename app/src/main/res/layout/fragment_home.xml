@@ -4,7 +4,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="56dp">
+    android:paddingBottom="56dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <!-- TODO: Update blank fragment layout -->
     <AutoCompleteTextView
@@ -18,7 +20,9 @@
         android:hint="Search box"
         android:paddingHorizontal="15dp"
         android:imeOptions="actionNext"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:nextFocusLeft="@id/meaning_auto_complete_search_box_home"
+        android:nextFocusUp="@id/meaning_auto_complete_search_box_home"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylerViewHome"

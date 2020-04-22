@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context=".activity.MeaningActivity">
+    tools:context=".activity.MeaningActivity"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/meaning_toolbar"
@@ -59,7 +61,9 @@
         android:layout_marginTop="15dp"
         android:paddingHorizontal="15dp"
         android:imeOptions="actionNext"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:nextFocusUp="@id/meaning_auto_complete_search_box"
+        android:nextFocusLeft="@id/meaning_auto_complete_search_box"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
