@@ -6,4 +6,5 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhiteTransparent">#80ffffff</color>
     <color name="levelTextColor">#FF0000</color>
+    <color name="backgroundPopup">#272525</color>
 </resources>

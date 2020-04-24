@@ -97,6 +97,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             meaningIntent.putExtra("id", id);
             meaningIntent.putExtra("html", html);
             meaningIntent.putExtra("word", word);
+            meaningIntent.putExtra("description", mean);
+            meaningIntent.putExtra("show_popup", 1);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             meaningIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             PendingIntent meaningPendingIntent = PendingIntent.getActivity(context.getApplicationContext(), id, meaningIntent

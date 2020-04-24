@@ -5,10 +5,12 @@ import androidx.appcompat.widget.Toolbar;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.Html;
@@ -22,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -32,21 +35,24 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
+import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.DatabaseOpenHelper;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.google.android.material.button.MaterialButton;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -61,14 +67,18 @@ public class MeaningActivity extends AppCompatActivity {
     LikeButton likeBtn;
     DatabaseAccess databaseAccess;
     CheckBox cbRemembered;
+    Dialog meaningPopup;
     LoginManager loginManager;
-
+    PopupHistoryAdapter popupHistoryAdapter;
+    ArrayList<MyDate> historyDateList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meaning);
+        databaseAccess = DatabaseAccess.getInstance(this);
         MappingView();
         SetUpToolbar();
+        meaningPopup = new Dialog(this);
         SetMeaningData();
         SetAutoCompleteSearchBox();
         loginManager = new LoginManager(this);
@@ -115,7 +125,9 @@ public class MeaningActivity extends AppCompatActivity {
                 String wordHeader = word.get(0).getWord();
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
-                if(!isHistoryExistence(wordId)){
+                if(isHistoryExistence(wordId)){
+                    databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
+                }else{
                     saveHistory(word.get(0).getId(), loginManager.getUserId());
                 }
                 RefreshScreen(wordHeader, wordHtml, wordId);
@@ -135,6 +147,12 @@ public class MeaningActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if(intent.hasExtra("show_popup")){
+            int wordId = intent.getIntExtra("id", 0);
+            String word = intent.getStringExtra("word");
+            String description = intent.getStringExtra("description");
+            showPopup(wordId, word, description);
+        }
         if(intent.hasExtra("word")){
             String contentHtml = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
@@ -168,8 +186,13 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void SetMeaningData() {
         Intent intent = getIntent();
+        if(intent.hasExtra("show_popup")){
+            int wordId = intent.getIntExtra("id", 0);
+            String word = intent.getStringExtra("word");
+            String description = intent.getStringExtra("description");
+            showPopup(wordId, word, description);
+        }
         String contentHtml = intent.getStringExtra("html");
-
         int start = contentHtml.indexOf("<h1>");
         int end = contentHtml.indexOf("<h3>");
         String replacement = "";
@@ -281,7 +304,7 @@ public class MeaningActivity extends AppCompatActivity {
     public void saveHistory(final int wordID, final int pUserID){
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(this) && pUserID > 0){
-            final String currentDateTime = getDatetime();
+            final long currentDateTime = getCurrentTimeInMillis();
             String url = Server.ADD_HISTORY_URL;
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -313,7 +336,7 @@ public class MeaningActivity extends AppCompatActivity {
                     HashMap<String, String> params = new HashMap<>();
                     params.put("userid", String.valueOf(pUserID));
                     params.put("wordid", String.valueOf(wordID));
-                    params.put("datetime", currentDateTime);
+                    params.put("datetime", String.valueOf(currentDateTime));
                     params.put("sync", String.valueOf(DatabaseContract.SYNC));
 
                     return params;
@@ -321,7 +344,8 @@ public class MeaningActivity extends AppCompatActivity {
             };
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getCurrentTimeInMillis());
+            databaseAccess.addHistoryDate(wordID, getCurrentTimeInMillis());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
@@ -336,10 +360,42 @@ public class MeaningActivity extends AppCompatActivity {
         }
     }
 
-    public String getDatetime(){
-        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
-        Date date = new Date();
-        return dateFormat.format(date);
+    public long getCurrentTimeInMillis(){
+        return System.currentTimeMillis();
+    }
+
+    public void showPopup(int wordId, String word, String description){
+        historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
+        popupHistoryAdapter = new PopupHistoryAdapter(this, historyDateList);
+        if(meaningPopup.isShowing()){
+            meaningPopup.dismiss();
+        }
+        TextView popUpClose, popUpWord, popUpDescription;
+        MaterialButton popUpBtnRemember;
+        ListView popUpListViewHistory, popUpListViewReminder;
+        meaningPopup.setContentView(R.layout.popup_word);
+        popUpClose = meaningPopup.findViewById(R.id.popup_txt_close);
+        popUpWord = meaningPopup.findViewById(R.id.popup_txt_word);
+        popUpListViewHistory = meaningPopup.findViewById(R.id.popup_lv_history);
+        popUpListViewHistory.setAdapter(popupHistoryAdapter);
+        popUpListViewReminder = meaningPopup.findViewById(R.id.popup_lv_reminder);
+        popUpWord.setText(word);
+        popUpDescription = meaningPopup.findViewById(R.id.popup_txt_description);
+        popUpDescription.setText(description);
+        popUpBtnRemember = meaningPopup.findViewById(R.id.popup_btn_remember);
+        popUpBtnRemember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                meaningPopup.dismiss();
+            }
+        });
+        popUpClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                meaningPopup.dismiss();
+            }
+        });
+        meaningPopup.show();
     }
 
     @Override
