@@ -171,7 +171,7 @@ public class SearchFragment extends Fragment {
     public void saveHistory(final int wordID, boolean pIsLogin, final int pUserID){
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pIsLogin == true){
-            final String currentDateTime = getDatetime();
+            final long currentDateTime = System.currentTimeMillis();
             String url = Server.ADD_HISTORY_URL;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -203,7 +203,7 @@ public class SearchFragment extends Fragment {
                     HashMap<String, String> params = new HashMap<>();
                     params.put("userid", String.valueOf(pUserID));
                     params.put("wordid", String.valueOf(wordID));
-                    params.put("datetime", currentDateTime);
+                    params.put("datetime", String.valueOf(currentDateTime));
                     params.put("sync", String.valueOf(DatabaseContract.SYNC));
 
                     return params;
@@ -211,7 +211,7 @@ public class SearchFragment extends Fragment {
             };
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, System.currentTimeMillis());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }

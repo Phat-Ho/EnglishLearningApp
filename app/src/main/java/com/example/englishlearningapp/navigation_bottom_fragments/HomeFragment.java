@@ -149,7 +149,9 @@ public class HomeFragment extends Fragment {
                 String wordHeader = word.get(0).getWord();
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
-                if(!isHistoryExistence(wordId)){
+                if(isHistoryExistence(wordId)){
+                    databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
+                }else{
                     saveHistory(word.get(0).getId(), loginManager.getUserId());
                 }
                 RefreshScreen(wordHeader, wordHtml, wordId);
@@ -169,7 +171,7 @@ public class HomeFragment extends Fragment {
     public void saveHistory(final int wordID, final int pUserID){
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getContext()) && pUserID > 0){
-            final String currentDateTime = getDatetime();
+            final long currentDateTime = System.currentTimeMillis();
             String url = Server.ADD_HISTORY_URL;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -198,7 +200,7 @@ public class HomeFragment extends Fragment {
                     HashMap<String, String> params = new HashMap<>();
                     params.put("userid", String.valueOf(pUserID));
                     params.put("wordid", String.valueOf(wordID));
-                    params.put("datetime", currentDateTime);
+                    params.put("datetime", String.valueOf(currentDateTime));
                     params.put("sync", String.valueOf(DatabaseContract.SYNC));
 
                     return params;
@@ -206,7 +208,8 @@ public class HomeFragment extends Fragment {
             };
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getDatetime());
+            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, System.currentTimeMillis());
+            databaseAccess.addHistoryDate(wordID, System.currentTimeMillis());
         }
     }
 

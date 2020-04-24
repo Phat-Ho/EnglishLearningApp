@@ -32,6 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SplashScreen extends AppCompatActivity {
 
     private static final String TAG = "SplashScreen";
@@ -41,7 +45,7 @@ public class SplashScreen extends AppCompatActivity {
     ImageView imgSplash;
     ContentLoadingProgressBar progressBarSplash;
     NetworkChangeReceiver networkChangeReceiver;
-    int delayTimes = 5000;
+    int delayTimes = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +96,7 @@ public class SplashScreen extends AppCompatActivity {
                             if(syncStatus == DatabaseContract.NOT_SYNC){
                                 int wordId = Integer.parseInt(jsonObject.get("wordId").toString());
                                 String date = jsonObject.get("date").toString();
-                                database.addHistory(wordId, DatabaseContract.SYNC, date);
+                                database.addHistory(wordId, DatabaseContract.SYNC, dateTimeToMillis(date));
                                 updateRemoteHistory(SplashScreen.this, userId, wordId);
                                 Log.d(TAG, "onResponse: sync success form remote to local");
                             }
@@ -148,6 +152,21 @@ public class SplashScreen extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(networkChangeReceiver);
+    }
+
+    private long dateTimeToMillis(String datetime){
+        Date date = null;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            date = dateFormatter.parse(datetime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(date == null){
+            return 0;
+        }else{
+            return date.getTime();
+        }
     }
 
     private void initNetworkChangeReceiver() {

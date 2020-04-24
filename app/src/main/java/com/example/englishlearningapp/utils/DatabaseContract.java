@@ -5,7 +5,8 @@ import java.net.PortUnreachableException;
 public class DatabaseContract {
     public static String HISTORY_TABLE = "history";
     public static String FAVORITE_TABLE = "favorite";
-    public static String WORD_ID = "id";
+    public static String HISTORY_DATE_TABLE = "historyDate";
+    public static String WORD_ID = "wordId";
     public static String SYNC_STATUS = "sync_status";
     public static String REMEMBERED = "remembered";
     public static int SYNC = 1;

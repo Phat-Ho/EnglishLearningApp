@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.fragments.HistoryFragment;
+import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 
 import java.text.SimpleDateFormat;
@@ -159,10 +160,18 @@ public class DatabaseAccess {
         return word;
     }
 
-    public int addHistory(int pWordID, int pSyncStatus, String pDate){
+    public void addHistoryDate(int wordId, long timeInMillis){
+        Log.d(TAG, "addHistoryDate, time: " + timeInMillis);
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WORD_ID, wordId);
+        values.put(DatabaseContract.DATE, timeInMillis);
+        database.insert(DatabaseContract.HISTORY_DATE_TABLE, null, values);
+    }
+
+    public int addHistory(int pWordID, int pSyncStatus, long pDate){
         int remembered = 0;
         ContentValues value = new ContentValues();
-        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put("id", pWordID);
         value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
         value.put(DatabaseContract.DATE, pDate);
         value.put(DatabaseContract.REMEMBERED, remembered);
@@ -170,8 +179,22 @@ public class DatabaseAccess {
         return pWordID;
     }
 
+    public ArrayList<MyDate> getHistoryDateByWordId(int wordId){
+        ArrayList<MyDate> dateList = new ArrayList<>();
+        String query = "SELECT history.id, historyDate.date FROM history JOIN historyDate ON history.id = historyDate.wordId";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                MyDate date = new MyDate(cursor.getLong(1));
+                dateList.add(date);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return dateList;
+    }
+
     public Cursor readHistory(){
-        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
+        String[] column = {"id", DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
 
         return cursor;
@@ -180,14 +203,14 @@ public class DatabaseAccess {
     public void updateHistorySyncStatus(int pWordID, int pSyncStatus){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
-        String selection = DatabaseContract.WORD_ID + " = " + pWordID;
+        String selection = "id = " + pWordID;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
     public void updateHistoryRemembered(int pWordID, int remembered){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.REMEMBERED, remembered);
-        String selection = DatabaseContract.WORD_ID + " = " + pWordID;
+        String selection = "id = " + pWordID;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
@@ -207,7 +230,7 @@ public class DatabaseAccess {
 
     public int addFavorite(int pWordID, int pSyncStatus){
         ContentValues value = new ContentValues();
-        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put("id", pWordID);
         value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
         database.insert("favorite", null, value);
         return pWordID;
