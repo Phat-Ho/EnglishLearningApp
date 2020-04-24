@@ -36,6 +36,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
+import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -70,7 +71,8 @@ public class MeaningActivity extends AppCompatActivity {
     Dialog meaningPopup;
     LoginManager loginManager;
     PopupHistoryAdapter popupHistoryAdapter;
-    ArrayList<MyDate> historyDateList;
+    PopupRemindedAdapter popupRemindedAdapter;
+    ArrayList<MyDate> historyDateList, remindedDateList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -366,7 +368,9 @@ public class MeaningActivity extends AppCompatActivity {
 
     public void showPopup(int wordId, String word, String description){
         historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
+        remindedDateList = databaseAccess.getRemindedWordDateById(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(this, historyDateList);
+        popupRemindedAdapter = new PopupRemindedAdapter(this, remindedDateList);
         if(meaningPopup.isShowing()){
             meaningPopup.dismiss();
         }
@@ -379,6 +383,7 @@ public class MeaningActivity extends AppCompatActivity {
         popUpListViewHistory = meaningPopup.findViewById(R.id.popup_lv_history);
         popUpListViewHistory.setAdapter(popupHistoryAdapter);
         popUpListViewReminder = meaningPopup.findViewById(R.id.popup_lv_reminder);
+        popUpListViewReminder.setAdapter(popupRemindedAdapter);
         popUpWord.setText(word);
         popUpDescription = meaningPopup.findViewById(R.id.popup_txt_description);
         popUpDescription.setText(description);

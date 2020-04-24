@@ -113,6 +113,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setAutoCancel(true);
             notificationManager.notify(id, notiBuilder.build());
 
+            //Add reminded word to database
+            if(isRemindedSave(id)){
+                db.addRemindedWordDate(id, System.currentTimeMillis());
+            }else{
+                db.addRemindedWord(id);
+                db.addRemindedWordDate(id, System.currentTimeMillis());
+            }
+
             //Increase index of notification
             arrayIndex++;
             alarmPropsManager.setIndex(arrayIndex);
@@ -124,6 +132,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
                 return;
             }
+        }
+    }
+
+    public boolean isRemindedSave(int wordId){
+        if(db.getRemindedWordByWordId(wordId).getId() > 0){
+            return true;
+        }else{
+            return false;
         }
     }
 

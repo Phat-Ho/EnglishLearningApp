@@ -161,7 +161,6 @@ public class DatabaseAccess {
     }
 
     public void addHistoryDate(int wordId, long timeInMillis){
-        Log.d(TAG, "addHistoryDate, time: " + timeInMillis);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.WORD_ID, wordId);
         values.put(DatabaseContract.DATE, timeInMillis);
@@ -181,7 +180,8 @@ public class DatabaseAccess {
 
     public ArrayList<MyDate> getHistoryDateByWordId(int wordId){
         ArrayList<MyDate> dateList = new ArrayList<>();
-        String query = "SELECT history.id, historyDate.date FROM history JOIN historyDate ON history.id = historyDate.wordId";
+        String query = "SELECT history.id, historyDate.date FROM history " +
+                "JOIN historyDate ON history.id = historyDate.wordId WHERE history.id = " + wordId;
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -262,5 +262,49 @@ public class DatabaseAccess {
 
     public long getFavoriteWordsCount(){
         return DatabaseUtils.queryNumEntries(database, DatabaseContract.FAVORITE_TABLE);
+    }
+
+    public void addRemindedWord(int wordId){
+        ContentValues value = new ContentValues();
+        value.put("wordId", wordId);
+        database.insert(DatabaseContract.REMINDED_TABLE, null, value);
+    }
+
+    public void addRemindedWordDate(int wordId, long timeInMillis){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WORD_ID, wordId);
+        values.put(DatabaseContract.DATE, timeInMillis);
+        database.insert(DatabaseContract.REMINDED_DATE_TABLE, null, values);
+    }
+
+    public Word getRemindedWordByWordId(int wordId){
+        Word word = new Word();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce " +
+                "FROM remindWord JOIN av ON remindWord.wordId = av.id WHERE av.id = " + wordId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setHtml(cursor.getString(2));
+            word.setDescription(cursor.getString(3));
+            word.setPronounce(cursor.getString(4));
+        }
+        cursor.close();
+        return word;
+    }
+
+    public ArrayList<MyDate> getRemindedWordDateById(int wordId){
+        ArrayList<MyDate> dateList = new ArrayList<>();
+        String query = "SELECT remindWord.wordId, remindWordDate.date FROM remindWord " +
+                "JOIN remindWordDate ON remindWord.wordId = remindWordDate.wordId WHERE remindWord.wordId = " + wordId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                MyDate date = new MyDate(cursor.getLong(1));
+                dateList.add(date);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return dateList;
     }
 }

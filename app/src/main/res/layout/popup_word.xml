@@ -36,22 +36,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Lịch sử nhắc nhở"
+        android:text="Lịch sử tra từ"
         android:textColor="@color/colorWhite"/>
     <ListView
         android:id="@+id/popup_lv_history"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Lịch sử tra từ"
+        android:text="Lịch sử nhắc nhở"
         android:textColor="@color/colorWhite" />
     <ListView
         android:id="@+id/popup_lv_reminder"
         android:layout_width="match_parent"
-        android:layout_height="100dp"/>
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/popup_btn_remember"
         android:layout_width="wrap_content"
