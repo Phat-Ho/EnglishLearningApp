@@ -32,6 +32,7 @@ import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +64,7 @@ public class SettingFragment extends Fragment {
     public ArrayList<AlarmType> alarmTypeList;
     boolean isChecked = false;
     AlarmPropsManager alarmPropsManager;
+    GlobalVariable globalHashSet;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -96,6 +98,7 @@ public class SettingFragment extends Fragment {
         db = DatabaseAccess.getInstance(getActivity());
         db.open();
         alarmPropsManager = new AlarmPropsManager(getActivity());
+        globalHashSet = (GlobalVariable) getActivity().getApplicationContext();
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -137,7 +140,8 @@ public class SettingFragment extends Fragment {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("checked", true);
                     editor.apply();
-                    alarmPropsManager.setIndex(0);
+                    alarmPropsManager.setAlarmCount(0);
+                    globalHashSet.clearHashSet();
                     long timeInMillis = 3000; //3 second
                     setRepeatAlarm(timeInMillis, alarmPropsManager.getStartHour());
                 }else {

@@ -2,14 +2,23 @@ package com.example.englishlearningapp.utils;
 
 import android.app.Application;
 
-public class GlobalVariable extends Application {
-    private int historyIndex;
+import java.util.HashSet;
 
-    public int getHistoryIndex() {
-        return historyIndex;
+public class GlobalVariable extends Application {
+    private HashSet<Integer> randomNumbers = new HashSet<>();
+
+    public boolean addToHashSet(int num){
+        return randomNumbers.add(num);
+    }
+    public int getHashSetSize(){
+        return randomNumbers.size();
     }
 
-    public void setHistoryIndex(int historyIndex) {
-        this.historyIndex = historyIndex;
+    public HashSet getHashSet(){
+        return randomNumbers;
+    }
+
+    public void clearHashSet(){
+        randomNumbers.clear();
     }
 }

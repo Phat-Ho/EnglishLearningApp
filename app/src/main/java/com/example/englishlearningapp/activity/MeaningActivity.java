@@ -67,7 +67,7 @@ public class MeaningActivity extends AppCompatActivity {
     Toolbar meaningToolbar;
     TextToSpeech tts;
     LikeButton likeBtn;
-    DatabaseAccess databaseAccess;
+    DatabaseAccess databaseAccess = null;
     Dialog meaningPopup;
     LoginManager loginManager;
     AlarmPropsManager alarmPropsManager;
@@ -345,8 +345,9 @@ public class MeaningActivity extends AppCompatActivity {
     }
 
     public void showPopup(final int wordId, String word, String description){
-        historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
-        remindedDateList = databaseAccess.getRemindedWordDateById(wordId);
+        final DatabaseAccess databaseAccess1 = DatabaseAccess.getInstance(this);
+        historyDateList = databaseAccess1.getHistoryDateByWordId(wordId);
+        remindedDateList = databaseAccess1.getRemindedWordDateById(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(this, historyDateList);
         popupRemindedAdapter = new PopupRemindedAdapter(this, remindedDateList);
         if(meaningPopup.isShowing()){
@@ -374,10 +375,10 @@ public class MeaningActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
-                    databaseAccess.setHistoryRememberByWordId(wordId);
+                    databaseAccess1.setHistoryRememberByWordId(wordId);
                 }
                 if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
-                    databaseAccess.setFavoriteRememberByWordId(wordId);
+                    databaseAccess1.setFavoriteRememberByWordId(wordId);
                 }
                 meaningPopup.dismiss();
             }

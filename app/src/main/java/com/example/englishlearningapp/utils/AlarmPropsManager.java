@@ -9,6 +9,7 @@ public class AlarmPropsManager {
     public Context context;
 
     public static final String PREF_NAME = "ALARM";
+    public static final String COUNT = "ALARM_COUNT";
     public static final String INDEX = "INDEX";
     public static final String NO_WORD = "NO_WORD";
     public static final String START_HOUR = "START_HOUR";
@@ -19,6 +20,15 @@ public class AlarmPropsManager {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.editor = sharedPreferences.edit();
+    }
+
+    public int getAlarmCount(){
+        return sharedPreferences.getInt(COUNT, 0);
+    }
+
+    public void setAlarmCount(int count){
+        editor.putInt(COUNT, count);
+        editor.apply();
     }
 
     public int getIndex(){

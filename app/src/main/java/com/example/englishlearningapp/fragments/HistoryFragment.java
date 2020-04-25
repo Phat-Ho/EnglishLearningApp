@@ -141,7 +141,8 @@ public class HistoryFragment extends Fragment {
     }
 
     public void showPopup(int wordId, String word, String description){
-        ArrayList<MyDate> historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
+        final DatabaseAccess databaseAccess1 = DatabaseAccess.getInstance(getActivity());
+        ArrayList<MyDate> historyDateList = databaseAccess1.getHistoryDateByWordId(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(getActivity(), historyDateList);
         if(historyPopup.isShowing()){
             historyPopup.dismiss();

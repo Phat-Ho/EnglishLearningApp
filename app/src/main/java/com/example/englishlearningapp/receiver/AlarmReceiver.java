@@ -19,9 +19,13 @@ import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -36,16 +40,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     AlarmPropsManager alarmPropsManager;
     @Override
     public void onReceive(Context context, Intent intent) {
+        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
+        Log.d(TAG, "Global hash set size: " + globalHashSet.getHashSetSize());
         db = DatabaseAccess.getInstance(context);
         db.open();
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmPropsManager = new AlarmPropsManager(context);
         //Create the same pending intent of alarm manager
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Get history words array index to show notification
-        int arrayIndex = alarmPropsManager.getIndex();
-        Log.d(TAG, "array index: " + arrayIndex);
 
         //Get start and end hours from Shared Preference
         int endHour = alarmPropsManager.getEndHour();
@@ -61,17 +63,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         int alarmId = alarmPropsManager.getAlarmType();
         alarmWords = getAlarmWords(alarmId);
 
+        //Get random index
+        int arrayIndex = randomIndexWithoutDuplicate(alarmWords.size(), context);
+        Log.d(TAG, "array index: " + arrayIndex);
+
+        //Get alarm count
+        int alarmCount = alarmPropsManager.getAlarmCount();
 
         if(alarmWords == null){
             alarmManager.cancel(pendingIntent);
-            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
+            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, context);
             return;
         }
 
-        if(arrayIndex >= alarmWords.size() || arrayIndex >= numberOfWords){
+        if((arrayIndex >= alarmWords.size()) || (alarmCount >= numberOfWords)){
             Log.d(TAG, "onReceive: stop alarm");
             alarmManager.cancel(pendingIntent);
-            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
+            startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, context);
             return;
         }else{
             //Get an instance of notification manager
@@ -113,6 +121,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setAutoCancel(true);
             notificationManager.notify(id, notiBuilder.build());
 
+            //Increase alarm count
+            alarmCount++;
+            alarmPropsManager.setAlarmCount(alarmCount);
+
             //Add reminded word to database
             if(isRemindedSave(id)){
                 db.addRemindedWordDate(id, System.currentTimeMillis());
@@ -121,15 +133,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 db.addRemindedWordDate(id, System.currentTimeMillis());
             }
 
-            //Increase index of notification
-            arrayIndex++;
-            alarmPropsManager.setIndex(arrayIndex);
-
             //Turn off notification if meet end hour
             if(currentHour >= endHour){
                 Log.d(TAG, "onReceive: meet end hour, stop alarm");
                 alarmManager.cancel(pendingIntent);
-                startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar);
+                startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, context);
                 return;
             }
         }
@@ -154,9 +162,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void startTomorrowAlarm(AlarmManager alarmManager
                                     , PendingIntent pendingIntent
-                                    , Calendar startCalendar){
+                                    , Calendar startCalendar, Context context){
         Log.d(TAG, "startTomorrowAlarm: " + startCalendar.getTimeInMillis());
-        alarmPropsManager.setIndex(0);
+        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
+        globalHashSet.clearHashSet();
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
 
@@ -169,5 +178,17 @@ public class AlarmReceiver extends BroadcastReceiver {
             wordArrayList = db.getFavoriteWordsToAlarm();
         }
         return  wordArrayList;
+    }
+
+    private int randomIndexWithoutDuplicate(int arraySize, Context context){
+        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
+        Random randomNumGenerator = new Random();
+        while(globalHashSet.getHashSetSize() <= arraySize){
+            int temp = randomNumGenerator.nextInt(arraySize);
+            if(globalHashSet.addToHashSet(temp)){
+                return temp;
+            }
+        }
+        return arraySize + 1;
     }
 }
