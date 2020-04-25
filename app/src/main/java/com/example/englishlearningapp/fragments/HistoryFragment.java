@@ -1,6 +1,7 @@
 package com.example.englishlearningapp.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,13 +17,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
+import com.example.englishlearningapp.adapters.HistoryAdapter;
+import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
+import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
+import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -33,12 +40,15 @@ public class HistoryFragment extends Fragment {
     private static final int MEANING_CODE = 1;
     ListView historyFragmentListView;
     ArrayList<Word> wordList;
-    ArrayAdapter arrayAdapter;
+    HistoryAdapter historyAdapter;
     DatabaseAccess databaseAccess;
 
     public HistoryFragment() {
         // Required empty public constructor
     }
+
+    PopupHistoryAdapter popupHistoryAdapter;
+    Dialog meaningPopup;
 
 
     @Override
@@ -48,6 +58,7 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         historyFragmentListView = view.findViewById(R.id.lv_fragment_history);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
+        meaningPopup = new Dialog(getActivity());
         LoadHistoryData();
         return view;
     }
@@ -59,7 +70,7 @@ public class HistoryFragment extends Fragment {
         if(requestCode == MEANING_CODE){
             if(resultCode == Activity.RESULT_OK){
                 wordList = databaseAccess.getHistoryWords();
-                arrayAdapter.notifyDataSetChanged();
+                historyAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -92,7 +103,7 @@ public class HistoryFragment extends Fragment {
                         databaseAccess.open();
                         if(databaseAccess.removeHistory(id)>0){
                             wordList.remove(position);
-                            arrayAdapter.notifyDataSetChanged();
+                            historyAdapter.notifyDataSetChanged();
                         }
                     }
                 }, new DialogInterface.OnClickListener() {
@@ -120,8 +131,8 @@ public class HistoryFragment extends Fragment {
     private void LoadHistoryData() {
         databaseAccess.open();
         wordList = databaseAccess.getHistoryWords();
-        arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, wordList);
-        historyFragmentListView.setAdapter(arrayAdapter);
+        historyAdapter = new HistoryAdapter(this, R.layout.row_list_view_history, wordList);
+        historyFragmentListView.setAdapter(historyAdapter);
     }
 
     private void moveToMeaningActivity(String html, String word, int wordId, int remembered) {
@@ -131,5 +142,38 @@ public class HistoryFragment extends Fragment {
         meaningIntent.putExtra("id", wordId);
         meaningIntent.putExtra("remembered", remembered);
         startActivityForResult(meaningIntent, HistoryFragment.MEANING_CODE);
+    }
+
+    public void showPopup(int wordId, String word, String description){
+        ArrayList<MyDate> historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
+        popupHistoryAdapter = new PopupHistoryAdapter(getActivity(), historyDateList);
+        if(meaningPopup.isShowing()){
+            meaningPopup.dismiss();
+        }
+        TextView popUpClose, popUpWord, popUpDescription;
+        MaterialButton popUpBtnRemember;
+        ListView popUpListViewHistory;
+        meaningPopup.setContentView(R.layout.popup_word);
+        popUpClose = meaningPopup.findViewById(R.id.popup_txt_close);
+        popUpWord = meaningPopup.findViewById(R.id.popup_txt_word);
+        popUpListViewHistory = meaningPopup.findViewById(R.id.popup_lv_history);
+        popUpListViewHistory.setAdapter(popupHistoryAdapter);
+        popUpWord.setText(word);
+        popUpDescription = meaningPopup.findViewById(R.id.popup_txt_description);
+        popUpDescription.setText(description);
+        popUpBtnRemember = meaningPopup.findViewById(R.id.popup_btn_remember);
+        popUpBtnRemember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                meaningPopup.dismiss();
+            }
+        });
+        popUpClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                meaningPopup.dismiss();
+            }
+        });
+        meaningPopup.show();
     }
 }
