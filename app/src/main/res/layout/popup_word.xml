@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
-    android:layout_height="450dp"
+    android:layout_height="400dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/backgroundPopup"
@@ -9,60 +9,69 @@
     android:padding="15dp">
 
     <TextView
-        android:id="@+id/popup_txt_close"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:textColor="@color/colorWhite"
-        android:text="X"
-        android:textStyle="bold"
-        android:layout_gravity="end"
-        android:gravity="center"
-        android:background="@drawable/custom_cancel_text"/>
-
-    <TextView
         android:id="@+id/popup_txt_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="hello"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/black"
         android:textStyle="bold"/>
     <TextView
         android:id="@+id/popup_txt_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="description"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="@color/black"/>
     <TextView
+        android:id="@+id/popup_meaning_txt_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Lịch sử tra từ"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="@color/levelTextColor"/>
     <ListView
         android:id="@+id/popup_lv_history"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="10dp"/>
     <TextView
+        android:id="@+id/popup_meaning_txt_reminded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Lịch sử nhắc nhở"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@color/levelTextColor" />
     <ListView
         android:id="@+id/popup_lv_reminder"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="10dp"/>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/popup_btn_remember"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đã nhớ"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"
-        app:strokeColor="@android:color/holo_green_light"
-        android:layout_marginTop="20dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/popup_btn_remember"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Đã nhớ"
+            android:textColor="@color/black"
+            app:strokeColor="@color/black"
+            android:layout_marginEnd="20dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/popup_btn_not_remember"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Chưa nhớ"
+            android:textColor="@color/black"
+            app:strokeColor="@color/black"
+            android:layout_marginStart="20dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+    </LinearLayout>
+
 
 </LinearLayout>

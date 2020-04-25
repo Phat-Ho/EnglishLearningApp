@@ -8,6 +8,5 @@
         android:id="@+id/row_popup_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="date"
-        android:textColor="@color/colorWhite"/>
+        android:text="date"/>
 </LinearLayout>

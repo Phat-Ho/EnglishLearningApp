@@ -15,17 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HistoryAdapter;
 import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
-import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -48,7 +44,7 @@ public class HistoryFragment extends Fragment {
     }
 
     PopupHistoryAdapter popupHistoryAdapter;
-    Dialog meaningPopup;
+    Dialog historyPopup;
 
 
     @Override
@@ -58,7 +54,7 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         historyFragmentListView = view.findViewById(R.id.lv_fragment_history);
         databaseAccess = DatabaseAccess.getInstance(getActivity());
-        meaningPopup = new Dialog(getActivity());
+        historyPopup = new Dialog(getActivity());
         LoadHistoryData();
         return view;
     }
@@ -147,33 +143,25 @@ public class HistoryFragment extends Fragment {
     public void showPopup(int wordId, String word, String description){
         ArrayList<MyDate> historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(getActivity(), historyDateList);
-        if(meaningPopup.isShowing()){
-            meaningPopup.dismiss();
+        if(historyPopup.isShowing()){
+            historyPopup.dismiss();
         }
         TextView popUpClose, popUpWord, popUpDescription;
-        MaterialButton popUpBtnRemember;
         ListView popUpListViewHistory;
-        meaningPopup.setContentView(R.layout.popup_word);
-        popUpClose = meaningPopup.findViewById(R.id.popup_txt_close);
-        popUpWord = meaningPopup.findViewById(R.id.popup_txt_word);
-        popUpListViewHistory = meaningPopup.findViewById(R.id.popup_lv_history);
+        historyPopup.setContentView(R.layout.popup_history);
+        popUpClose = historyPopup.findViewById(R.id.popup_history_txt_close);
+        popUpWord = historyPopup.findViewById(R.id.popup_history_txt_word);
+        popUpListViewHistory = historyPopup.findViewById(R.id.popup_history_lv_history);
         popUpListViewHistory.setAdapter(popupHistoryAdapter);
         popUpWord.setText(word);
-        popUpDescription = meaningPopup.findViewById(R.id.popup_txt_description);
+        popUpDescription = historyPopup.findViewById(R.id.popup_history_txt_description);
         popUpDescription.setText(description);
-        popUpBtnRemember = meaningPopup.findViewById(R.id.popup_btn_remember);
-        popUpBtnRemember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                meaningPopup.dismiss();
-            }
-        });
         popUpClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                meaningPopup.dismiss();
+                historyPopup.dismiss();
             }
         });
-        meaningPopup.show();
+        historyPopup.show();
     }
 }

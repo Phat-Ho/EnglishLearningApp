@@ -39,6 +39,7 @@ import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
 import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
+import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.DatabaseOpenHelper;
@@ -67,9 +68,9 @@ public class MeaningActivity extends AppCompatActivity {
     TextToSpeech tts;
     LikeButton likeBtn;
     DatabaseAccess databaseAccess;
-    CheckBox cbRemembered;
     Dialog meaningPopup;
     LoginManager loginManager;
+    AlarmPropsManager alarmPropsManager;
     PopupHistoryAdapter popupHistoryAdapter;
     PopupRemindedAdapter popupRemindedAdapter;
     ArrayList<MyDate> historyDateList, remindedDateList;
@@ -84,6 +85,7 @@ public class MeaningActivity extends AppCompatActivity {
         SetMeaningData();
         SetAutoCompleteSearchBox();
         loginManager = new LoginManager(this);
+        alarmPropsManager = new AlarmPropsManager(this);
     }
 
     private void SetUpToolbar() {
@@ -180,7 +182,6 @@ public class MeaningActivity extends AppCompatActivity {
                 }
             });
             addToFavorite(intent);
-            addToRemembered(intent);
         }
     }
 
@@ -222,7 +223,6 @@ public class MeaningActivity extends AppCompatActivity {
 
         //Compare to set Favorite
         addToFavorite(intent);
-        addToRemembered(intent);
     }
 
     private void MappingView() {
@@ -231,7 +231,6 @@ public class MeaningActivity extends AppCompatActivity {
         txtContentHtml = findViewById(R.id.textViewContentHtml);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         likeBtn = findViewById(R.id.LikeButtonHeart);
-        cbRemembered = findViewById(R.id.checkBoxRemembered);
         meaningToolbar = findViewById(R.id.meaning_toolbar);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -278,27 +277,6 @@ public class MeaningActivity extends AppCompatActivity {
             @Override
             public void unLiked(LikeButton likeButton) {
                 databaseAccess.removeFavorite(wordId);
-            }
-        });
-    }
-    private void addToRemembered(Intent intent){
-        final int wordId = intent.getIntExtra("id", 0);
-        int isRemembered = databaseAccess.getHistoryWordById(wordId).getRemembered();
-        if (isRemembered == 1){
-            cbRemembered.setChecked(true);
-        } else {
-            cbRemembered.setChecked(false);
-        }
-
-        cbRemembered.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MeaningActivity.rememberChange = true;
-                if (isChecked){
-                    databaseAccess.updateHistoryRemembered(wordId, 1);
-                } else {
-                    databaseAccess.updateHistoryRemembered(wordId, 0);
-                }
             }
         });
     }
@@ -366,7 +344,7 @@ public class MeaningActivity extends AppCompatActivity {
         return System.currentTimeMillis();
     }
 
-    public void showPopup(int wordId, String word, String description){
+    public void showPopup(final int wordId, String word, String description){
         historyDateList = databaseAccess.getHistoryDateByWordId(wordId);
         remindedDateList = databaseAccess.getRemindedWordDateById(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(this, historyDateList);
@@ -374,11 +352,15 @@ public class MeaningActivity extends AppCompatActivity {
         if(meaningPopup.isShowing()){
             meaningPopup.dismiss();
         }
-        TextView popUpClose, popUpWord, popUpDescription;
-        MaterialButton popUpBtnRemember;
+        TextView popUpWord, popUpDescription, popUpHistory, popUpReminded;
+        MaterialButton popUpBtnRemember, popUpBtnNotRemember;
         ListView popUpListViewHistory, popUpListViewReminder;
         meaningPopup.setContentView(R.layout.popup_word);
-        popUpClose = meaningPopup.findViewById(R.id.popup_txt_close);
+        popUpHistory = meaningPopup.findViewById(R.id.popup_meaning_txt_history);
+        popUpHistory.setText("Lịch sử tra từ" + " (" + historyDateList.size()+")");
+        popUpReminded = meaningPopup.findViewById(R.id.popup_meaning_txt_reminded);
+        popUpReminded.setText("Lịch sử nhắc nhở" + " (" + remindedDateList.size()+")");
+        popUpBtnNotRemember = meaningPopup.findViewById(R.id.popup_btn_not_remember);
         popUpWord = meaningPopup.findViewById(R.id.popup_txt_word);
         popUpListViewHistory = meaningPopup.findViewById(R.id.popup_lv_history);
         popUpListViewHistory.setAdapter(popupHistoryAdapter);
@@ -391,10 +373,17 @@ public class MeaningActivity extends AppCompatActivity {
         popUpBtnRemember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
+                    databaseAccess.setHistoryRememberByWordId(wordId);
+                }
+                if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
+                    databaseAccess.setFavoriteRememberByWordId(wordId);
+                }
                 meaningPopup.dismiss();
             }
         });
-        popUpClose.setOnClickListener(new View.OnClickListener() {
+
+        popUpBtnNotRemember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 meaningPopup.dismiss();

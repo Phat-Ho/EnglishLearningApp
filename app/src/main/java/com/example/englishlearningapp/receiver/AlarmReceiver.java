@@ -59,7 +59,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Get alarm word from database
         int alarmId = alarmPropsManager.getAlarmType();
-        alarmWords = getAlarmWords(alarmId, numberOfWords);
+        alarmWords = getAlarmWords(alarmId);
 
 
         if(alarmWords == null){
@@ -160,27 +160,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
 
-    private ArrayList<Word> getAlarmWords(int pAlarmId, int numberOfWords){
-        ArrayList<Word> words = null;
-        ArrayList<Word> arrayList;
+    private ArrayList<Word> getAlarmWords(int pAlarmId){
+        ArrayList<Word> wordArrayList = null;
         if(pAlarmId == DatabaseContract.ALARM_HISTORY){
-            arrayList = db.getHistoryWords();
-            for (Word word: new ArrayList<>(arrayList)){
-                if (word.getRemembered() == 1){
-                    arrayList.remove(word);
-                }
-            }
-            words = arrayList;
+            wordArrayList = db.getHistoryWordsToAlarm();
         }
         if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
-            arrayList = db.getFavoriteWords();
-            for (Word word: new ArrayList<>(arrayList)){
-                if (word.getRemembered() == 1){
-                    arrayList.remove(word);
-                }
-            }
-            words = arrayList;
+            wordArrayList = db.getFavoriteWordsToAlarm();
         }
-        return words;
+        return  wordArrayList;
     }
 }

@@ -127,6 +127,28 @@ public class DatabaseAccess {
         return wordList;
     }
 
+    public ArrayList<Word> getHistoryWordsToAlarm(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
+                "FROM history JOIN av ON history.id = av.id WHERE history.remembered = 0";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(6));
+
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return wordList;
+    }
+
     public ArrayList<Word> getVietnameseWords(String word){
         ArrayList<Word> list = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM va WHERE word LIKE '" + word + "%'" + "LIMIT 100", null);
@@ -193,6 +215,13 @@ public class DatabaseAccess {
         return dateList;
     }
 
+    public void setHistoryRememberByWordId(int wordId){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.REMEMBERED, 1);
+        String selection = "id = " + wordId;
+        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+    }
+
     public Cursor readHistory(){
         String[] column = {"id", DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
@@ -256,12 +285,40 @@ public class DatabaseAccess {
         return wordList;
     }
 
+    public ArrayList<Word> getFavoriteWordsToAlarm(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, favorite.remembered " +
+                "FROM favorite JOIN av ON favorite.id = av.id WHERE favorite.remembered = 0";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(5));
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return wordList;
+    }
+
     public int removeFavorite(int id){
         return database.delete("favorite", "id = " + id, null);
     }
 
     public long getFavoriteWordsCount(){
         return DatabaseUtils.queryNumEntries(database, DatabaseContract.FAVORITE_TABLE);
+    }
+
+    public void setFavoriteRememberByWordId(int wordId){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.REMEMBERED, 1);
+        String selection = "id = " + wordId;
+        database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
     }
 
     public void addRemindedWord(int wordId){
