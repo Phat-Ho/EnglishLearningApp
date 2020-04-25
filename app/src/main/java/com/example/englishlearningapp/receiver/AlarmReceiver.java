@@ -40,8 +40,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     AlarmPropsManager alarmPropsManager;
     @Override
     public void onReceive(Context context, Intent intent) {
-        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
-        Log.d(TAG, "Global hash set size: " + globalHashSet.getHashSetSize());
         db = DatabaseAccess.getInstance(context);
         db.open();
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -164,7 +162,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     , PendingIntent pendingIntent
                                     , Calendar startCalendar, Context context){
         Log.d(TAG, "startTomorrowAlarm: " + startCalendar.getTimeInMillis());
-        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
+        GlobalVariable globalHashSet = GlobalVariable.getInstance(context);
         globalHashSet.clearHashSet();
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
@@ -181,9 +179,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private int randomIndexWithoutDuplicate(int arraySize, Context context){
-        GlobalVariable globalHashSet = (GlobalVariable) context.getApplicationContext();
+        GlobalVariable globalHashSet = GlobalVariable.getInstance(context);
+        Log.d(TAG, "Hash set size: " + globalHashSet.getHashSetSize());
         Random randomNumGenerator = new Random();
-        while(globalHashSet.getHashSetSize() <= arraySize){
+        while(globalHashSet.getHashSetSize() < arraySize){
             int temp = randomNumGenerator.nextInt(arraySize);
             if(globalHashSet.addToHashSet(temp)){
                 return temp;

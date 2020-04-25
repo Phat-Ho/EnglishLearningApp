@@ -98,7 +98,7 @@ public class SettingFragment extends Fragment {
         db = DatabaseAccess.getInstance(getActivity());
         db.open();
         alarmPropsManager = new AlarmPropsManager(getActivity());
-        globalHashSet = (GlobalVariable) getActivity().getApplicationContext();
+        globalHashSet = GlobalVariable.getInstance(getActivity());
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
