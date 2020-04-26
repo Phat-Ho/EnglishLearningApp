@@ -1,6 +1,7 @@
 package com.example.englishlearningapp.fragments;
 
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,8 @@ import android.widget.Switch;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.SettingListViewAdapter;
 import com.example.englishlearningapp.models.AlarmType;;
+import com.example.englishlearningapp.models.Topic;
+import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -65,6 +68,7 @@ public class SettingFragment extends Fragment {
     boolean isChecked = false;
     AlarmPropsManager alarmPropsManager;
     GlobalVariable globalHashSet;
+    Dialog settingPopup;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -110,6 +114,7 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        settingPopup = new Dialog(getActivity());
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         spinnerNumberOfWords = view.findViewById(R.id.spinner_number_of_words);
@@ -202,6 +207,8 @@ public class SettingFragment extends Fragment {
     }
 
     private void SetUpListView() {
+        ArrayList<Topic> topicList = null;
+        topicList = db.getTopics();
         Log.d(TAG, "alarm Type: " + alarmPropsManager.getAlarmType());
         alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, "Lịch sử (" + db.getHistoryWordsCount() + ")", false));
         alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, "Yêu thích (" + db.getFavoriteWordsCount() + ")", false));
@@ -211,7 +218,19 @@ public class SettingFragment extends Fragment {
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
             alarmTypeList.get(1).setChecked(true);
         }
-        lvAdapter = new SettingListViewAdapter(getActivity(), alarmTypeList);
+        if(topicList!=null){
+            for(int i =0;i<topicList.size();i++){
+                int wordCount = db.getWordCountByTopicId(topicList.get(i).getTopicId());
+                int topicId = topicList.get(i).getTopicId();
+                String topicName = topicList.get(i).getTopicName();
+                if(alarmPropsManager.getAlarmType() == topicId){
+                    alarmTypeList.add(new AlarmType(topicId, topicName + " (" +wordCount + ")", true));
+                }else{
+                    alarmTypeList.add(new AlarmType(topicId, topicName + " (" +wordCount + ")", false));
+                }
+            }
+        }
+        lvAdapter = new SettingListViewAdapter(this, alarmTypeList);
         lvSetting.setAdapter(lvAdapter);
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -225,7 +244,8 @@ public class SettingFragment extends Fragment {
                         alarmTypeList.get(i).setChecked(false);
                     }
                     //update alarm type
-                    alarmPropsManager.setAlarmType(position);
+                    int alarmId = alarmTypeList.get(position).getAlarmId();
+                    alarmPropsManager.setAlarmType(alarmId);
                     //Set isChecked props of selected item to true
                     alarmTypeList.get(position).setChecked(true);
                     reStartSwitch();
@@ -240,6 +260,23 @@ public class SettingFragment extends Fragment {
             swtReminder.setChecked(false);
             swtReminder.setChecked(true);
         }
+    }
+
+    public void showPopupWordList(int alarmId){
+        ArrayList<Word> wordList = null;
+        if(alarmId == DatabaseContract.ALARM_HISTORY){
+            wordList = db.getHistoryWords();
+        }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
+            wordList = db.getFavoriteWords();
+        }else{
+            wordList = db.getWordsByTopicId(alarmId);
+        }
+        settingPopup.setContentView(R.layout.popup_setting);
+        ListView lvSettingPopup;
+        lvSettingPopup = settingPopup.findViewById(R.id.popup_setting_lv_word);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, wordList);
+        lvSettingPopup.setAdapter(arrayAdapter);
+        settingPopup.show();
     }
 
     public class NumberOfWordsSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener{

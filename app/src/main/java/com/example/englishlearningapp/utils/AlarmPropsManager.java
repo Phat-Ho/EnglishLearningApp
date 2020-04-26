@@ -68,7 +68,7 @@ public class AlarmPropsManager {
     }
 
     public int getAlarmType(){
-        return sharedPreferences.getInt(ALARM_TYPE, 0);
+        return sharedPreferences.getInt(ALARM_TYPE, 99);
     }
 
     public void setAlarmType(int alarmType){

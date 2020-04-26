@@ -14,6 +14,6 @@ public class DatabaseContract {
     public static int SYNC = 1;
     public static int NOT_SYNC = 0;
     public static String DATE = "date";
-    public static int ALARM_HISTORY = 0;
-    public static int ALARM_FAVORITE = 1;
+    public static int ALARM_HISTORY = 99;
+    public static int ALARM_FAVORITE = 100;
 }

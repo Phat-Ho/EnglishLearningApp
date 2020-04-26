@@ -7,12 +7,24 @@
 
     <TextView
         android:id="@+id/txt_lv_setting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="24sp"
         android:text="Lịch sử"
         android:textColor="@color/black"
-        android:paddingStart="15dp"/>
+        android:paddingStart="15dp"
+        android:layout_centerVertical="true"/>
+
+    <ImageButton
+        android:background="?android:selectableItemBackground"
+        android:id="@+id/row_lv_setting_img_btn_info"
+        android:src="@drawable/ic_info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
+        android:layout_toRightOf="@id/txt_lv_setting"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"/>
     <ImageView
         android:id="@+id/img_lv_setting"
         android:layout_width="50dp"

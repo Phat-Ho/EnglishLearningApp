@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.models.MyDate;
+import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 
 import java.text.SimpleDateFormat;
@@ -348,6 +349,46 @@ public class DatabaseAccess {
         }
         cursor.close();
         return word;
+    }
+
+    public ArrayList<Word> getWordsByTopicId(int topicId) {
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE idTopic LIKE '%," + topicId + ",%'" + "LIMIT 100", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(new Word(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(cursor.getColumnIndex("description")),
+                    cursor.getString(cursor.getColumnIndex("pronounce")),
+                    cursor.getString(cursor.getColumnIndex("html"))));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+
+    }
+
+    public ArrayList<Topic> getTopics(){
+        ArrayList<Topic> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM topic", null);
+        if(cursor.moveToFirst()){
+            do{
+                Topic topic = new Topic();
+                topic.setTopicId(cursor.getInt(0));
+                topic.setTopicName(cursor.getString(1));
+                topic.setActive(cursor.getInt(2));
+
+                list.add(topic);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public int getWordCountByTopicId(int topicId){
+        ArrayList<Word> wordList;
+        wordList = getWordsByTopicId(topicId);
+        return wordList.size();
     }
 
     public ArrayList<MyDate> getRemindedWordDateById(int wordId){

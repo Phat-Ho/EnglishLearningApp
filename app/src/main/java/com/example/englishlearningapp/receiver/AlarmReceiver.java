@@ -171,9 +171,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         ArrayList<Word> wordArrayList = null;
         if(pAlarmId == DatabaseContract.ALARM_HISTORY){
             wordArrayList = db.getHistoryWordsToAlarm();
-        }
-        if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
+        }else if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
             wordArrayList = db.getFavoriteWordsToAlarm();
+        }else{
+            wordArrayList = db.getWordsByTopicId(pAlarmId);
         }
         return  wordArrayList;
     }
