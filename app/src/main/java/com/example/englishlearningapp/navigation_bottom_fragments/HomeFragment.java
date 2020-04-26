@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -135,6 +136,9 @@ public class HomeFragment extends Fragment {
                 txtMeaningSearch.setAdapter(searchBoxAdapter);
                 txtMeaningSearch.setThreshold(1);
                 searchBoxAdapter.notifyDataSetChanged();
+                if (wordList.isEmpty()){
+                    Toast.makeText(getActivity(), "Không có kết quả", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

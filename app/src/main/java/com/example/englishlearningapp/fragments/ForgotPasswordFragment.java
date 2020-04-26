@@ -58,7 +58,6 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     Toolbar tbForgotPassword;
-    Fragment remove = this;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
