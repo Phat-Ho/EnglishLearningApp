@@ -235,7 +235,6 @@ public class SettingFragment extends Fragment {
             }
         }
         lvAdapter = new SettingListViewAdapter(this, alarmTypeList);
-        lvSetting.setAdapter(lvAdapter);
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -257,6 +256,7 @@ public class SettingFragment extends Fragment {
                 lvAdapter.notifyDataSetChanged();
             }
         });
+        lvSetting.setAdapter(lvAdapter);
     }
 
     public void reStartSwitch(){
@@ -325,8 +325,8 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            alarmPropsManager.setStartHour(position);
             if(userSelect){
-                alarmPropsManager.setStartHour(position);
                 Log.d(TAG, "start Hour: " + position);
                 reStartSwitch();
                 userSelect = false;
@@ -351,8 +351,8 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            alarmPropsManager.setEndHour(position);
             if(userSelect){
-                alarmPropsManager.setEndHour(position);
                 reStartSwitch();
                 userSelect = false;
             }

@@ -56,6 +56,8 @@ public class SettingListViewAdapter extends BaseAdapter {
         //Set data from array list to view holder
         final AlarmType alarmType = (AlarmType) getItem(position);
         viewHolder.txtNameAlarm.setText(alarmType.getAlarmName());
+        viewHolder.imgBtnInfoSetting.setFocusable(false);
+        viewHolder.imgBtnInfoSetting.setFocusableInTouchMode(false);
         viewHolder.imgBtnInfoSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

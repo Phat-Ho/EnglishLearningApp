@@ -24,7 +24,7 @@
             android:layout_height="20dp"
             android:src="@drawable/check_icon"
             android:layout_marginStart="15dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </LinearLayout>
 
     <View

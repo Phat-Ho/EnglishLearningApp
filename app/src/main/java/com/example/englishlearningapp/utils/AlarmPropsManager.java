@@ -63,7 +63,7 @@ public class AlarmPropsManager {
     }
 
     public void setEndHour(int endHour){
-        editor.putInt(START_HOUR, endHour);
+        editor.putInt(END_HOUR, endHour);
         editor.apply();
     }
 
