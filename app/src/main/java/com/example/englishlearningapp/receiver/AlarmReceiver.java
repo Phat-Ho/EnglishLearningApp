@@ -174,7 +174,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }else if(pAlarmId == DatabaseContract.ALARM_FAVORITE){
             wordArrayList = db.getFavoriteWordsToAlarm();
         }else{
-            wordArrayList = db.getWordsByTopicId(pAlarmId);
+            wordArrayList = db.getWordAlarmByTopicId(pAlarmId);
         }
         return  wordArrayList;
     }

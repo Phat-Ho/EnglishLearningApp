@@ -25,9 +25,11 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.SettingListViewAdapter;
+import com.example.englishlearningapp.adapters.SettingListViewPopupAdapter;
 import com.example.englishlearningapp.models.AlarmType;;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
@@ -36,6 +38,8 @@ import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.GlobalVariable;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -269,13 +273,20 @@ public class SettingFragment extends Fragment {
         }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
             wordList = db.getFavoriteWords();
         }else{
-            wordList = db.getWordsByTopicId(alarmId);
+            wordList = db.getWordsRememberByTopicId(alarmId);
         }
+
         settingPopup.setContentView(R.layout.popup_setting);
         ListView lvSettingPopup;
+        TextView txtSettingPopupEmpty;
+        txtSettingPopupEmpty = settingPopup.findViewById(R.id.txt_popup_setting_empty);
         lvSettingPopup = settingPopup.findViewById(R.id.popup_setting_lv_word);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, wordList);
-        lvSettingPopup.setAdapter(arrayAdapter);
+        if(wordList.isEmpty()){
+            txtSettingPopupEmpty.setVisibility(View.VISIBLE);
+        }else{
+            SettingListViewPopupAdapter adapter = new SettingListViewPopupAdapter(wordList, getActivity());
+            lvSettingPopup.setAdapter(adapter);
+        }
         settingPopup.show();
     }
 

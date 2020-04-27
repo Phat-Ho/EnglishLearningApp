@@ -387,8 +387,59 @@ public class DatabaseAccess {
 
     public int getWordCountByTopicId(int topicId){
         ArrayList<Word> wordList;
-        wordList = getWordsByTopicId(topicId);
+        wordList = getWordsRememberByTopicId(topicId);
         return wordList.size();
+    }
+
+    public void setTopicRemember(int wordId, int topicId){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.REMEMBERED, 1);
+        String selection = "wordId = " + wordId + " AND " + "topicId = " + topicId;
+        database.update(DatabaseContract.TOPIC_REMEMBER_TABLE, values, selection, null);
+    }
+
+    public ArrayList<Word> getWordsRememberByTopicId(int topicId) {
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT av.id, av.word, av.html, av.description, av.pronounce, topicRemember.remembered " +
+                                                "FROM topicRemember JOIN av on topicRemember.wordId = av.id " +
+                                                "WHERE topicRemember.topicId = " + topicId, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Word word = new Word();
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setHtml(cursor.getString(2));
+            word.setDescription(cursor.getString(3));
+            word.setPronounce(cursor.getString(4));
+            word.setRemembered(cursor.getInt(5));
+            list.add(word);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+
+    }
+
+    public ArrayList<Word> getWordAlarmByTopicId(int topicId) {
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT av.id, av.word, av.html, av.description, av.pronounce, topicRemember.remembered " +
+                "FROM topicRemember JOIN av on topicRemember.wordId = av.id " +
+                "WHERE topicRemember.topicId = " + topicId + " AND topicRemember.remembered <> 1", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Word word = new Word();
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setHtml(cursor.getString(2));
+            word.setDescription(cursor.getString(3));
+            word.setPronounce(cursor.getString(4));
+            word.setRemembered(cursor.getInt(5));
+            list.add(word);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+
     }
 
     public ArrayList<MyDate> getRemindedWordDateById(int wordId){

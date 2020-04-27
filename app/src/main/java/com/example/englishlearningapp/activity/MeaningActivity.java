@@ -376,9 +376,10 @@ public class MeaningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
                     databaseAccess1.setHistoryRememberByWordId(wordId);
-                }
-                if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
+                }else if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
                     databaseAccess1.setFavoriteRememberByWordId(wordId);
+                }else{
+                    databaseAccess1.setTopicRemember(wordId, alarmPropsManager.getAlarmType());
                 }
                 meaningPopup.dismiss();
             }
