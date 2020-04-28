@@ -11,7 +11,8 @@
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:src="@drawable/home_logo"/>
 
     <Spinner
         android:id="@+id/spinner_language"

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity{
         MappingView();
         database = DatabaseAccess.getInstance(this);
         database.open();
-        imgLogo.setImageResource(R.mipmap.ic_launcher);
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, languages);
         spinnerLang.setAdapter(adapter);
         spinnerLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
