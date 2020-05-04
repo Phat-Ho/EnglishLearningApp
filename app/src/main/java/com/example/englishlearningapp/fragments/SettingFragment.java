@@ -71,7 +71,6 @@ public class SettingFragment extends Fragment {
     public ArrayList<AlarmType> alarmTypeList;
     boolean isChecked = false;
     AlarmPropsManager alarmPropsManager;
-    GlobalVariable globalHashSet;
     Dialog settingPopup;
 
     public SettingFragment() {
@@ -106,7 +105,6 @@ public class SettingFragment extends Fragment {
         db = DatabaseAccess.getInstance(getActivity());
         db.open();
         alarmPropsManager = new AlarmPropsManager(getActivity());
-        globalHashSet = GlobalVariable.getInstance(getActivity());
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -150,7 +148,6 @@ public class SettingFragment extends Fragment {
                     editor.putBoolean("checked", true);
                     editor.apply();
                     alarmPropsManager.setAlarmCount(0);
-                    globalHashSet.clearHashSet();
                     long timeInMillis = 3000; //3 second
                     setRepeatAlarm(timeInMillis, alarmPropsManager.getStartHour());
                 }else {

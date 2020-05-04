@@ -17,6 +17,7 @@
         android:layout_marginRight="20dp"/>
 
     <TextView
+        android:id="@+id/welcome_txt_quest_detail"
         android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:layout_gravity="center"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/welcome_txt_topic"
         android:textColor="#673AB7"
         android:layout_gravity="center"
         android:textSize="22sp"
@@ -58,6 +60,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/welcome_btn_1"
                 android:textSize="18sp"
                 android:textColor="#2196F3"
                 android:layout_width="150dp"
@@ -69,12 +72,14 @@
                 app:cornerRadius="10dp"/>
 
             <TextView
+                android:id="@+id/welcome_txt_meaning_1"
                 android:textStyle="bold"
                 android:textColor="#E91E63"
                 android:layout_gravity="center"
                 android:text="Xin chào"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -85,6 +90,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/welcome_btn_2"
                 android:textSize="18sp"
                 android:textColor="#2196F3"
                 android:layout_width="150dp"
@@ -95,12 +101,14 @@
                 app:cornerRadius="10dp"/>
 
             <TextView
+                android:id="@+id/welcome_txt_meaning_2"
                 android:textStyle="bold"
                 android:textColor="#E91E63"
                 android:layout_gravity="center"
                 android:text="Đẹp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -121,6 +129,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/welcome_btn_3"
                 android:textSize="18sp"
                 android:textColor="#2196F3"
                 android:layout_width="150dp"
@@ -132,12 +141,14 @@
                 app:cornerRadius="10dp"/>
 
             <TextView
+                android:id="@+id/welcome_txt_meaning_3"
                 android:textStyle="bold"
                 android:textColor="#E91E63"
                 android:layout_gravity="center"
                 android:text="Cái gì"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -148,29 +159,31 @@
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
-                android:textSize="18sp"
-                android:textColor="#2196F3"
+                android:id="@+id/welcome_btn_4"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="150dp"
                 android:layout_height="70dp"
                 android:text="Hell"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeWidth="2dp"
-                app:cornerRadius="10dp"/>
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                app:cornerRadius="10dp"
+                app:strokeWidth="2dp" />
 
             <TextView
+                android:id="@+id/welcome_txt_meaning_4"
                 android:textStyle="bold"
                 android:textColor="#E91E63"
                 android:layout_gravity="center"
                 android:text="Địa ngục"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
 
         </LinearLayout>
-
-
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/welcome_btn_next"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

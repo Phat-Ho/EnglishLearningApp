@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 
 import com.example.englishlearningapp.activity.HistoryActivity;
 import com.example.englishlearningapp.fragments.HistoryFragment;
+import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.MyDate;
+import com.example.englishlearningapp.models.Question;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 
@@ -34,6 +36,7 @@ public class DatabaseAccess {
      */
     private DatabaseAccess(Context context) {
         this.openHelper = new DatabaseOpenHelper(context);
+        open();
     }
 
     /**
@@ -90,20 +93,18 @@ public class DatabaseAccess {
         return list;
     }
 
-    public ArrayList<Word> getWordsById(int wordId){
-        ArrayList<Word> list = new ArrayList<>();
+    public Word getWordsById(int wordId){
+        Word word = new Word();
         Cursor cursor = database.rawQuery("SELECT * FROM av WHERE id = " + wordId, null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            list.add(new Word(cursor.getInt(0),
-                    cursor.getString(1),
-                    cursor.getString(cursor.getColumnIndex("description")),
-                    cursor.getString(cursor.getColumnIndex("pronounce")),
-                    cursor.getString(cursor.getColumnIndex("html"))));
-            cursor.moveToNext();
+        if(cursor.moveToFirst()){
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+            word.setPronounce(cursor.getString(cursor.getColumnIndex("pronounce")));
+            word.setHtml(cursor.getString(cursor.getColumnIndex("html")));
         }
         cursor.close();
-        return list;
+        return word;
     }
 
     public ArrayList<Word> getHistoryWords(){
@@ -455,5 +456,41 @@ public class DatabaseAccess {
         }
         cursor.close();
         return dateList;
+    }
+
+    public Question getQuestionById(int questionId){
+        Question question = new Question();
+        String query = "SELECT * FROM question WHERE questionId = " + questionId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            question.setQuestionId(cursor.getInt(0));
+            question.setTopicId(cursor.getInt(1));
+            question.setQuestionDetail(cursor.getString(2));
+        }
+        cursor.close();
+        return question;
+    }
+
+    public ArrayList<Choice> getChoicesByQuestionId(int questionId){
+        ArrayList<Choice> choiceList = new ArrayList<>();
+        String query = "SELECT question.questionId, question.topicId, " +
+                "questionChoices.choiceId, questionChoices.wordId, questionChoices.isRight" +
+                "  FROM question JOIN questionChoices ON question.questionId = questionChoices.questionId " +
+                "WHERE question.questionId = " + questionId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Choice choice = new Choice();
+                choice.setQuestionId(cursor.getInt(0));
+                choice.setTopicId(cursor.getInt(1));
+                choice.setChoiceId(cursor.getInt(2));
+                choice.setWordId(cursor.getInt(3));
+                choice.setIsRight(cursor.getInt(4));
+
+                choiceList.add(choice);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return choiceList;
     }
 }

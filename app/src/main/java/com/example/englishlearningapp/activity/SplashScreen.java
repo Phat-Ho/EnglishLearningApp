@@ -42,7 +42,6 @@ public class SplashScreen extends AppCompatActivity {
     LoginManager loginManager;
     DatabaseAccess database;
     TextView txtSplash;
-    ImageView imgSplash;
     ContentLoadingProgressBar progressBarSplash;
     NetworkChangeReceiver networkChangeReceiver;
     int delayTimes = 2000;
@@ -65,8 +64,8 @@ public class SplashScreen extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(mainIntent);
+                Intent welcomeIntent = new Intent(SplashScreen.this, WelcomeActivity.class);
+                startActivity(welcomeIntent);
                 finish();
             }
         };

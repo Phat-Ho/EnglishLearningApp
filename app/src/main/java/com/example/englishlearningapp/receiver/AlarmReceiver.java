@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.text.Html;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -19,13 +18,10 @@ import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
-import com.example.englishlearningapp.utils.GlobalVariable;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+
 import java.util.Random;
-import java.util.Set;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -62,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmWords = getAlarmWords(alarmId);
 
         //Get random index
-        int arrayIndex = randomIndexWithoutDuplicate(alarmWords.size(), context);
+        int arrayIndex = randomIndex(alarmWords.size());
         Log.d(TAG, "array index: " + arrayIndex);
 
         //Get alarm count
@@ -162,8 +158,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     , PendingIntent pendingIntent
                                     , Calendar startCalendar, Context context){
         Log.d(TAG, "startTomorrowAlarm: " + startCalendar.getTimeInMillis());
-        GlobalVariable globalHashSet = GlobalVariable.getInstance(context);
-        globalHashSet.clearHashSet();
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startCalendar.getTimeInMillis(), 3000, pendingIntent);
     }
 
@@ -179,16 +173,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         return  wordArrayList;
     }
 
-    private int randomIndexWithoutDuplicate(int arraySize, Context context){
-        GlobalVariable globalHashSet = GlobalVariable.getInstance(context);
-        Log.d(TAG, "Hash set size: " + globalHashSet.getHashSetSize());
+    private int randomIndex(int arraySize){
         Random randomNumGenerator = new Random();
-        while(globalHashSet.getHashSetSize() < arraySize){
-            int temp = randomNumGenerator.nextInt(arraySize);
-            if(globalHashSet.addToHashSet(temp)){
-                return temp;
-            }
-        }
-        return arraySize + 1;
+        int temp = randomNumGenerator.nextInt(arraySize);
+        return temp;
     }
 }
