@@ -84,14 +84,7 @@ public class RememberedFragment extends Fragment {
     }
 
     private void loadRememberedData(){
-        databaseAccess.open();
-        historyWords = databaseAccess.getHistoryWords();
-        rememberedWords = new ArrayList<>();
-        for (int i = 0; i < historyWords.size(); i++){
-            if (historyWords.get(i).getRemembered() == 1){
-                rememberedWords.add(historyWords.get(i));
-            }
-        }
+        rememberedWords = databaseAccess.getAllRememberedWords();
         adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, rememberedWords);
         lvRemembered.setAdapter(adapter);
     }

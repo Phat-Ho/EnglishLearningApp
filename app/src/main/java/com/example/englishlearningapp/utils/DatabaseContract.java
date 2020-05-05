@@ -9,6 +9,7 @@ public class DatabaseContract {
     public static String REMINDED_TABLE = "remindWord";
     public static String REMINDED_DATE_TABLE = "remindWordDate";
     public static String TOPIC_REMEMBER_TABLE = "topicRemember";
+    public static String REMEMBERED_TABLE = "remembered";
     public static String WORD_ID = "wordId";
     public static String TOPIC_ID = "topicId";
     public static String SYNC_STATUS = "sync_status";

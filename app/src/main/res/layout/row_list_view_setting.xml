@@ -15,15 +15,6 @@
         android:paddingStart="15dp"
         android:layout_centerVertical="true"/>
 
-    <ImageView
-        android:id="@+id/img_lv_setting"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/check_icon"
-        android:layout_alignParentEnd="true"
-        android:paddingRight="30dp"
-        android:visibility="invisible"/>
-
     <ImageButton
         android:background="?android:selectableItemBackground"
         android:id="@+id/row_lv_setting_img_btn_info"
@@ -31,7 +22,16 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:scaleType="fitXY"
-        android:layout_toLeftOf="@id/img_lv_setting"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"/>
+        android:layout_marginEnd="25dp"/>
+
+    <ImageView
+        android:id="@+id/img_lv_setting"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/check_icon"
+        android:layout_toLeftOf="@id/row_lv_setting_img_btn_info"
+        android:visibility="invisible"
+        android:layout_marginEnd="30dp"/>
 </RelativeLayout>

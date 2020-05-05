@@ -376,10 +376,19 @@ public class MeaningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
                     databaseAccess1.setHistoryRememberByWordId(wordId);
+                    if(!isRememberSaved(wordId)){
+                        databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
+                    }
                 }else if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
                     databaseAccess1.setFavoriteRememberByWordId(wordId);
+                    if(!isRememberSaved(wordId)){
+                        databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
+                    }
                 }else{
                     databaseAccess1.setTopicRemember(wordId, alarmPropsManager.getAlarmType());
+                    if(!isRememberSaved(wordId)){
+                        databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
+                    }
                 }
                 meaningPopup.dismiss();
             }
@@ -392,6 +401,14 @@ public class MeaningActivity extends AppCompatActivity {
             }
         });
         meaningPopup.show();
+    }
+
+    private boolean isRememberSaved(int wordId){
+        if(databaseAccess.getRememberedWordById(wordId).getId() > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

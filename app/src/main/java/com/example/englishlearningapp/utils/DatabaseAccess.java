@@ -336,6 +336,49 @@ public class DatabaseAccess {
         database.insert(DatabaseContract.REMINDED_DATE_TABLE, null, values);
     }
 
+    public void addRememberedWord(int wordId, long date){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WORD_ID, wordId);
+        values.put(DatabaseContract.DATE, date);
+        database.insert(DatabaseContract.REMEMBERED_TABLE, null, values);
+    }
+
+    public ArrayList<Word> getAllRememberedWords(){
+        ArrayList<Word> list = new ArrayList<>();
+        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do {
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+
+                list.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public Word getRememberedWordById(int wordId){
+        Word word = new Word();
+        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId WHERE av.id = " + wordId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            word.setId(cursor.getInt(0));
+            word.setWord(cursor.getString(1));
+            word.setHtml(cursor.getString(2));
+            word.setDescription(cursor.getString(3));
+            word.setPronounce(cursor.getString(4));
+        }
+        cursor.close();
+
+        return word;
+    }
+
     public Word getRemindedWordByWordId(int wordId){
         Word word = new Word();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce " +
