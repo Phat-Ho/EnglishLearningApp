@@ -4,18 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Choice;
+import com.example.englishlearningapp.models.Question;
+import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class WelcomeActivity extends AppCompatActivity {
+    private static final String TAG = "WelcomeActivity";
     TextView welcomeTxtQuestDetail, welcomeTxtTopic,
             welcomeTxtMeaning1, welcomeTxtMeaning2,
             welcomeTxtMeaning3, welcomeTxtMeaning4;
@@ -23,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     welcomeBtn3, welcomeBtn4, welcomeBtnNext;
     DatabaseAccess databaseAccess;
     ArrayList<Choice> choiceList = null;
+    ArrayList<Question> questionList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,30 +36,40 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         MappingView();
         databaseAccess = DatabaseAccess.getInstance(this);
-        SetUpAnswerButton();
+        SetUpView();
         HandleEvent();
     }
 
-    private void SetUpAnswerButton() {
-        choiceList = databaseAccess.getChoicesByQuestionId(1);
-        if(choiceList.size() > 3){
-            Word word = new Word();
-            word = databaseAccess.getWordsById(choiceList.get(0).getWordId());
-            welcomeBtn1.setText(word.getWord());
-            welcomeTxtMeaning1.setText(getMeaning(word.getDescription()));
+    private void SetUpView() {
+        questionList = databaseAccess.getAllQuestion();
+        if(questionList.size() > 0){
+            int index = randomIndex(questionList.size());
+            welcomeTxtQuestDetail.setText(questionList.get(index).getQuestionDetail());
+            Topic topic = databaseAccess.getTopicByQuestionId(questionList.get(index).getQuestionId());
+            welcomeTxtTopic.setText("(Topic " + topic.getTopicName() + ")");
+            choiceList = databaseAccess.getChoicesByQuestionId(questionList.get(index).getQuestionId());
+            if(choiceList.size() > 3){
+                Word word = new Word();
+                word = databaseAccess.getWordsById(choiceList.get(0).getWordId());
+                welcomeBtn1.setText(word.getWord());
+                welcomeTxtMeaning1.setText(getMeaning(word.getDescription()));
 
-            word = databaseAccess.getWordsById(choiceList.get(1).getWordId());
-            welcomeBtn2.setText(word.getWord());
-            welcomeTxtMeaning2.setText(getMeaning(word.getDescription()));
+                word = databaseAccess.getWordsById(choiceList.get(1).getWordId());
+                welcomeBtn2.setText(word.getWord());
+                welcomeTxtMeaning2.setText(getMeaning(word.getDescription()));
 
-            word = databaseAccess.getWordsById(choiceList.get(2).getWordId());
-            welcomeBtn3.setText(databaseAccess.getWordsById(choiceList.get(2).getWordId()).getWord());
-            welcomeTxtMeaning3.setText(getMeaning(word.getDescription()));
+                word = databaseAccess.getWordsById(choiceList.get(2).getWordId());
+                welcomeBtn3.setText(databaseAccess.getWordsById(choiceList.get(2).getWordId()).getWord());
+                welcomeTxtMeaning3.setText(getMeaning(word.getDescription()));
 
-            word = databaseAccess.getWordsById(choiceList.get(3).getWordId());
-            welcomeBtn4.setText(word.getWord());
-            welcomeTxtMeaning4.setText(getMeaning(word.getDescription()));
+                word = databaseAccess.getWordsById(choiceList.get(3).getWordId());
+                welcomeBtn4.setText(word.getWord());
+                welcomeTxtMeaning4.setText(getMeaning(word.getDescription()));
+            }
+        }else{
+            Log.d(TAG, "SetUpView: question empty");
         }
+
 
     }
 
@@ -90,12 +106,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    for (int i = 0; i < 4; i++) {
-                        if(choiceList.get(i).isRight() == 1){
-                            showMeaning(i + 1);
-                            break;
-                        }
-                    }
+                    showAllMeaning();
                     disableButton();
                 }
             }
@@ -110,12 +121,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    for (int i = 0; i < 4; i++) {
-                        if(choiceList.get(i).isRight() == 1){
-                            showMeaning(i + 1);
-                            break;
-                        }
-                    }
+                    showAllMeaning();
                     disableButton();
                 }
             }
@@ -130,12 +136,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    for (int i = 0; i < 4; i++) {
-                        if(choiceList.get(i).isRight() == 1){
-                            showMeaning(i + 1);
-                            break;
-                        }
-                    }
+                    showAllMeaning();
                     disableButton();
                 }
             }
@@ -150,12 +151,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    for (int i = 0; i < 4; i++) {
-                        if(choiceList.get(i).isRight() == 1){
-                            showMeaning(i + 1);
-                            break;
-                        }
-                    }
+                    showAllMeaning();
                     disableButton();
                 }
             }
@@ -199,11 +195,24 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+    private void showAllMeaning(){
+        welcomeTxtMeaning1.setVisibility(View.VISIBLE);
+        welcomeTxtMeaning2.setVisibility(View.VISIBLE);
+        welcomeTxtMeaning3.setVisibility(View.VISIBLE);
+        welcomeTxtMeaning4.setVisibility(View.VISIBLE);
+    }
+
     private void disableButton(){
         welcomeBtn1.setEnabled(false);
         welcomeBtn2.setEnabled(false);
         welcomeBtn3.setEnabled(false);
         welcomeBtn4.setEnabled(false);
+    }
+
+    private int randomIndex(int arraySize){
+        Random randomNumGenerator = new Random();
+        int temp = randomNumGenerator.nextInt(arraySize);
+        return temp;
     }
 
     private String getMeaning(String str){

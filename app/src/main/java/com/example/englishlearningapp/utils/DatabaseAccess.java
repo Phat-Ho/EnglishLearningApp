@@ -471,6 +471,40 @@ public class DatabaseAccess {
         return question;
     }
 
+    public ArrayList<Question> getAllQuestion(){
+        ArrayList<Question> questionList = new ArrayList<>();
+        String query = "SELECT * FROM question";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Question question = new Question();
+                question.setQuestionId(cursor.getInt(0));
+                question.setTopicId(cursor.getInt(1));
+                question.setQuestionDetail(cursor.getString(2));
+
+                questionList.add(question);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return questionList;
+    }
+
+    public Topic getTopicByQuestionId(int questId){
+        Topic topic = new Topic();
+        String query = "SELECT topic.id, topic.topicName FROM question " +
+                "JOIN topic ON question.topicId = topic.id " +
+                "WHERE questionId = " + questId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            topic.setTopicId(cursor.getInt(0));
+            topic.setTopicName(cursor.getString(1));
+        }
+        cursor.close();
+
+        return topic;
+    }
+
     public ArrayList<Choice> getChoicesByQuestionId(int questionId){
         ArrayList<Choice> choiceList = new ArrayList<>();
         String query = "SELECT question.questionId, question.topicId, " +
@@ -491,6 +525,7 @@ public class DatabaseAccess {
             }while (cursor.moveToNext());
         }
         cursor.close();
+
         return choiceList;
     }
 }
