@@ -15,9 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
@@ -29,7 +27,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
-import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
@@ -115,7 +112,7 @@ public class SearchFragment extends Fragment {
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<Word> historyWords = databaseAccess.getHistoryWords();
+                ArrayList<Word> historyWords = databaseAccess.getHistoryWordsWithoutDuplicate();
                 boolean isSaved = false;
 
                 String html = completeWordsData.get(position).getHtml();

@@ -120,12 +120,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarmPropsManager.setAlarmCount(alarmCount);
 
             //Add reminded word to database
-            if(isRemindedSave(id)){
-                db.addRemindedWordDate(id, System.currentTimeMillis());
-            }else{
-                db.addRemindedWord(id);
-                db.addRemindedWordDate(id, System.currentTimeMillis());
-            }
+            db.addRemindedWord(id, System.currentTimeMillis());
 
             //Turn off notification if meet end hour
             if(currentHour >= endHour){
@@ -134,14 +129,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 startTomorrowAlarm(alarmManager, pendingIntent, nextDayCalendar, context);
                 return;
             }
-        }
-    }
-
-    public boolean isRemindedSave(int wordId){
-        if(db.getRemindedWordByWordId(wordId).getId() > 0){
-            return true;
-        }else{
-            return false;
         }
     }
 

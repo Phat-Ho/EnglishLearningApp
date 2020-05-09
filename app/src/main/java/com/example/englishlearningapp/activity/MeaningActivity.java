@@ -137,11 +137,7 @@ public class MeaningActivity extends AppCompatActivity {
 
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
-                if(isHistoryExistence(wordId)){
-                    databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
-                }else{
-                    saveHistory(word.get(0).getId(), loginManager.getUserId());
-                }
+                saveHistory(word.get(0).getId(), loginManager.getUserId());
                 RefreshScreen(wordHeader, wordHtml, wordId);
                 hideSoftKeyBoard();
             }
@@ -337,18 +333,7 @@ public class MeaningActivity extends AppCompatActivity {
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, getCurrentTimeInMillis());
-            databaseAccess.addHistoryDate(wordID, getCurrentTimeInMillis());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
-        }
-    }
-
-    public boolean isHistoryExistence(int wordId){
-        Word word = databaseAccess.getHistoryWordById(wordId);
-        Log.d(TAG, "history word Id: " + word.getId());
-        if(word.getId() > 0){
-            return true;
-        }else{
-            return false;
         }
     }
 

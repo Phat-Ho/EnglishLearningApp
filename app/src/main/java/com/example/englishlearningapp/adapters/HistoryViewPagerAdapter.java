@@ -27,14 +27,18 @@ public class HistoryViewPagerAdapter extends FragmentPagerAdapter {
         return fragmentList.size();
     }
 
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return fragmentTitle.get(position);
+    }
+
     public void addFragment(Fragment pFragment, String pTitle){
         fragmentList.add(pFragment);
         fragmentTitle.add(pTitle);
     }
 
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return fragmentTitle.get(position);
+    public void updateFragment(Fragment pFrag, int position){
+        fragmentList.set(position, pFrag);
     }
 }

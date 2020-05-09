@@ -25,7 +25,6 @@ import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -65,7 +64,7 @@ public class HistoryFragment extends Fragment {
 
         if(requestCode == MEANING_CODE){
             if(resultCode == Activity.RESULT_OK){
-                wordList = databaseAccess.getHistoryWords();
+                wordList = databaseAccess.getHistoryWordsWithoutDuplicate();
                 historyAdapter.notifyDataSetChanged();
             }
         }
@@ -126,7 +125,7 @@ public class HistoryFragment extends Fragment {
 
     private void LoadHistoryData() {
         databaseAccess.open();
-        wordList = databaseAccess.getHistoryWords();
+        wordList = databaseAccess.getHistoryWordsWithoutDuplicate();
         historyAdapter = new HistoryAdapter(this, R.layout.row_list_view_history, wordList);
         historyFragmentListView.setAdapter(historyAdapter);
     }

@@ -37,9 +37,6 @@ import com.example.englishlearningapp.receiver.AlarmReceiver;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
-import com.example.englishlearningapp.utils.GlobalVariable;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -266,7 +263,7 @@ public class SettingFragment extends Fragment {
     public void showPopupWordList(int alarmId){
         ArrayList<Word> wordList = null;
         if(alarmId == DatabaseContract.ALARM_HISTORY){
-            wordList = db.getHistoryWords();
+            wordList = db.getHistoryWordsWithoutDuplicate();
         }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
             wordList = db.getFavoriteWords();
         }else{

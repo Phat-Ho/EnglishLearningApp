@@ -153,11 +153,7 @@ public class HomeFragment extends Fragment {
                 String wordHeader = word.get(0).getWord();
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
-                if(isHistoryExistence(wordId)){
-                    databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
-                }else{
-                    saveHistory(word.get(0).getId(), loginManager.getUserId());
-                }
+                saveHistory(word.get(0).getId(), loginManager.getUserId());
                 RefreshScreen(wordHeader, wordHtml, wordId);
                 hideSoftKeyBoard();
             }
@@ -213,7 +209,6 @@ public class HomeFragment extends Fragment {
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, System.currentTimeMillis());
-            databaseAccess.addHistoryDate(wordID, System.currentTimeMillis());
         }
     }
 

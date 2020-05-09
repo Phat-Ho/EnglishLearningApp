@@ -6,11 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import com.example.englishlearningapp.activity.HistoryActivity;
-import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
@@ -107,10 +102,10 @@ public class DatabaseAccess {
         return word;
     }
 
-    public ArrayList<Word> getHistoryWords(){
+    public ArrayList<Word> getHistoryWordsWithoutDuplicate(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
-                         "FROM history JOIN av ON history.id = av.id";
+                            " FROM history JOIN av on av.id = history.wordId GROUP BY history.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -132,7 +127,7 @@ public class DatabaseAccess {
     public ArrayList<Word> getHistoryWordsToAlarm(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
-                "FROM history JOIN av ON history.id = av.id WHERE history.remembered = 0";
+                " FROM history JOIN av on av.id = history.wordId WHERE history.remembered = 0 GROUP BY history.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -170,7 +165,7 @@ public class DatabaseAccess {
     public Word getHistoryWordById(int wordId){
         Word word = new Word();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
-                "FROM history JOIN av ON history.id = av.id WHERE av.id = " + wordId;
+                " FROM history JOIN av on av.id = history.wordId WHERE history.wordId = " + wordId + " GROUP BY history.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             word.setId(cursor.getInt(0));
@@ -184,17 +179,11 @@ public class DatabaseAccess {
         return word;
     }
 
-    public void addHistoryDate(int wordId, long timeInMillis){
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.WORD_ID, wordId);
-        values.put(DatabaseContract.DATE, timeInMillis);
-        database.insert(DatabaseContract.HISTORY_DATE_TABLE, null, values);
-    }
 
     public int addHistory(int pWordID, int pSyncStatus, long pDate){
         int remembered = 0;
         ContentValues value = new ContentValues();
-        value.put("id", pWordID);
+        value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
         value.put(DatabaseContract.DATE, pDate);
         value.put(DatabaseContract.REMEMBERED, remembered);
@@ -204,8 +193,7 @@ public class DatabaseAccess {
 
     public ArrayList<MyDate> getHistoryDateByWordId(int wordId){
         ArrayList<MyDate> dateList = new ArrayList<>();
-        String query = "SELECT history.id, historyDate.date FROM history " +
-                "JOIN historyDate ON history.id = historyDate.wordId WHERE history.id = " + wordId;
+        String query = "SELECT history.wordId, history.date FROM history WHERE history.wordId = " + wordId;
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -220,12 +208,12 @@ public class DatabaseAccess {
     public void setHistoryRememberByWordId(int wordId){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.REMEMBERED, 1);
-        String selection = "id = " + wordId;
+        String selection = "wordId = " + wordId;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
     public Cursor readHistory(){
-        String[] column = {"id", DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
+        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
 
         return cursor;
@@ -234,7 +222,7 @@ public class DatabaseAccess {
     public void updateHistorySyncStatus(int pWordID, int pSyncStatus){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
-        String selection = "id = " + pWordID;
+        String selection = "wordId = " + pWordID;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
@@ -246,7 +234,7 @@ public class DatabaseAccess {
     }
 
     public int removeHistory(int id){
-        return database.delete("history", "id = " + id, null);
+        return database.delete("history", "wordId = " + id, null);
     }
 
     public long getHistoryWordsCount(){
@@ -323,17 +311,11 @@ public class DatabaseAccess {
         database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
     }
 
-    public void addRemindedWord(int wordId){
+    public void addRemindedWord(int wordId, long datetime){
         ContentValues value = new ContentValues();
-        value.put("wordId", wordId);
+        value.put(DatabaseContract.WORD_ID, wordId);
+        value.put(DatabaseContract.DATE, datetime);
         database.insert(DatabaseContract.REMINDED_TABLE, null, value);
-    }
-
-    public void addRemindedWordDate(int wordId, long timeInMillis){
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.WORD_ID, wordId);
-        values.put(DatabaseContract.DATE, timeInMillis);
-        database.insert(DatabaseContract.REMINDED_DATE_TABLE, null, values);
     }
 
     public void addRememberedWord(int wordId, long date){
@@ -488,8 +470,7 @@ public class DatabaseAccess {
 
     public ArrayList<MyDate> getRemindedWordDateById(int wordId){
         ArrayList<MyDate> dateList = new ArrayList<>();
-        String query = "SELECT remindWord.wordId, remindWordDate.date FROM remindWord " +
-                "JOIN remindWordDate ON remindWord.wordId = remindWordDate.wordId WHERE remindWord.wordId = " + wordId;
+        String query = "SELECT remindWord.wordId, remindWord.date FROM remindWord WHERE remindWord.wordId = " + wordId;
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{

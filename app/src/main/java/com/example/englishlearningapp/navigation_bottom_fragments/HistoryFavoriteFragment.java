@@ -1,5 +1,6 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -9,13 +10,19 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.HistoryViewPagerAdapter;
 import com.example.englishlearningapp.fragments.FavoriteFragment;
 import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.fragments.RememberedFragment;
+import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,9 +41,11 @@ public class HistoryFavoriteFragment extends Fragment {
     Toolbar historyFavToolbar;
     TabLayout historyFavTabLayout;
     ViewPager historyFavViewPager;
+    Spinner historyFavSpinnerSort, historyFavSpinnerType;
     HistoryFragment historyFragment = new HistoryFragment();
     FavoriteFragment favoriteFragment = new FavoriteFragment();
     RememberedFragment rememberedFragment = new RememberedFragment();
+    SharedPrefsManager prefsManager;
 
     public HistoryFavoriteFragment() {
         // Required empty public constructor
@@ -67,6 +76,7 @@ public class HistoryFavoriteFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        prefsManager = new SharedPrefsManager(getActivity());
     }
 
     @Override
@@ -76,9 +86,42 @@ public class HistoryFavoriteFragment extends Fragment {
         historyFavTabLayout = view.findViewById(R.id.history_favorite_tabLayout);
         historyFavToolbar = view.findViewById(R.id.history_favorite_toolbar);
         historyFavViewPager = view.findViewById(R.id.history_favorite_viewPager);
+        historyFavSpinnerSort = view.findViewById(R.id.history_favorite_spinner_date);
+        historyFavSpinnerType = view.findViewById(R.id.history_favorite_spinner_type);
         SetUpViewPager(historyFavViewPager);
+        SetUpSpinner();
         historyFavTabLayout.setupWithViewPager(historyFavViewPager);
         return view;
+    }
+
+    private void SetUpSpinner() {
+        String[] listViewType = new String[]{"Mở rộng", "Thu gọn"};
+        ArrayAdapter<String> spinnerViewAdapter = new ArrayAdapter<String>(getActivity(),
+                                                        R.layout.spinner_white_text, listViewType);
+        spinnerViewAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        historyFavSpinnerType.setAdapter(spinnerViewAdapter);
+        historyFavSpinnerType.setSelection(prefsManager.getViewType());
+
+        String[] listSortType = new String[]{"A  -  Z", "Thời gian"};
+        ArrayAdapter<String> spinnerSortAdapter = new ArrayAdapter<String>(getActivity(),
+                                                        R.layout.spinner_white_text, listSortType);
+        spinnerSortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        historyFavSpinnerSort.setAdapter(spinnerSortAdapter);
+        historyFavSpinnerSort.setSelection(prefsManager.getSortBy());
+    }
+
+    private void HandleSpinnerEvent(){
+        historyFavSpinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void SetUpViewPager(ViewPager viewPager) {
