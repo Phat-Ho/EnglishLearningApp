@@ -156,6 +156,7 @@ public class MeaningActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -183,6 +184,7 @@ public class MeaningActivity extends AppCompatActivity {
                 txtContentHtml.setText(Html.fromHtml(meaningHtml));
             }
 
+            loadingImage(word);
             imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
