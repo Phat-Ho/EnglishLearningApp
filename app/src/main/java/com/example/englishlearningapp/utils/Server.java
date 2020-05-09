@@ -16,6 +16,10 @@ public class Server
     public static String UPDATE_HISTORY_URL = Server.host + "english/updateHistorySync.php?";
     public static String CHECK_USER_URL = backend_host + "api/hash/checkUser?";
 
+    public static String UNSPLASH = "https://api.unsplash.com/search/photos?client_id=";
+    public static String UNSPLASH_ACCESS_KEY = "061504391baa1996b6f650a91bab50949b2fa5be97e3483b8228b934518a536f&";
+    public static String UNSPLASH_SEARCH = UNSPLASH + UNSPLASH_ACCESS_KEY + "query=";
+
     public static boolean haveNetworkConnection(Context context) {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;

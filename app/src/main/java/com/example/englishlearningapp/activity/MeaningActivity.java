@@ -24,14 +24,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
@@ -46,9 +49,12 @@ import com.example.englishlearningapp.utils.DatabaseOpenHelper;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.JsonArray;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +73,7 @@ public class MeaningActivity extends AppCompatActivity {
     Toolbar meaningToolbar;
     TextToSpeech tts;
     LikeButton likeBtn;
+    ImageView imgMeaning;
     DatabaseAccess databaseAccess = null;
     Dialog meaningPopup;
     LoginManager loginManager;
@@ -127,6 +134,7 @@ public class MeaningActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> word = databaseAccess.getWords(txtMeaningSearch.getText().toString());
                 String wordHeader = word.get(0).getWord();
+
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
                 if(isHistoryExistence(wordId)){
@@ -212,6 +220,7 @@ public class MeaningActivity extends AppCompatActivity {
         }
 
         final String word = intent.getStringExtra("word");
+        loadingImage(word);
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
@@ -231,6 +240,7 @@ public class MeaningActivity extends AppCompatActivity {
         txtContentHtml = findViewById(R.id.textViewContentHtml);
         imgBtnPronounce = findViewById(R.id.imageButtonPronounce);
         likeBtn = findViewById(R.id.LikeButtonHeart);
+        imgMeaning = findViewById(R.id.imageViewMeaning);
         meaningToolbar = findViewById(R.id.meaning_toolbar);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -411,6 +421,31 @@ public class MeaningActivity extends AppCompatActivity {
         }
     }
 
+    private void loadingImage(String query){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Server.UNSPLASH_SEARCH + query, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray object = response.getJSONArray("results");
+                            JSONObject urls = object.getJSONObject(0).getJSONObject("urls");
+                            String regular_url = urls.getString("regular");
+                            Picasso.get().load(regular_url).into(imgMeaning);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("AAA", error.toString());
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
+    }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -429,4 +464,5 @@ public class MeaningActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
+
 }
