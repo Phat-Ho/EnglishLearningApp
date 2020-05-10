@@ -64,7 +64,7 @@ public class HistoryAdapter extends BaseAdapter {
         viewHolder.imgBtnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.showPopup(historyWord.getId(), historyWord.getWord(), historyWord.getDescription());
+            context.showPopup(historyWord.getId(), historyWord.getWord(), historyWord.getDescription());
             }
         });
         return convertView;

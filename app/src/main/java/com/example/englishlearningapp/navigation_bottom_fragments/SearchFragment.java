@@ -112,7 +112,7 @@ public class SearchFragment extends Fragment {
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<Word> historyWords = databaseAccess.getHistoryWordsWithoutDuplicate();
+                ArrayList<Word> historyWords = databaseAccess.getHistoryWordsWithoutDuplicateSortByAZ();
                 boolean isSaved = false;
 
                 String html = completeWordsData.get(position).getHtml();

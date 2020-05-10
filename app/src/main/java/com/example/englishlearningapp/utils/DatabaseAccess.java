@@ -102,10 +102,76 @@ public class DatabaseAccess {
         return word;
     }
 
-    public ArrayList<Word> getHistoryWordsWithoutDuplicate(){
+    public ArrayList<Word> getHistoryWordsWithoutDuplicateSortByAZ(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
-                            " FROM history JOIN av on av.id = history.wordId GROUP BY history.wordId";
+                            " FROM history JOIN av on av.id = history.wordId GROUP BY history.wordId ORDER BY history.id";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(6));
+
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return wordList;
+    }
+
+    public ArrayList<Word> getHistoryWordsWithoutDuplicateSortByTimeLatest(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered" +
+                " FROM history JOIN av on av.id = history.wordId GROUP BY history.wordId ORDER BY history.date DESC";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(6));
+
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return wordList;
+    }
+
+    public ArrayList<Word> getHistoryWordsWithDuplicateSortByAZ(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
+                        "FROM history JOIN av on av.id = history.wordId ORDER BY history.wordId";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Word word = new Word();
+                word.setId(cursor.getInt(0));
+                word.setWord(cursor.getString(1));
+                word.setHtml(cursor.getString(2));
+                word.setDescription(cursor.getString(3));
+                word.setPronounce(cursor.getString(4));
+                word.setRemembered(cursor.getInt(6));
+
+                wordList.add(word);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return wordList;
+    }
+
+    public ArrayList<Word> getHistoryWordsWithDuplicateSortByTimeLatest(){
+        ArrayList<Word> wordList = new ArrayList<>();
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
+                "FROM history JOIN av on av.id = history.wordId ORDER BY history.date DESC";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{

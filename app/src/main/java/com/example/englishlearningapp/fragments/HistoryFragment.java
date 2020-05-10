@@ -25,6 +25,7 @@ import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.SharedPrefsManager;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,10 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment {
     private static final int MEANING_CODE = 1;
     ListView historyFragmentListView;
-    ArrayList<Word> wordList;
+    ArrayList<Word> wordList = new ArrayList<>();
     HistoryAdapter historyAdapter;
     DatabaseAccess databaseAccess;
+    SharedPrefsManager prefsManager;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -45,6 +47,11 @@ public class HistoryFragment extends Fragment {
     PopupHistoryAdapter popupHistoryAdapter;
     Dialog historyPopup;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prefsManager = new SharedPrefsManager(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +71,7 @@ public class HistoryFragment extends Fragment {
 
         if(requestCode == MEANING_CODE){
             if(resultCode == Activity.RESULT_OK){
-                wordList = databaseAccess.getHistoryWordsWithoutDuplicate();
+                wordList = databaseAccess.getHistoryWordsWithoutDuplicateSortByAZ();
                 historyAdapter.notifyDataSetChanged();
             }
         }
@@ -124,8 +131,14 @@ public class HistoryFragment extends Fragment {
     }
 
     private void LoadHistoryData() {
-        databaseAccess.open();
-        wordList = databaseAccess.getHistoryWordsWithoutDuplicate();
+        if(prefsManager.getSortBy() == SharedPrefsManager.BY_ALPHABET){
+            wordList.clear();
+            wordList.addAll(databaseAccess.getHistoryWordsWithoutDuplicateSortByAZ());
+        }else{
+            wordList.clear();
+            wordList.addAll(databaseAccess.getHistoryWordsWithoutDuplicateSortByTimeLatest());
+        }
+
         historyAdapter = new HistoryAdapter(this, R.layout.row_list_view_history, wordList);
         historyFragmentListView.setAdapter(historyAdapter);
     }
@@ -163,5 +176,17 @@ public class HistoryFragment extends Fragment {
             }
         });
         historyPopup.show();
+    }
+
+    public void sortItemListView(int sortType){
+        if(sortType == SharedPrefsManager.BY_ALPHABET){
+            wordList.clear();
+            wordList.addAll(databaseAccess.getHistoryWordsWithoutDuplicateSortByAZ());
+            historyAdapter.notifyDataSetChanged();
+        }else{
+            wordList.clear();
+            wordList.addAll(databaseAccess.getHistoryWordsWithoutDuplicateSortByTimeLatest());
+            historyAdapter.notifyDataSetChanged();
+        }
     }
 }

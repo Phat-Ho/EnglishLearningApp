@@ -18,6 +18,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.HistoryViewPagerAdapter;
 import com.example.englishlearningapp.fragments.FavoriteFragment;
 import com.example.englishlearningapp.fragments.HistoryFragment;
+import com.example.englishlearningapp.fragments.HistoryFragment2;
 import com.example.englishlearningapp.fragments.RememberedFragment;
 import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.tabs.TabLayout;
@@ -43,9 +44,11 @@ public class HistoryFavoriteFragment extends Fragment {
     ViewPager historyFavViewPager;
     Spinner historyFavSpinnerSort, historyFavSpinnerType;
     HistoryFragment historyFragment = new HistoryFragment();
+    HistoryFragment2 historyFragment2 = new HistoryFragment2();
     FavoriteFragment favoriteFragment = new FavoriteFragment();
     RememberedFragment rememberedFragment = new RememberedFragment();
     SharedPrefsManager prefsManager;
+    HistoryViewPagerAdapter pagerAdapter;
 
     public HistoryFavoriteFragment() {
         // Required empty public constructor
@@ -77,6 +80,7 @@ public class HistoryFavoriteFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         prefsManager = new SharedPrefsManager(getActivity());
+        pagerAdapter = new HistoryViewPagerAdapter(getChildFragmentManager());
     }
 
     @Override
@@ -88,9 +92,10 @@ public class HistoryFavoriteFragment extends Fragment {
         historyFavViewPager = view.findViewById(R.id.history_favorite_viewPager);
         historyFavSpinnerSort = view.findViewById(R.id.history_favorite_spinner_date);
         historyFavSpinnerType = view.findViewById(R.id.history_favorite_spinner_type);
-        SetUpViewPager(historyFavViewPager);
         SetUpSpinner();
+        SetUpViewPager(historyFavViewPager);
         historyFavTabLayout.setupWithViewPager(historyFavViewPager);
+        HandleSpinnerEvent();
         return view;
     }
 
@@ -114,7 +119,32 @@ public class HistoryFavoriteFragment extends Fragment {
         historyFavSpinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(historyFavSpinnerType.getSelectedItemPosition() == SharedPrefsManager.EXPAND){
+                    historyFragment2.sortItemListView(position);
+                }else{
+                    historyFragment.sortItemListView(position);
+                }
+                prefsManager.setSortBy(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        historyFavSpinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == SharedPrefsManager.EXPAND){
+                    pagerAdapter.updateFragment(historyFragment2, 0);
+                    prefsManager.setViewType(position);
+                    pagerAdapter.notifyDataSetChanged();
+                }else{
+                    pagerAdapter.updateFragment(historyFragment, 0);
+                    prefsManager.setViewType(position);
+                    pagerAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -125,8 +155,11 @@ public class HistoryFavoriteFragment extends Fragment {
     }
 
     private void SetUpViewPager(ViewPager viewPager) {
-        HistoryViewPagerAdapter pagerAdapter = new HistoryViewPagerAdapter(getChildFragmentManager());
-        pagerAdapter.addFragment(historyFragment, "Lịch sử");
+        if(historyFavSpinnerType.getSelectedItemPosition() == SharedPrefsManager.COLLAPSE){
+            pagerAdapter.addFragment(historyFragment, "Lịch sử");
+        }else{
+            pagerAdapter.addFragment(historyFragment2, "Lịch sử");
+        }
         pagerAdapter.addFragment(favoriteFragment, "Yêu thích");
         pagerAdapter.addFragment(rememberedFragment, "Đã nhớ");
         viewPager.setAdapter(pagerAdapter);

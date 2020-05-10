@@ -8,6 +8,7 @@
         android:id="@+id/textViewHistoryWord"
         android:layout_margin="10dp"
         android:text="A B C"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"/>

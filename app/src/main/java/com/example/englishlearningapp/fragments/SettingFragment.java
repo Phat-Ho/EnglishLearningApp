@@ -263,7 +263,7 @@ public class SettingFragment extends Fragment {
     public void showPopupWordList(int alarmId){
         ArrayList<Word> wordList = null;
         if(alarmId == DatabaseContract.ALARM_HISTORY){
-            wordList = db.getHistoryWordsWithoutDuplicate();
+            wordList = db.getHistoryWordsWithoutDuplicateSortByAZ();
         }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
             wordList = db.getFavoriteWords();
         }else{

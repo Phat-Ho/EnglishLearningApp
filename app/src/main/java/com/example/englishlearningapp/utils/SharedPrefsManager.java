@@ -25,8 +25,10 @@ public class SharedPrefsManager {
     public void setSortBy(int sort){
         if(sort == EXPAND){
             editor.putInt(SORT_BY, EXPAND);
+            editor.apply();
         }else{
             editor.putInt(SORT_BY, COLLAPSE);
+            editor.apply();
         }
     }
 
@@ -37,8 +39,10 @@ public class SharedPrefsManager {
     public void setViewType(int viewType){
         if(viewType == BY_ALPHABET){
             editor.putInt(VIEW_TYPE, BY_ALPHABET);
+            editor.apply();
         }else{
             editor.putInt(VIEW_TYPE, BY_TIME);
+            editor.apply();
         }
     }
 
