@@ -14,11 +14,19 @@
         android:layout_height="200dp"
         android:src="@drawable/home_logo"/>
 
-    <Spinner
-        android:id="@+id/spinner_language"
+    <RelativeLayout
         android:layout_marginTop="10dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_spinner">
+
+        <Spinner
+            android:id="@+id/spinner_language"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/home_next_button"
