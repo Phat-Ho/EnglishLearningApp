@@ -10,6 +10,16 @@
         <item>Chủ nhật</item>
     </string-array>
 
+    <string-array name="history_sort">
+        <item>A - Z</item>
+        <item>Thời gian</item>
+    </string-array>
+
+    <string-array name="history_view">
+        <item>Mở rộng</item>
+        <item>Thu gọn</item>
+    </string-array>
+
     <string-array name="hours">
         <item>0:00</item>
         <item>1:00</item>
