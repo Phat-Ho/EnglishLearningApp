@@ -211,13 +211,13 @@ public class MeaningActivity extends AppCompatActivity {
         if (text != null) {
             String translatedWord = text.toString();
             ArrayList<Word> dbWord = databaseAccess.getWords(translatedWord.trim().toLowerCase());
-            contentHtml = dbWord.get(0).getHtml();
-            ProcessingHTML(contentHtml);
-            loadingImage(dbWord.get(0).getWord());
-            int wordId = dbWord.get(0).getId();
-            if(isHistoryExistence(wordId)){
-                databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
-            }else{
+            if (dbWord.isEmpty()){
+                txtWordHtml.setText("Không tìm thấy kết quả. Vui lòng bỏ /s/ và /ed/ khi tra từ");
+                imgBtnPronounce.setVisibility(View.INVISIBLE);
+            } else {
+                contentHtml = dbWord.get(0).getHtml();
+                ProcessingHTML(contentHtml);
+                loadingImage(dbWord.get(0).getWord());
                 saveHistory(dbWord.get(0).getId(), loginManager.getUserId());
             }
         } else {
