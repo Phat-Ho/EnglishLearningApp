@@ -34,10 +34,16 @@
 
         <activity
             android:name=".activity.MeaningActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.HistoryActivity" />
         <activity android:name=".activity.ScheduleActivity" />
-        <activity android:name=".activity.MainHomeActivity" />
+        <activity android:name=".activity.MainHomeActivity"/>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.MainActivity" />

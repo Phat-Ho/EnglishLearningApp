@@ -145,7 +145,6 @@ public class HomeFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
         });
-
         txtMeaningSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -89,10 +89,11 @@ public class MeaningActivity extends AppCompatActivity {
         MappingView();
         SetUpToolbar();
         meaningPopup = new Dialog(this);
+        loginManager = new LoginManager(this);
         SetMeaningData();
         SetAutoCompleteSearchBox();
-        loginManager = new LoginManager(this);
         alarmPropsManager = new AlarmPropsManager(this);
+
     }
 
     private void SetUpToolbar() {
@@ -199,32 +200,38 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void SetMeaningData() {
         Intent intent = getIntent();
+        databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
         if(intent.hasExtra("show_popup")){
             int wordId = intent.getIntExtra("id", 0);
             String word = intent.getStringExtra("word");
             String description = intent.getStringExtra("description");
             showPopup(wordId, word, description);
         }
-        String contentHtml = intent.getStringExtra("html");
-        int start = contentHtml.indexOf("<h1>");
-        int end = contentHtml.indexOf("<h3>");
-        String replacement = "";
-        String toBeReplaced = contentHtml.substring(start, end);
-        String wordHtml = toBeReplaced;
-        String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
-            txtContentHtml.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
+        String contentHtml = "";
+
+        CharSequence text = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
+        if (text != null) {
+            String translatedWord = text.toString();
+            ArrayList<Word> dbWord = databaseAccess.getWords(translatedWord.trim().toLowerCase());
+            contentHtml = dbWord.get(0).getHtml();
+            ProcessingHTML(contentHtml);
+            loadingImage(dbWord.get(0).getWord());
+            int wordId = dbWord.get(0).getId();
+            if(isHistoryExistence(wordId)){
+                databaseAccess.addHistoryDate(wordId, System.currentTimeMillis());
+            }else{
+                saveHistory(dbWord.get(0).getId(), loginManager.getUserId());
+            }
         } else {
-            txtWordHtml.setText(Html.fromHtml(wordHtml));
-            txtContentHtml.setText(Html.fromHtml(meaningHtml));
+            contentHtml = intent.getStringExtra("html");
+            ProcessingHTML(contentHtml);
+            final String word = intent.getStringExtra("word");
+            loadingImage(word);
         }
 
         final String word = intent.getStringExtra("word");
-        loadingImage(word);
-        databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
         imgBtnPronounce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +241,23 @@ public class MeaningActivity extends AppCompatActivity {
 
         //Compare to set Favorite
         addToFavorite(intent);
+    }
+
+    private void ProcessingHTML(String contentHtml){
+        int start = contentHtml.indexOf("<h1>");
+        int end = contentHtml.indexOf("<h3>");
+        String replacement = "";
+        String toBeReplaced = contentHtml.substring(start, end);
+        String wordHtml = toBeReplaced;
+        String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
+            txtContentHtml.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            txtWordHtml.setText(Html.fromHtml(wordHtml));
+            txtContentHtml.setText(Html.fromHtml(meaningHtml));
+        }
+
     }
 
     private void MappingView() {
