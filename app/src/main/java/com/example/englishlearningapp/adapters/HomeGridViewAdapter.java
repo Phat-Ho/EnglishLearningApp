@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.englishlearningapp.activity.CameraActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.VietnameseActivity;
@@ -61,6 +63,10 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         //Navigate to Vietnamese - English Dictionary
                         Intent vaIntent = new Intent(context, VietnameseActivity.class);
                         context.startActivity(vaIntent);
+                        break;
+                    case 2:
+                        Intent cameraIntent = new Intent(context, CameraActivity.class);
+                        context.startActivity(cameraIntent);
                         break;
                 }
             }
