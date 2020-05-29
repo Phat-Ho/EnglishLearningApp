@@ -208,8 +208,8 @@ public class SettingFragment extends Fragment {
         ArrayList<Topic> topicList = null;
         topicList = db.getTopics();
         Log.d(TAG, "alarm Type: " + alarmPropsManager.getAlarmType());
-        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, "Lịch sử (" + db.getHistoryWordsCount() + ")", false));
-        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, "Yêu thích (" + db.getFavoriteWordsCount() + ")", false));
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, getString(R.string.history) + " (" + db.getHistoryWordsCount() + ")", false));
+        alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, getString(R.string.favorite) + " (" + db.getFavoriteWordsCount() + ")", false));
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
             alarmTypeList.get(0).setChecked(true);
         }

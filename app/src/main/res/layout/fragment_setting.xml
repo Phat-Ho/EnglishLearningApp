@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorAccent"
-        app:title="Cài đặt thông báo"
+        app:title="@string/setting_notification"
         app:titleTextColor="@color/black">
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Word Reminder Enabled"
+                android:text="@string/word_reminder_enabled"
                 android:textSize="24sp"/>
             <Switch
                 android:id="@+id/switchReminder"
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Number of Words"
+                android:text="@string/number_of_words"
                 android:textSize="24sp"/>
 
             <Spinner
@@ -83,13 +83,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="Start"
+                android:text="@string/start"
                 android:textSize="18sp" />
             <TextView
                 android:gravity="center"
                 android:layout_weight="2"
                 android:textSize="18sp"
-                android:text="End"
+                android:text="@string/end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -117,7 +117,7 @@
 
         <TextView
             android:padding="10dp"
-            android:text="Select Type"
+            android:text="@string/select_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <LinearLayout

@@ -158,10 +158,10 @@ public class HistoryFavoriteFragment extends Fragment {
         if(historyFavSpinnerType.getSelectedItemPosition() == SharedPrefsManager.COLLAPSE){
             pagerAdapter.addFragment(historyFragment, "Lịch sử");
         }else{
-            pagerAdapter.addFragment(historyFragment2, "Lịch sử");
+            pagerAdapter.addFragment(historyFragment2, getString(R.string.history));
         }
-        pagerAdapter.addFragment(favoriteFragment, "Yêu thích");
-        pagerAdapter.addFragment(rememberedFragment, "Đã nhớ");
+        pagerAdapter.addFragment(favoriteFragment, getString(R.string.favorite));
+        pagerAdapter.addFragment(rememberedFragment, getString(R.string.remembered));
         viewPager.setAdapter(pagerAdapter);
     }
 }

@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
                 txtMeaningSearch.setThreshold(1);
                 searchBoxAdapter.notifyDataSetChanged();
                 if (wordList.isEmpty()){
-                    Toast.makeText(getActivity(), "Không có kết quả", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getText(R.string.no_result_found), Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="Lịch sử"
+        android:text="@string/history"
         android:textColor="@color/black"
         android:paddingStart="15dp"
         android:layout_centerVertical="true"/>
