@@ -6,14 +6,19 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.utils.CustomTextRecognizer;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
@@ -37,6 +42,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView = findViewById(R.id.surfaceView);
         mTextView = findViewById(R.id.text_view);
         startCameraResource();
+
     }
 
     @Override
@@ -62,16 +68,17 @@ public class CameraActivity extends AppCompatActivity {
     private void startCameraResource() {
         {
             final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+            final CustomTextRecognizer customTextRecognizer = new CustomTextRecognizer(textRecognizer, 500, 500);
 
             if (!textRecognizer.isOperational()) {
                 Log.w(TAG, "Detector dependencies not loaded yet");
             } else {
 
                 //Initialize camerasource to use high resolution and set Autofocus on.
-                mCameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
+                mCameraSource = new CameraSource.Builder(getApplicationContext(), customTextRecognizer)
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(1280, 1024)
-                        .setAutoFocusEnabled(true)
+                        .setAutoFocusEnabled(false)
                         .setRequestedFps(2.0f)
                         .build();
 
@@ -112,7 +119,7 @@ public class CameraActivity extends AppCompatActivity {
                 });
 
                 //Set the TextRecognizer's Processor.
-                textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
+                customTextRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
                     @Override
                     public void release() {
                     }
@@ -124,6 +131,7 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void receiveDetections(Detector.Detections<TextBlock> detections) {
                         final SparseArray<TextBlock> items = detections.getDetectedItems();
+
                         if (items.size() != 0 ){
 
 

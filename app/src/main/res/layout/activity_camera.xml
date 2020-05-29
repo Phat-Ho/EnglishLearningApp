@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.CameraActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="5">
 
     <SurfaceView
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="4"/>
     <TextView
         android:id="@+id/text_view"
         android:layout_width="match_parent"
