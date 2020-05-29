@@ -68,7 +68,7 @@ public class CameraActivity extends AppCompatActivity {
     private void startCameraResource() {
         {
             final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-            final CustomTextRecognizer customTextRecognizer = new CustomTextRecognizer(textRecognizer, 500, 500);
+            final CustomTextRecognizer customTextRecognizer = new CustomTextRecognizer(textRecognizer, 300, 300);
 
             if (!textRecognizer.isOperational()) {
                 Log.w(TAG, "Detector dependencies not loaded yet");
@@ -78,7 +78,7 @@ public class CameraActivity extends AppCompatActivity {
                 mCameraSource = new CameraSource.Builder(getApplicationContext(), customTextRecognizer)
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(1280, 1024)
-                        .setAutoFocusEnabled(false)
+                        .setAutoFocusEnabled(true)
                         .setRequestedFps(2.0f)
                         .build();
 
