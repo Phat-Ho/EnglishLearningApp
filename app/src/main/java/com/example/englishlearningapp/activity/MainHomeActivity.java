@@ -1,14 +1,22 @@
 package com.example.englishlearningapp.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 ;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
 import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HistoryFavoriteFragment;
@@ -16,6 +24,8 @@ import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.FileOutputStream;
 
 public class MainHomeActivity extends AppCompatActivity {
 
@@ -83,4 +93,39 @@ public class MainHomeActivity extends AppCompatActivity {
         }
     }
 
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // by this point we have the camera photo on disk
+                Bitmap takenImage = BitmapFactory.decodeFile(HomeGridViewAdapter.photoFile.getAbsolutePath());
+                // RESIZE BITMAP, see section below
+                // Load the taken image into a preview
+//                Intent intent = new Intent(this, CameraActivity.class);
+//                intent.putExtra("BitmapImage", takenImage);
+//                startActivity(intent);
+                try {
+                    //Write file
+                    String filename = "bitmap.png";
+                    FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+                    takenImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                    //Cleanup
+                    stream.close();
+                    takenImage.recycle();
+
+                    //Pop intent
+                    Intent in1 = new Intent(this, CameraActivity.class);
+                    in1.putExtra("image", filename);
+                    startActivity(in1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else { // Result was a failure
+                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

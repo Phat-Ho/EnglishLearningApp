@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:weightSum="5">
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <ImageView
+        android:id="@+id/image_view_translate"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"/>
