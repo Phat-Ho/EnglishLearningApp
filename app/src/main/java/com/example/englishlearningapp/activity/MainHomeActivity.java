@@ -102,30 +102,30 @@ public class MainHomeActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(HomeGridViewAdapter.photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-//                Intent intent = new Intent(this, CameraActivity.class);
-//                intent.putExtra("BitmapImage", takenImage);
-//                startActivity(intent);
-                try {
-                    //Write file
-                    String filename = "bitmap.png";
-                    FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
-                    takenImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-                    //Cleanup
-                    stream.close();
-                    takenImage.recycle();
-
-                    //Pop intent
-                    Intent in1 = new Intent(this, CameraActivity.class);
-                    in1.putExtra("image", filename);
-                    startActivity(in1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                passBitmapIntent(takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void passBitmapIntent(Bitmap takenImage){
+        try {
+            //Write file
+            String filename = "bitmap.png";
+            FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+            takenImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+            //Cleanup
+            stream.close();
+            takenImage.recycle();
+
+            //Pop intent
+            Intent in1 = new Intent(this, CameraActivity.class);
+            in1.putExtra("image", filename);
+            startActivity(in1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -48,6 +48,10 @@ public class CameraActivity extends AppCompatActivity {
         imgTranslate = findViewById(R.id.image_view_translate);
         Bitmap bmp = null;
         String filename = getIntent().getStringExtra("image");
+        getBitmapIntent(filename, bmp);
+    }
+
+    private void getBitmapIntent(String filename, Bitmap bmp){
         try {
             FileInputStream is = this.openFileInput(filename);
             bmp = BitmapFactory.decodeStream(is);

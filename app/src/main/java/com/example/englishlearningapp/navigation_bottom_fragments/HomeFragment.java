@@ -243,22 +243,4 @@ public class HomeFragment extends Fragment {
         }
     }
 
-//    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                // by this point we have the camera photo on disk
-//                Bitmap takenImage = BitmapFactory.decodeFile(adapter.photoFile.getAbsolutePath());
-//                // RESIZE BITMAP, see section below
-//                // Load the taken image into a preview
-//                Intent intent = new Intent(getActivity(), CameraActivity.class);
-//                intent.putExtra("BitmapImage", takenImage);
-//                getActivity().startActivity(intent);
-//            } else { // Result was a failure
-//                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 }
