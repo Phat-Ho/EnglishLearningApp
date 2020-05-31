@@ -88,6 +88,22 @@ public class DatabaseAccess {
         return list;
     }
 
+    public ArrayList<Word> getWordExactly(String word){
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE word LIKE '" + word + "'" + "LIMIT 100", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(new Word(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(cursor.getColumnIndex("description")),
+                    cursor.getString(cursor.getColumnIndex("pronounce")),
+                    cursor.getString(cursor.getColumnIndex("html"))));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
     public Word getWordsById(int wordId){
         Word word = new Word();
         Cursor cursor = database.rawQuery("SELECT * FROM av WHERE id = " + wordId, null);
