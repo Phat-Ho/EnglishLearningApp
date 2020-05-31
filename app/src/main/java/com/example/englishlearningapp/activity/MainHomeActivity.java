@@ -111,13 +111,13 @@ public class MainHomeActivity extends AppCompatActivity {
 
 //                            Bitmap takenImage = BitmapFactory.decodeFile(HomeGridViewAdapter.photoFile.getAbsolutePath());
                             Bitmap takenImage = decodeSampledBitmapFromFile(HomeGridViewAdapter.photoFile.getAbsolutePath(), 800, 480);
-
                             rotateImage(takenImage);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
+                Toast.makeText(MainHomeActivity.this, "Đang xử lí hình ảnh", Toast.LENGTH_SHORT).show();
 
                 // RESIZE BITMAP, see section below
 //                passBitmapIntent(takenImage);
@@ -153,7 +153,7 @@ public class MainHomeActivity extends AppCompatActivity {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
-        int inSampleSize = 3;
+        int inSampleSize = 4;
 
         if (height > reqHeight || width > reqWidth) {
 
