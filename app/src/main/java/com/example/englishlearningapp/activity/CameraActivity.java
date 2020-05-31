@@ -81,7 +81,6 @@ public class CameraActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(CameraActivity.this, arrCaptureText.get(position), Toast.LENGTH_SHORT).show();
                 ArrayList<Word> wordList = databaseAccess.getWords(arrCaptureText.get(position).trim().toLowerCase());
-//                Toast.makeText(CameraActivity.this, wordList.get(position).getWord(), Toast.LENGTH_SHORT).show();
                 String html = wordList.get(0).getHtml();
                 String word = wordList.get(0).getWord();
                 int wordId = wordList.get(0).getId();
@@ -106,47 +105,10 @@ public class CameraActivity extends AppCompatActivity {
             bmp = BitmapFactory.decodeStream(is);
             is.close();
             imgTranslate.setImageBitmap(bmp);
-//            Picasso.get().load(filename).resize(50, 50).centerCrop().into(imgTranslate);
             getTextFromImage(bmp);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-
-    public static Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(filePath, options);
     }
 
     private void getTextFromImage(Bitmap bitmap){
