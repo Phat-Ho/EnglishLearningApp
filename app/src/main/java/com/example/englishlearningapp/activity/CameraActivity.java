@@ -78,10 +78,10 @@ public class CameraActivity extends AppCompatActivity {
                 Toast.makeText(CameraActivity.this, arrCaptureText.get(position), Toast.LENGTH_SHORT).show();
                 ArrayList<Word> wordList = databaseAccess.getWords(arrCaptureText.get(position).trim().toLowerCase());
 //                Toast.makeText(CameraActivity.this, wordList.get(position).getWord(), Toast.LENGTH_SHORT).show();
-                String html = wordList.get(position).getHtml();
-                String word = wordList.get(position).getWord();
-                int wordId = wordList.get(position).getId();
-                int remembered = wordList.get(position).getRemembered();
+                String html = wordList.get(0).getHtml();
+                String word = wordList.get(0).getWord();
+                int wordId = wordList.get(0).getId();
+                int remembered = wordList.get(0).getRemembered();
                 moveToMeaningActivity(html, word, wordId, remembered);
             }
         });
