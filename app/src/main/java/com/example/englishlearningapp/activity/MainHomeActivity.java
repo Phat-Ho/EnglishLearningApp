@@ -6,10 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 ;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -26,6 +30,7 @@ import com.example.englishlearningapp.utils.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainHomeActivity extends AppCompatActivity {
 
@@ -93,18 +98,21 @@ public class MainHomeActivity extends AppCompatActivity {
         }
     }
 
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == HomeGridViewAdapter.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(HomeGridViewAdapter.photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
-                passBitmapIntent(takenImage);
+//                passBitmapIntent(takenImage);
+                try {
+                    rotateImage(takenImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else { // Result was a failure
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -126,6 +134,40 @@ public class MainHomeActivity extends AppCompatActivity {
             startActivity(in1);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void rotateImage(Bitmap bmp) throws IOException {
+        androidx.exifinterface.media.ExifInterface exifInterface = null;
+        exifInterface = new androidx.exifinterface.media.ExifInterface(HomeGridViewAdapter.photoFile.toString());
+
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+        switch (orientation){
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            default:
+        }
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+        passBitmapIntent(rotatedBitmap);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == HomeGridViewAdapter.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Camera permission granted", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
         }
     }
 }

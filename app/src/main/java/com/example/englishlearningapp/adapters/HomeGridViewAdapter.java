@@ -1,8 +1,11 @@
 package com.example.englishlearningapp.adapters;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +60,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
         holder.image.setImageResource((Integer) subjectImages.get(position));
         final MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
 //                Toast.makeText(context, "You clicked " + subjectNames.get(position), Toast.LENGTH_SHORT).show();
@@ -101,25 +106,31 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     public String photoFileName = "photo.jpg";
     public static File photoFile;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onLaunchCamera() {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
+        if (context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ((MainHomeActivity) context).requestPermissions(new String[]{Manifest.permission.CAMERA}, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        } else {
+            // create Intent to take a picture and return control to the calling application
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Create a File reference for future access
+            photoFile = getPhotoFileUri(photoFileName);
 
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(context, "com.example.englishlearningapp.fileprovider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+            // wrap File object into a content provider
+            // required for API >= 24
+            Uri fileProvider = FileProvider.getUriForFile(context, "com.example.englishlearningapp.fileprovider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            // Start the image capture intent to take photo
-            ((MainHomeActivity) context).startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+            // So as long as the result is not null, it's safe to use the intent.
+            if (intent.resolveActivity(context.getPackageManager()) != null) {
+                // Start the image capture intent to take photo
+                ((MainHomeActivity) context).startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
         }
     }
+
+
 
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
