@@ -20,37 +20,22 @@ import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
-import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.models.Word;
-import com.example.englishlearningapp.utils.CustomTextRecognizer;
 import com.example.englishlearningapp.utils.DatabaseAccess;
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -80,13 +65,16 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(CameraActivity.this, arrCaptureText.get(position), Toast.LENGTH_SHORT).show();
-                ArrayList<Word> wordList = databaseAccess.getWords(arrCaptureText.get(position).trim().toLowerCase());
-//                Toast.makeText(CameraActivity.this, wordList.get(position).getWord(), Toast.LENGTH_SHORT).show();
-                String html = wordList.get(0).getHtml();
-                String word = wordList.get(0).getWord();
-                int wordId = wordList.get(0).getId();
-                int remembered = wordList.get(0).getRemembered();
-                moveToMeaningActivity(html, word, wordId, remembered);
+                ArrayList<Word> wordList = databaseAccess.getWordExactly(arrCaptureText.get(position).trim().toLowerCase());
+                if(wordList.isEmpty()){
+                    Toast.makeText(CameraActivity.this, "Không thể tra từ", Toast.LENGTH_SHORT).show();
+                }else {
+                    String html = wordList.get(0).getHtml();
+                    String word = wordList.get(0).getWord();
+                    int wordId = wordList.get(0).getId();
+                    int remembered = wordList.get(0).getRemembered();
+                    moveToMeaningActivity(html, word, wordId, remembered);
+                }
             }
         });
     }
