@@ -7,14 +7,32 @@
     tools:context=".fragments.SettingFragment"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/setting_toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAccent"
-        app:title="@string/setting_notification"
-        app:titleTextColor="@color/black">
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/setting_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#03A9F4"
+                android:layout_gravity="center_horizontal">
+            </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_notification"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,6 +52,8 @@
                 android:text="@string/word_reminder_enabled"
                 android:textSize="24sp"/>
             <Switch
+                android:trackTint="#03A9F4"
+                android:thumbTint="#03A9F4"
                 android:id="@+id/switchReminder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

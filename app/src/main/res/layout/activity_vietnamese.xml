@@ -8,15 +8,36 @@
     android:orientation="vertical"
     tools:context=".activity.VietnameseActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/vn_toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAccent"
-        app:title="Tra từ Việt - Anh"
-        app:titleTextColor="@color/black">
+        android:layout_height="wrap_content">
 
-    </androidx.appcompat.widget.Toolbar>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/vn_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:titleTextColor="@color/black">
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vietnamese_english"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
     <EditText
         android:id="@+id/vn_edt_search"
         android:layout_margin="10dp"

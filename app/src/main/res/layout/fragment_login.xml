@@ -17,7 +17,7 @@
         android:text="@string/login"
         android:textAllCaps="true"
         android:textSize="50sp"
-        android:textColor="#FA0000"
+        android:textColor="@color/colorPrimary"
         android:layout_marginBottom="40dp"
         android:layout_gravity="center"/>
 
@@ -39,7 +39,8 @@
             android:layout_margin="4dp"
             app:errorEnabled="true"
             style="@style/Widget.TextInputLayout"
-            android:hint="Email">
+            android:hint="Email"
+            android:textColorHint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEmail"
@@ -70,7 +71,8 @@
             android:layout_margin="4dp"
             app:errorEnabled="true"
             style="@style/Widget.TextInputLayout"
-            android:hint="@string/password">
+            android:hint="@string/password"
+            android:textColorHint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextPassword"
@@ -105,11 +107,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSignIn"
-            style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/login"/>
+            android:text="@string/login"
+            />
 
         <LinearLayout
             android:gravity="center_horizontal"
@@ -147,7 +149,6 @@
         <com.google.android.material.button.MaterialButton
             android:layout_marginTop="10dp"
             android:id="@+id/buttonRegisterLogin"
-            style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create_new_account" />

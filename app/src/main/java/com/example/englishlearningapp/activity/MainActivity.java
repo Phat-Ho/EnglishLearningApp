@@ -7,12 +7,14 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.google.android.material.button.MaterialButton;
 
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(MainActivity.this);
         setContentView(R.layout.activity_main);
         MappingView();
         database = DatabaseAccess.getInstance(this);

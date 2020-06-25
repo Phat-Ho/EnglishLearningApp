@@ -14,6 +14,7 @@ import com.example.englishlearningapp.models.Question;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(WelcomeActivity.this);
         setContentView(R.layout.activity_welcome);
         MappingView();
         databaseAccess = DatabaseAccess.getInstance(this);

@@ -15,26 +15,23 @@
         android:id="@+id/meaning_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="#03A9F4"
+        >
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp">
-
-
+                android:layout_height="match_parent">
                 <com.like.LikeButton
                     android:id="@+id/LikeButtonHeart"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentTop="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
-
-                    android:layout_marginTop="5dp"
+                    android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
+                    app:circle_start_color="@color/colorWhite"
                     app:icon_type="heart" />
             </RelativeLayout>
         </FrameLayout>

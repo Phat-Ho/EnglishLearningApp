@@ -15,7 +15,7 @@
             android:id="@+id/history_favorite_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="#03A9F4"
             android:theme="@style/ThemeOverlay.AppCompat.Light">
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -43,10 +43,11 @@
             android:id="@+id/history_favorite_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicator="@color/colorPrimary"
+            app:tabIndicatorColor="#03A9F4"
             app:tabIndicatorHeight="3dp"
             app:tabGravity="fill"
-            style="@style/Widget.MaterialComponents.TabLayout"/>
+            app:tabTextColor="#03A9F4"
+            style="@style/Widget.MaterialComponents.TabLayout" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager

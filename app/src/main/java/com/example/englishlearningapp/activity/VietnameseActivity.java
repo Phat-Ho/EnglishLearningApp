@@ -1,9 +1,12 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +19,7 @@ import android.widget.ListView;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 
@@ -27,9 +31,11 @@ public class VietnameseActivity extends AppCompatActivity {
     DatabaseAccess databaseAccess;
     ArrayAdapter adapter;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(VietnameseActivity.this);
         setContentView(R.layout.activity_vietnamese);
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
@@ -76,9 +82,13 @@ public class VietnameseActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void SetUpToolbar() {
         setSupportActionBar(vnToolbar);
+        vnToolbar.setTitle("");
+        setSupportActionBar(vnToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        vnToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         vnToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

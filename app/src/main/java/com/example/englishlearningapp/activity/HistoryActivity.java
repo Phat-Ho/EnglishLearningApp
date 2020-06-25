@@ -12,6 +12,7 @@ import com.example.englishlearningapp.adapters.HistoryViewPagerAdapter;
 import com.example.englishlearningapp.fragments.FavoriteFragment;
 import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.fragments.RememberedFragment;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.google.android.material.tabs.TabLayout;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -26,6 +27,7 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(HistoryActivity.this);
         setContentView(R.layout.activity_history);
         MappingView();
         SetUpToolbar();

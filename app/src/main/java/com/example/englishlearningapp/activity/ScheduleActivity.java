@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.google.android.material.button.MaterialButton;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(ScheduleActivity.this);
         setContentView(R.layout.activity_schedule);
         MappingView();
         InitActionBar();

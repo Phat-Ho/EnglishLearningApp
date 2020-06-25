@@ -26,6 +26,7 @@ import com.example.englishlearningapp.fragments.SettingFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HistoryFavoriteFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -49,6 +50,7 @@ public class MainHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(MainHomeActivity.this);
         setContentView(R.layout.activity_main_home);
         loginManager = new LoginManager(MainHomeActivity.this);
         setHomeFragment();

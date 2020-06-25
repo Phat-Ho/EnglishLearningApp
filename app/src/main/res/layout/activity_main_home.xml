@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/navigation_bottom"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimary"
+            android:background="@color/black"
             app:itemIconTint="@color/navigation_item_color"
             app:itemTextColor="@color/navigation_item_color"
             app:menu="@menu/navigation_bottom_menu"

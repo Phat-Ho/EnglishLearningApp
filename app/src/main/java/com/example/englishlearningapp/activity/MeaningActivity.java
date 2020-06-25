@@ -1,5 +1,6 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -8,6 +9,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -46,6 +48,7 @@ import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.DatabaseOpenHelper;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
@@ -81,9 +84,11 @@ public class MeaningActivity extends AppCompatActivity {
     PopupHistoryAdapter popupHistoryAdapter;
     PopupRemindedAdapter popupRemindedAdapter;
     ArrayList<MyDate> historyDateList, remindedDateList;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(MeaningActivity.this);
         setContentView(R.layout.activity_meaning);
         databaseAccess = DatabaseAccess.getInstance(this);
         MappingView();
@@ -96,9 +101,11 @@ public class MeaningActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void SetUpToolbar() {
         setSupportActionBar(meaningToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        meaningToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         meaningToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

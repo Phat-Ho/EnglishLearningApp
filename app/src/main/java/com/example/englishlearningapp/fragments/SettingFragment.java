@@ -120,6 +120,8 @@ public class SettingFragment extends Fragment {
         swtReminder = view.findViewById(R.id.switchReminder);
         lvSetting = view.findViewById(R.id.lv_setting);
         settingToolbar = view.findViewById(R.id.setting_toolbar);
+        settingToolbar.setTitle("");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(settingToolbar);
         SetUpListView();
         InitSpinner();
         swtReminder.setChecked(isChecked);

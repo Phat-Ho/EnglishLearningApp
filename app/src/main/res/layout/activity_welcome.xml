@@ -32,7 +32,7 @@
     <TextView
         android:layout_weight="1"
         android:id="@+id/welcome_txt_topic"
-        android:textColor="#673AB7"
+        android:textColor="@color/colorPrimary"
         android:layout_gravity="center"
         android:textSize="22sp"
         android:text="(Topic School)"

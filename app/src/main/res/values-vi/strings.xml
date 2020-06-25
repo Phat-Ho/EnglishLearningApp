@@ -35,4 +35,5 @@
     <string name="end">Kết thúc</string>
     <string name="select_type">Loại nhắc nhở</string>
     <string name="no_result_found">Không có kết quả</string>
+    <string name="vietnamese_english">Việt - Anh</string>
 </resources>

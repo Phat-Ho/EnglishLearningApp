@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -52,6 +53,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(CameraActivity.this);
         setContentView(R.layout.activity_camera);
         imgTranslate = findViewById(R.id.image_view_translate);
         lvCaptureText = findViewById(R.id.list_view_capture_text);

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 public class VietnameseMeaningActivity extends AppCompatActivity {
     TextView vnMeaningTxt;
@@ -19,6 +20,7 @@ public class VietnameseMeaningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.hideStatusBar(VietnameseMeaningActivity.this);
         setContentView(R.layout.activity_vietnamese_meaning);
         MappingView();
         SetUpToolbar();
