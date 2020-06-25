@@ -20,7 +20,7 @@ public class VietnameseMeaningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(VietnameseMeaningActivity.this);
+        GlobalVariable.changeStatusBarColor(VietnameseMeaningActivity.this);
         setContentView(R.layout.activity_vietnamese_meaning);
         MappingView();
         SetUpToolbar();

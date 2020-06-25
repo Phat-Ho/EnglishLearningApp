@@ -35,7 +35,7 @@ public class VietnameseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(VietnameseActivity.this);
+        GlobalVariable.changeStatusBarColor(VietnameseActivity.this);
         setContentView(R.layout.activity_vietnamese);
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();

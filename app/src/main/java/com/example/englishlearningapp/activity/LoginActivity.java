@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(LoginActivity.this);
+        GlobalVariable.changeStatusBarColor(LoginActivity.this);
         setContentView(R.layout.activity_login);
         MappingView();
         SetUpEvent();

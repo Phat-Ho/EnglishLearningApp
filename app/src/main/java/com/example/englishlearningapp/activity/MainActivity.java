@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(MainActivity.this);
+        GlobalVariable.changeStatusBarColor(MainActivity.this);
         setContentView(R.layout.activity_main);
         MappingView();
         database = DatabaseAccess.getInstance(this);

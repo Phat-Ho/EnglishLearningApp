@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(RegisterActivity.this);
+        GlobalVariable.changeStatusBarColor(RegisterActivity.this);
         setContentView(R.layout.activity_register);
         MappingView();
         HandleEvent();

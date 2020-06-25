@@ -27,7 +27,7 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(HistoryActivity.this);
+        GlobalVariable.changeStatusBarColor(HistoryActivity.this);
         setContentView(R.layout.activity_history);
         MappingView();
         SetUpToolbar();

@@ -88,7 +88,7 @@ public class MeaningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(MeaningActivity.this);
+        GlobalVariable.changeStatusBarColor(MeaningActivity.this);
         setContentView(R.layout.activity_meaning);
         databaseAccess = DatabaseAccess.getInstance(this);
         MappingView();

@@ -20,7 +20,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(ScheduleActivity.this);
+        GlobalVariable.changeStatusBarColor(ScheduleActivity.this);
         setContentView(R.layout.activity_schedule);
         MappingView();
         InitActionBar();

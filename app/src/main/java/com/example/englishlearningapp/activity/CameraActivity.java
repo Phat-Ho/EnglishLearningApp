@@ -53,7 +53,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(CameraActivity.this);
+        GlobalVariable.changeStatusBarColor(CameraActivity.this);
         setContentView(R.layout.activity_camera);
         imgTranslate = findViewById(R.id.image_view_translate);
         lvCaptureText = findViewById(R.id.list_view_capture_text);

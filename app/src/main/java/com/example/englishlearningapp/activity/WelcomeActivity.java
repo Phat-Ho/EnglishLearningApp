@@ -34,7 +34,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(WelcomeActivity.this);
+        GlobalVariable.changeStatusBarColor(WelcomeActivity.this);
         setContentView(R.layout.activity_welcome);
         MappingView();
         databaseAccess = DatabaseAccess.getInstance(this);

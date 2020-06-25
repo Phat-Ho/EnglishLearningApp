@@ -50,7 +50,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalVariable.hideStatusBar(SplashScreen.this);
+        GlobalVariable.changeStatusBarColor(SplashScreen.this);
         setContentView(R.layout.activity_splash_screen);
         database = DatabaseAccess.getInstance(this);
         database.open();
