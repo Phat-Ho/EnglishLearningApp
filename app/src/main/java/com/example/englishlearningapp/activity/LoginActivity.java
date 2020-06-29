@@ -21,6 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     public String LOGIN_URL = Server.LOGIN_URL;
     NetworkChangeReceiver networkChangeReceiver = null;
     LoginManager loginManager;
+    DatabaseAccess databaseAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         MappingView();
         SetUpEvent();
         loginManager = new LoginManager(this);
+        databaseAccess = DatabaseAccess.getInstance(this);
     }
 
     private void SetUpEvent() {
@@ -114,6 +117,10 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Gán lại cho login manager
                             loginManager.createUserData(userId, name, email, password, number, dob);
+
+                            //Update database with userId
+                            updateDatabaseWithUserId(userId);
+
                             //Sync database after login
                             syncDatabaseRemoteToLocal();
 
@@ -136,6 +143,11 @@ public class LoginActivity extends AppCompatActivity {
             requestQueue.add(loginRequest);
             //Kết thúc gọi webservice
         }
+    }
+
+    private void updateDatabaseWithUserId(int idUser) {
+        Log.d(TAG, "updateDatabaseWithUserId: ");
+        databaseAccess.updateHistoryIdUser(idUser);
     }
 
     @Override

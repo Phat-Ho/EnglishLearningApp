@@ -7,11 +7,11 @@ import android.net.NetworkInfo;
 
 public class Server
 {
-    public static String host = "http://192.168.1.62/";
-    public static String backend_host = "http://192.168.1.62:5001/";
+    public static String host = "http://192.168.1.30/";
+    public static String backend_host = "http://192.168.1.30:5001/";
     public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
     public static String LOGIN_URL = backend_host + "api/hash/login?";
-    public static String ADD_HISTORY_URL = Server.host + "english/addHistory.php";
+    public static String SEND_DATA_URL = backend_host + "api/sync/sendDataToServer";
     public static String GET_HISTORY_URL = Server.host + "english/getHistoryByUserId.php?";
     public static String UPDATE_HISTORY_URL = Server.host + "english/updateHistorySync.php?";
     public static String CHECK_USER_URL = backend_host + "api/hash/checkUser?";

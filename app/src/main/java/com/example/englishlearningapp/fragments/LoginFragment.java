@@ -23,11 +23,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.LoginActivity;
-import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.navigation_bottom_fragments.ProfileFragment;
 import com.example.englishlearningapp.receiver.NetworkChangeReceiver;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
@@ -36,6 +35,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +47,7 @@ public class LoginFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "LoginFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +91,7 @@ public class LoginFragment extends Fragment {
     public String LOGIN_URL = Server.LOGIN_URL;
     NetworkChangeReceiver networkChangeReceiver = null;
     LoginManager loginManager;
+    DatabaseAccess databaseAccess;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,6 +100,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         MappingView(view);
         SetUpEvent();
+        databaseAccess = DatabaseAccess.getInstance(getActivity());
         loginManager = new LoginManager(getActivity());
         return view;
     }
@@ -188,6 +191,9 @@ public class LoginFragment extends Fragment {
                             //Sync database after login
                             syncDatabaseRemoteToLocal();
 
+                            //Update database with userId
+                            updateDatabaseWithUserId(userId);
+
                             //Chuyển qua màn hình MainHome
                             navigateToHomeScreen();
                         }
@@ -207,6 +213,11 @@ public class LoginFragment extends Fragment {
             requestQueue.add(loginRequest);
             //Kết thúc gọi webservice
         }
+    }
+
+    private void updateDatabaseWithUserId(int idUser) {
+        Log.d(TAG, "updateDatabaseWithUserId: ");
+        databaseAccess.updateHistoryIdUser(idUser);
     }
 
     private void navigateToHomeScreen(){

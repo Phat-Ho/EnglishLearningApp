@@ -2,6 +2,7 @@ package com.example.englishlearningapp.utils;
 
 
 public class DatabaseContract {
+    public static String ID = "id";
     public static String HISTORY_TABLE = "history";
     public static String FAVORITE_TABLE = "favorite";
     public static String REMINDED_TABLE = "remindWord";
@@ -11,6 +12,11 @@ public class DatabaseContract {
     public static String TOPIC_ID = "topicId";
     public static String SYNC_STATUS = "sync_status";
     public static String REMEMBERED = "remembered";
+    public static String SYNCHRONIZED = "Synchronized";
+    public static String LINKWEB = "LinkWeb";
+    public static String ISCHANGE = "IsChange";
+    public static String IDSERVER = "IdServer";
+    public static String IDUSER = "IdUser";
     public static int SYNC = 1;
     public static int NOT_SYNC = 0;
     public static String DATE = "date";

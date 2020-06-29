@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
@@ -262,15 +264,17 @@ public class DatabaseAccess {
     }
 
 
-    public int addHistory(int pWordID, int pSyncStatus, long pDate){
+    public long addHistory(int pWordID, long pDate){
         int remembered = 0;
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
-        value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
         value.put(DatabaseContract.DATE, pDate);
         value.put(DatabaseContract.REMEMBERED, remembered);
-        database.insert("history", null, value);
-        return pWordID;
+        value.put(DatabaseContract.SYNCHRONIZED, 0);
+        value.put(DatabaseContract.LINKWEB, "");
+        value.put(DatabaseContract.ISCHANGE, 0);
+        value.put(DatabaseContract.IDSERVER, 0);
+        return database.insert("history", null, value);
     }
 
     public ArrayList<MyDate> getHistoryDateByWordId(int wordId){
@@ -287,6 +291,20 @@ public class DatabaseAccess {
         return dateList;
     }
 
+    public void updateHistoryIdServer(long id, int idServer){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.IDSERVER, idServer);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+    }
+
+    public void updateHistoryIdUser(int idUser){
+        Log.d(TAG, "IdUser: " + idUser);
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.IDUSER, idUser);
+        database.update(DatabaseContract.HISTORY_TABLE, values, null, null);
+    }
+
     public void setHistoryRememberByWordId(int wordId){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.REMEMBERED, 1);
@@ -295,7 +313,9 @@ public class DatabaseAccess {
     }
 
     public Cursor readHistory(){
-        String[] column = {DatabaseContract.WORD_ID, DatabaseContract.SYNC_STATUS, DatabaseContract.DATE};
+        String[] column = {DatabaseContract.ID, DatabaseContract.WORD_ID, DatabaseContract.DATE,
+                            DatabaseContract.IDSERVER, DatabaseContract.IDUSER, DatabaseContract.REMEMBERED,
+                            DatabaseContract.LINKWEB, DatabaseContract.SYNCHRONIZED, DatabaseContract.ISCHANGE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
 
         return cursor;

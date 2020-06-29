@@ -97,7 +97,7 @@ public class SplashScreen extends AppCompatActivity {
                             if(syncStatus == DatabaseContract.NOT_SYNC){
                                 int wordId = Integer.parseInt(jsonObject.get("wordId").toString());
                                 String date = jsonObject.get("date").toString();
-                                database.addHistory(wordId, DatabaseContract.SYNC, dateTimeToMillis(date));
+                                database.addHistory(wordId, dateTimeToMillis(date));
                                 updateRemoteHistory(SplashScreen.this, userId, wordId);
                                 Log.d(TAG, "onResponse: sync success form remote to local");
                             }

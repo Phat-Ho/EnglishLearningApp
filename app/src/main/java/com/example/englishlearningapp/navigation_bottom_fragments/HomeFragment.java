@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
@@ -41,6 +42,7 @@ import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "HomeFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -178,57 +181,67 @@ public class HomeFragment extends Fragment {
     }
 
     public void saveHistory(final int wordID, final int pUserID){
+        final long currentDateTime = System.currentTimeMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
-        if(Server.haveNetworkConnection(getContext()) && pUserID > 0){
-            final long currentDateTime = System.currentTimeMillis();
-            String url = Server.ADD_HISTORY_URL;
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime);
+            String sendDataUrl = Server.SEND_DATA_URL;
+            final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+            //Initial request body
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("table", "searchhistory");
+                JSONArray jsonArray1 = new JSONArray();
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Id", insertId);
+                jsonObject1.put("IdUser", pUserID);
+                jsonObject1.put("IdWord", wordID);
+                jsonObject1.put("Remembered", 0);
+                jsonObject1.put("Synchronized", 0);
+                jsonObject1.put("TimeSearch", dateString);
+                jsonObject1.put("LinkWeb", "");
+                jsonObject1.put("IsChange", 0);
+                jsonObject1.put("IdServer", 0);
+                jsonArray1.put(jsonObject1);
+                jsonObject.put("data", jsonArray1);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String message = jsonObject.getString("message");
-                        if(message.equals("success")){
-                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC, currentDateTime);
-                        }else{
-                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                public void onResponse(JSONArray response) {
+                    if(response.length() > 0){
+                        try {
+                            JSONObject dataArray = (JSONObject) response.get(0);
+                            Log.d(TAG, "onResponse: " + dataArray);
+                            JSONArray array = (JSONArray) dataArray.get("data");
+                            JSONObject data = (JSONObject) array.get(0);
+                            int idServer = data.getInt("IdServer");
+                            databaseAccess.updateHistoryIdServer(insertId, idServer);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                    Log.e("Error: ", error.getMessage());
                 }
-            }){
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("userid", String.valueOf(pUserID));
-                    params.put("wordid", String.valueOf(wordID));
-                    params.put("datetime", String.valueOf(currentDateTime));
-                    params.put("sync", String.valueOf(DatabaseContract.SYNC));
-
-                    return params;
-                }
-            };
-            requestQueue.add(stringRequest);
+            });
+            requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, System.currentTimeMillis());
+            databaseAccess.addHistory(wordID, System.currentTimeMillis());
+            Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
 
-    public boolean isHistoryExistence(int wordId){
-        Word word = databaseAccess.getHistoryWordById(wordId);
-        if(word.getId() > 0){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
     public String getDatetime(){
         java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());

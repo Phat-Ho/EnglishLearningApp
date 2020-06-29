@@ -169,7 +169,7 @@ public class SearchFragment extends Fragment {
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pIsLogin == true){
             final long currentDateTime = System.currentTimeMillis();
-            String url = Server.ADD_HISTORY_URL;
+            String url = Server.SEND_DATA_URL;
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
@@ -178,10 +178,10 @@ public class SearchFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(response);
                         String message = jsonObject.getString("message");
                         if(message.equals("success")){
-                            databaseAccess.addHistory(wordID, DatabaseContract.SYNC, currentDateTime);
+                            databaseAccess.addHistory(wordID, currentDateTime);
                             Log.d(TAG, "onResponse: added to server");
                         }else{
-                            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                            databaseAccess.addHistory(wordID, currentDateTime);
                             Log.d(TAG, "onResponse: " + message);
                         }
                     } catch (JSONException e) {
@@ -192,7 +192,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, currentDateTime);
+                    databaseAccess.addHistory(wordID, currentDateTime);
                 }
             }){
                 @Override
@@ -208,7 +208,7 @@ public class SearchFragment extends Fragment {
             };
             requestQueue.add(stringRequest);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, DatabaseContract.NOT_SYNC, System.currentTimeMillis());
+            databaseAccess.addHistory(wordID, System.currentTimeMillis());
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
