@@ -27,11 +27,7 @@
         android:orientation="horizontal"
         style="@style/Widget.EditBox">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            style="@style/Widget.TextView"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputEmail"
             android:layout_width="match_parent"
@@ -58,11 +54,7 @@
         android:orientation="horizontal"
         style="@style/Widget.EditBox">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/password"
-            style="@style/Widget.TextView"/>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputPassword"

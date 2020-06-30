@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.RegisterActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/background">
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,7 +15,7 @@
         android:layout_marginBottom="40dp"
         android:text="@string/register"
         android:textAllCaps="true"
-        android:textColor="#FA0000"
+        android:textColor="@color/colorPrimary"
         android:textSize="50sp" />
 
     <LinearLayout
@@ -23,11 +24,6 @@
         android:orientation="horizontal"
         style="@style/Widget.EditBox">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            style="@style/Widget.TextView"/>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/register_text_layout_email"
             android:layout_width="match_parent"
@@ -35,7 +31,8 @@
             android:layout_margin="4dp"
             style="@style/Widget.TextInputLayout"
             android:hint="Email"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            android:textColorHint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_email"
@@ -53,12 +50,6 @@
         android:orientation="horizontal"
         style="@style/Widget.EditBox">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/password"
-            style="@style/Widget.TextView"/>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/register_text_input"
             android:layout_width="match_parent"
@@ -66,7 +57,8 @@
             android:layout_margin="4dp"
             app:errorEnabled="true"
             style="@style/Widget.TextInputLayout"
-            android:hint="@string/password">
+            android:hint="@string/password"
+            android:textColorHint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_password"
@@ -92,7 +84,6 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_button"
-            style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register" />
@@ -103,7 +94,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:text="@string/login_with_account"></com.google.android.material.button.MaterialButton>
+        android:text="@string/login_with_account"
+        ></com.google.android.material.button.MaterialButton>
 
 <!--    <com.google.android.material.button.MaterialButton-->
 <!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->

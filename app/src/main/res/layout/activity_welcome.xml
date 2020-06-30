@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.WelcomeActivity"
     android:orientation="vertical"
-    android:weightSum="8">
+    android:weightSum="8"
+    android:background="@drawable/background">
 
     <ImageView
         android:layout_weight="2"

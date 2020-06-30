@@ -2,8 +2,6 @@ package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,30 +13,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.CameraActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
-import com.example.englishlearningapp.utils.DatabaseContract;
+import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 
@@ -50,11 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-
-import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -126,7 +114,15 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recylerViewHome);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new HomeGridViewAdapter(getActivity(), subjectNames, subjectImages, this);
+
+
+        int spanCount = 2;
+        int spacing = 0;
+        boolean includeEdge = true;
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+
+
+        adapter = new HomeGridViewAdapter(getActivity(), subjectImages, this);
 
         recyclerView.setAdapter(adapter);
 

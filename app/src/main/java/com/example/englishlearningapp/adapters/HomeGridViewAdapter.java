@@ -33,18 +33,18 @@ import java.util.ArrayList;
 
 public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapter.MyViewHolder>{
 
-    ArrayList subjectNames;
+
     ArrayList subjectImages;
     Context context;
     SubjectsFragment subjectsFragment = new SubjectsFragment();
     HomeFragment homeFragment;
 
-    public HomeGridViewAdapter(Context context, ArrayList subjectNames, ArrayList subjectImages, HomeFragment homeFragment) {
+    public HomeGridViewAdapter(Context context, ArrayList subjectImages, HomeFragment homeFragment) {
         this.context = context;
-        this.subjectNames = subjectNames;
         this.subjectImages = subjectImages;
         this.homeFragment = homeFragment;
     }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // infalte the item Layout
@@ -56,7 +56,6 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        holder.name.setText((String) subjectNames.get(position));
         holder.image.setImageResource((Integer) subjectImages.get(position));
         final MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -86,17 +85,15 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 
     @Override
     public int getItemCount() {
-        return subjectNames.size();
+        return subjectImages.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         // init the item view's
-        TextView name;
         ImageView image;
         public MyViewHolder(View itemView) {
             super(itemView);
             // get the reference of item view's
-            name = itemView.findViewById(R.id.textViewHomeItem);
             image = itemView.findViewById(R.id.imageViewHomeItem);
         }
     }
