@@ -12,6 +12,7 @@ public class Server
     public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
     public static String LOGIN_URL = backend_host + "api/hash/login?";
     public static String SEND_DATA_URL = backend_host + "api/sync/sendDataToServer";
+    public static String GET_DATA_URL = backend_host + "/api/sync/getDataFromServer?IdUser=";
     public static String GET_HISTORY_URL = Server.host + "english/getHistoryByUserId.php?";
     public static String UPDATE_HISTORY_URL = Server.host + "english/updateHistorySync.php?";
     public static String CHECK_USER_URL = backend_host + "api/hash/checkUser?";
