@@ -11,10 +11,10 @@
 
     <ImageView
         android:layout_weight="2"
-        android:src="@drawable/ic_logo"
+        android:src="@drawable/ic_logo_welcome"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
