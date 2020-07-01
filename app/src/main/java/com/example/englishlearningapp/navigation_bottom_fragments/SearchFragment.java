@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
@@ -32,6 +33,7 @@ import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.Server;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,7 +109,6 @@ public class SearchFragment extends Fragment {
         databaseAccess.open();
         loginPref = getActivity().getSharedPreferences("loginState", Context.MODE_PRIVATE);
         final int userID = loginPref.getInt("userID", 0);
-        final boolean isLogin = loginPref.getBoolean("isLogin", false);
         loadDatabase(edtSearch.getText().toString().trim());
         lvTranslatedWords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -127,7 +128,7 @@ public class SearchFragment extends Fragment {
                     }
                 }
                 if(isSaved == false){
-                    saveHistory(completeWordsData.get(position).getId(), isLogin, userID);
+                    saveHistory(completeWordsData.get(position).getId(), userID);
                 }
                 if (remembered == 1){
                     moveToMeaningActivity(html,
@@ -165,50 +166,64 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public void saveHistory(final int wordID, boolean pIsLogin, final int pUserID){
+    public void saveHistory(final int wordID, final int pUserID){
+        final long currentDateTime = System.currentTimeMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
-        if(Server.haveNetworkConnection(getActivity()) && pIsLogin == true){
-            final long currentDateTime = System.currentTimeMillis();
-            String url = Server.SEND_DATA_URL;
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID,0);
+            String sendDataUrl = Server.SEND_DATA_URL;
+            final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+            //Initial request body
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("table", "searchhistory");
+                JSONArray jsonArray1 = new JSONArray();
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Id", insertId);
+                jsonObject1.put("IdUser", pUserID);
+                jsonObject1.put("IdWord", wordID);
+                jsonObject1.put("Remembered", 0);
+                jsonObject1.put("Synchronized", 0);
+                jsonObject1.put("TimeSearch", dateString);
+                jsonObject1.put("LinkWeb", "");
+                jsonObject1.put("IsChange", 0);
+                jsonObject1.put("IdServer", 0);
+                jsonArray1.put(jsonObject1);
+                jsonObject.put("data", jsonArray1);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String message = jsonObject.getString("message");
-                        if(message.equals("success")){
-                            databaseAccess.addHistory(wordID, currentDateTime);
-                            Log.d(TAG, "onResponse: added to server");
-                        }else{
-                            databaseAccess.addHistory(wordID, currentDateTime);
-                            Log.d(TAG, "onResponse: " + message);
+                public void onResponse(JSONArray response) {
+                    if(response.length() > 0){
+                        try {
+                            JSONObject dataArray = (JSONObject) response.get(0);
+                            Log.d(TAG, "onResponse: " + dataArray);
+                            JSONArray array = (JSONArray) dataArray.get("data");
+                            JSONObject data = (JSONObject) array.get(0);
+                            int idServer = data.getInt("IdServer");
+                            databaseAccess.updateHistoryIdServer(insertId, idServer);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    databaseAccess.addHistory(wordID, currentDateTime);
+                    Log.e("Error: ", error.getMessage());
                 }
-            }){
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("userid", String.valueOf(pUserID));
-                    params.put("wordid", String.valueOf(wordID));
-                    params.put("datetime", String.valueOf(currentDateTime));
-                    params.put("sync", String.valueOf(DatabaseContract.SYNC));
-
-                    return params;
-                }
-            };
-            requestQueue.add(stringRequest);
+            });
+            requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, System.currentTimeMillis());
+            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0,0);
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }

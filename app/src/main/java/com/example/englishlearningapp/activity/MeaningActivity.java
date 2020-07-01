@@ -283,7 +283,7 @@ public class MeaningActivity extends AppCompatActivity {
 
     private void addToFavorite(Intent intent){
         final int wordId = intent.getIntExtra("id", 0);
-
+        final int userId = loginManager.getUserId();
         ArrayList<Word> favoriteWords = databaseAccess.getFavoriteWords();
         isSaved = false;
         for (int i = 0; i < favoriteWords.size(); i++){
@@ -302,9 +302,60 @@ public class MeaningActivity extends AppCompatActivity {
             @Override
             public void liked(LikeButton likeButton) {
                 if (isSaved == false) {
-                    databaseAccess.addFavorite(wordId, DatabaseContract.NOT_SYNC);
-                }
 
+                    if(loginManager.isLogin() && Server.haveNetworkConnection(MeaningActivity.this)){
+                        final long insertId = databaseAccess.addFavorite(wordId, 0,0);
+                        String sendDataUrl = Server.SEND_DATA_URL;
+                        final RequestQueue requestQueue = Volley.newRequestQueue(MeaningActivity.this);
+
+                        //Initial request body
+                        JSONArray jsonArray = new JSONArray();
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("table", "wordlike");
+                            JSONArray jsonArray1 = new JSONArray();
+                            JSONObject jsonObject1 = new JSONObject();
+                            jsonObject1.put("Id", insertId);
+                            jsonObject1.put("IdUser", userId);
+                            jsonObject1.put("IdWord", wordId);
+                            jsonObject1.put("Remembered", 0);
+                            jsonObject1.put("Synchronized", 0);
+                            jsonObject1.put("IsChange", 0);
+                            jsonObject1.put("IdServer", 0);
+                            jsonArray1.put(jsonObject1);
+                            jsonObject.put("data", jsonArray1);
+                            jsonArray.put(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                if(response.length() > 0){
+                                    try {
+                                        JSONObject dataArray = (JSONObject) response.get(0);
+                                        Log.d(TAG, "onResponse: " + dataArray);
+                                        JSONArray array = (JSONArray) dataArray.get("data");
+                                        JSONObject data = (JSONObject) array.get(0);
+                                        int idServer = data.getInt("IdServer");
+                                        databaseAccess.updateFavoriteIdServer(insertId, idServer);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Error: ", error.getMessage());
+                            }
+                        });
+                        requestQueue.add(request);
+                    }else{ // No internet or no login add to local
+                        databaseAccess.addFavorite(wordId, 0,0);
+                    }
+                }
             }
 
             @Override
@@ -314,13 +365,14 @@ public class MeaningActivity extends AppCompatActivity {
         });
     }
 
-    public void saveHistory(final int wordID, final int pUserID){
+    public void saveHistory(final int wordID, final int pUserID)
+    {
         final long currentDateTime = getCurrentTimeInMillis();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(this) && pUserID > 0){
-            final long insertId = databaseAccess.addHistory(wordID, currentDateTime);
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0);
             String sendDataUrl = Server.SEND_DATA_URL;
             final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -371,7 +423,7 @@ public class MeaningActivity extends AppCompatActivity {
             });
             requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, getCurrentTimeInMillis());
+            databaseAccess.addHistory(wordID, getCurrentTimeInMillis(), 0,0);
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }

@@ -1,24 +1,18 @@
 package com.example.englishlearningapp.receiver;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
@@ -29,9 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
@@ -56,7 +50,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
                 databaseAccess.open();
 
-                SyncHistory(databaseAccess, context, userID);
+                SyncDatabase(databaseAccess, context, userID);
 
 
             }
@@ -66,23 +60,25 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
 
-    private void SyncHistory(final DatabaseAccess databaseAccess, Context context, int userID) {
+    private void SyncDatabase(final DatabaseAccess databaseAccess, Context context, int userID) {
         //Request JSON array body
         JSONArray bodyJson = new JSONArray();
-        JSONArray dataJsonArray = new JSONArray();
-        JSONArray listIdServerJson = new JSONArray();
+        JSONArray listIdServerHistoryArray = new JSONArray();
+        JSONArray dataHistoryArray = new JSONArray();
+
+        //Send data to server
         //Get the history cursor from local database
         Cursor cursor = databaseAccess.readHistory();
         if(cursor.moveToFirst()){
             do{
                 int idServer = cursor.getInt(cursor.getColumnIndex("IdServer"));
-                if(idServer == 0) { //Sync if the history word is not saved to server
+                int isChange = cursor.getInt(cursor.getColumnIndex("IsChange"));
+                if(idServer == 0 || isChange == 1) { //Sync if the history word is not saved to server
                     final long dateTimeInMillis = cursor.getLong(cursor.getColumnIndex(DatabaseContract.DATE));
                     Log.d(TAG, "datetime: " + dateTimeInMillis);
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
                     String dateString = simpleDateFormat.format(dateTimeInMillis);
                     JSONObject dataObject = new JSONObject();
-
                     try {
                         dataObject.put("Id", cursor.getInt(cursor.getColumnIndex("id")));
                         dataObject.put("IdUser", cursor.getInt(cursor.getColumnIndex("IdUser")));
@@ -93,49 +89,104 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         dataObject.put("LinkWeb", cursor.getString(cursor.getColumnIndex("LinkWeb")));
                         dataObject.put("IsChange", cursor.getInt(cursor.getColumnIndex("IsChange")));
                         dataObject.put("IdServer", cursor.getInt(cursor.getColumnIndex("IdServer")));
-                        dataJsonArray.put(dataObject);
+                        dataHistoryArray.put(dataObject);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }else{
-                    listIdServerJson.put(idServer);
+                    listIdServerHistoryArray.put(idServer);
                 }
             }while (cursor.moveToNext());
         }
 
-        JSONObject tableObject = new JSONObject();
+        JSONObject tableHistory = new JSONObject();
         try {
-            tableObject.put("table", "searchhistory");
-            tableObject.put("data", dataJsonArray);
+            tableHistory.put("table", "searchhistory");
+            tableHistory.put("data", dataHistoryArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        bodyJson.put(tableObject);
+        bodyJson.put(tableHistory);
+
+        //Get the favorite cursor from local database
+        JSONArray dataFavoriteArray = new JSONArray();
+        JSONArray listIdServerFavoriteArray = new JSONArray();
+        Cursor favoriteCursor = databaseAccess.readFavorite();
+        if(favoriteCursor.moveToFirst()){
+            do{
+                int idServer = favoriteCursor.getInt(favoriteCursor.getColumnIndex("IdServer"));
+                int isChange = favoriteCursor.getInt(favoriteCursor.getColumnIndex("IsChange"));
+                if(idServer == 0 || isChange == 1) { //Sync if the favorite word is not saved to server or had been change
+                    JSONObject dataObject = new JSONObject();
+
+                    try {
+                        dataObject.put("Id", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+                        dataObject.put("IdUser", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
+                        dataObject.put("IdWord", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+                        dataObject.put("Remembered", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+                        dataObject.put("Synchronized", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.SYNCHRONIZED)));
+                        dataObject.put("IsChange", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+                        dataObject.put("IdServer", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+                        dataFavoriteArray.put(dataObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    listIdServerFavoriteArray.put(idServer);
+                }
+            }while (cursor.moveToNext());
+        }
+
+        JSONObject favoriteTable = new JSONObject();
+        try {
+            favoriteTable.put("table", "wordlike");
+            favoriteTable.put("data", dataFavoriteArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bodyJson.put(favoriteTable);
+        Log.d(TAG, "request body array: " + bodyJson);
         //End initial body json
 
 
-        Log.d(TAG, "history json array: " + bodyJson);
+        //Begin cal send API
         String url = Server.SEND_DATA_URL;
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-
-        //Send data to server
         JsonArrayRequest sendDataRequest = new JsonArrayRequest(Request.Method.POST, url, bodyJson, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "onResponse: " + response);
-                if(response.length() > 0){
-                    try {
-                        JSONObject dataArray = (JSONObject) response.get(0);
-                        JSONArray array = (JSONArray) dataArray.get("data");
-                        int length = array.length();
-                        for (int i = 0; i < length; i++) {
-                            JSONObject data = (JSONObject) array.get(i);
-                            int idServer = data.getInt("IdServer");
-                            int historyId = data.getInt("Id");
-                            databaseAccess.updateHistoryIdServer(historyId, idServer);
+                int resLength = response.length();
+                if(resLength != 0){
+                    //Do nothing
+                }else{
+                    for (int i = 0; i < resLength; i++) {
+                        try {
+                            JSONObject tableObject = (JSONObject) response.get(i);
+                            String tableName = tableObject.getString("table");
+                            JSONArray array = (JSONArray) tableObject.get("data");
+                            if(tableName.equals("searchhistory")){
+                                int length = array.length();
+                                for (int j = 0; j < length; j++) {
+                                    JSONObject data = (JSONObject) array.get(j);
+                                    int idServer = data.getInt("IdServer");
+                                    int historyId = data.getInt("Id");
+                                    databaseAccess.updateHistoryIdServer(historyId, idServer);
+                                }
+                            }
+                            if(tableName.equals("wordlike")){
+                                int length = array.length();
+                                for (int j = 0; j < length; j++) {
+                                    JSONObject data = (JSONObject) array.get(j);
+                                    int idServer = data.getInt("IdServer");
+                                    int favoriteId = data.getInt("Id");
+                                    databaseAccess.updateHistoryIdServer(favoriteId, idServer);
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -146,25 +197,69 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             }
         });
         requestQueue.add(sendDataRequest);
+        //End send data to server
+
 
         //Get data from server request
         //Initial body json
         JSONArray getDataBodyArray = new JSONArray();
-        JSONObject getDataTable = new JSONObject();
+        JSONObject getHistoryJSON = new JSONObject();
+        JSONObject getFavoriteJSON = new JSONObject();
         try {
-            getDataTable.put("table", "searchhistory");
-            getDataTable.put("listIds", listIdServerJson);
-            getDataBodyArray.put(getDataTable);
+            getHistoryJSON.put("table", "searchhistory");
+            getHistoryJSON.put("listIds", listIdServerHistoryArray);
+            getDataBodyArray.put(getHistoryJSON);
+            getFavoriteJSON.put("table", "wordlike");
+            getFavoriteJSON.put("listIds", listIdServerFavoriteArray);
+            getDataBodyArray.put(getFavoriteJSON);
             Log.d(TAG, "getDataBody: " + getDataBodyArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        //Begin call get data API
         String getDataUrl = Server.GET_DATA_URL + userID;
         JsonArrayRequest getDataRequest = new JsonArrayRequest(Request.Method.POST, getDataUrl, getDataBodyArray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "get Data response: " + response.toString());
+                int resLength = response.length();
+                for (int i = 0; i < resLength; i++) {
+                    try {
+                        JSONObject tableObject = (JSONObject) response.get(i);
+                        String tableName = tableObject.getString("table");
+                        JSONArray dataArray = (JSONArray) tableObject.get("data");
+                        int length = dataArray.length();
+                        if(tableName.equals("searchhistory")){
+                            if(length == 0){
+                                //Do nothing
+                            }else{
+                                for(int j = 0;j < length;j++){
+                                    JSONObject dataObject = (JSONObject) dataArray.get(j);
+                                    String timeSearch = (String) dataObject.get("TimeSearch");
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    Date date = null;
+                                    date = simpleDateFormat.parse(timeSearch);
+                                    databaseAccess.addHistory(dataObject.getInt("IdWord"), date.getTime(), dataObject.getInt("IdUser"), dataObject.getInt("Id"));
+                                }
+                            }
+                        }
+
+                        if(tableName.equals("wordlike")){
+                            if(length == 0){
+                                //Do nothing
+                            }else{
+                                for(int j = 0;j < length;j++){
+                                    JSONObject dataObject = (JSONObject) dataArray.get(j);
+                                    databaseAccess.addFavorite(dataObject.getInt("IdWord"), dataObject.getInt("IdUser"), dataObject.getInt("Id"));
+                                }
+                            }
+                        }
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -173,5 +268,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             }
         });
         requestQueue.add(getDataRequest);
+        //End get data from server
     }
 }

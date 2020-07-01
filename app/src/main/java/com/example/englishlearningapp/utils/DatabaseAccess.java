@@ -264,16 +264,17 @@ public class DatabaseAccess {
     }
 
 
-    public long addHistory(int pWordID, long pDate){
+    public long addHistory(int pWordID, long pDate,int userId, int idServer){
         int remembered = 0;
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.DATE, pDate);
         value.put(DatabaseContract.REMEMBERED, remembered);
         value.put(DatabaseContract.SYNCHRONIZED, 0);
-        value.put(DatabaseContract.LINKWEB, "");
-        value.put(DatabaseContract.ISCHANGE, 0);
-        value.put(DatabaseContract.IDSERVER, 0);
+        value.put(DatabaseContract.LINK_WEB, "");
+        value.put(DatabaseContract.IS_CHANGE, 0);
+        value.put(DatabaseContract.ID_SERVER, idServer);
+        value.put(DatabaseContract.ID_USER, userId);
         return database.insert("history", null, value);
     }
 
@@ -293,7 +294,7 @@ public class DatabaseAccess {
 
     public void updateHistoryIdServer(long id, int idServer){
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.IDSERVER, idServer);
+        values.put(DatabaseContract.ID_SERVER, idServer);
         String selection = "id = " + id;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
@@ -301,7 +302,7 @@ public class DatabaseAccess {
     public void updateHistoryIdUser(int idUser){
         Log.d(TAG, "IdUser: " + idUser);
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.IDUSER, idUser);
+        values.put(DatabaseContract.ID_USER, idUser);
         database.update(DatabaseContract.HISTORY_TABLE, values, null, null);
     }
 
@@ -314,25 +315,19 @@ public class DatabaseAccess {
 
     public Cursor readHistory(){
         String[] column = {DatabaseContract.ID, DatabaseContract.WORD_ID, DatabaseContract.DATE,
-                            DatabaseContract.IDSERVER, DatabaseContract.IDUSER, DatabaseContract.REMEMBERED,
-                            DatabaseContract.LINKWEB, DatabaseContract.SYNCHRONIZED, DatabaseContract.ISCHANGE};
+                            DatabaseContract.ID_SERVER, DatabaseContract.ID_USER, DatabaseContract.REMEMBERED,
+                            DatabaseContract.LINK_WEB, DatabaseContract.SYNCHRONIZED, DatabaseContract.IS_CHANGE};
         Cursor cursor = database.query(DatabaseContract.HISTORY_TABLE, column, null, null, null, null, null);
 
         return cursor;
     }
 
-    public void updateHistorySyncStatus(int pWordID, int pSyncStatus){
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
-        String selection = "wordId = " + pWordID;
-        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
-    }
+    public Cursor readFavorite(){
+        String[] column = {DatabaseContract.ID, DatabaseContract.WORD_ID, DatabaseContract.ID_SERVER, DatabaseContract.ID_USER, DatabaseContract.REMEMBERED,
+                DatabaseContract.SYNCHRONIZED, DatabaseContract.IS_CHANGE};
+        Cursor cursor = database.query(DatabaseContract.FAVORITE_TABLE, column, null, null, null, null, null);
 
-    public void updateHistoryRemembered(int pWordID, int remembered){
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.REMEMBERED, remembered);
-        String selection = "id = " + pWordID;
-        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+        return cursor;
     }
 
     public int removeHistory(int id){
@@ -349,18 +344,27 @@ public class DatabaseAccess {
         return dateFormat.format(date);
     }
 
-    public int addFavorite(int pWordID, int pSyncStatus){
+    public long addFavorite(int pWordID, int userId, int idServer){
         ContentValues value = new ContentValues();
-        value.put("id", pWordID);
-        value.put(DatabaseContract.SYNC_STATUS, pSyncStatus);
-        database.insert("favorite", null, value);
-        return pWordID;
+        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put(DatabaseContract.ID_SERVER, idServer);
+        value.put(DatabaseContract.REMEMBERED, 0);
+        value.put(DatabaseContract.ID_USER, userId);
+        value.put(DatabaseContract.IS_CHANGE, 0);
+        return database.insert("favorite", null, value);
+    }
+
+    public void updateFavoriteIdServer(long id, int idServer){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ID_SERVER, idServer);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
     }
 
     public ArrayList<Word> getFavoriteWords(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce " +
-                "FROM favorite JOIN av ON favorite.id = av.id";
+                "FROM favorite JOIN av ON favorite.wordId = av.id";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -399,7 +403,7 @@ public class DatabaseAccess {
     }
 
     public int removeFavorite(int id){
-        return database.delete("favorite", "id = " + id, null);
+        return database.delete("favorite", "wordId = " + id, null);
     }
 
     public long getFavoriteWordsCount(){

@@ -13,11 +13,10 @@ public class DatabaseContract {
     public static String SYNC_STATUS = "sync_status";
     public static String REMEMBERED = "remembered";
     public static String SYNCHRONIZED = "Synchronized";
-    public static String LINKWEB = "LinkWeb";
-    public static String ISCHANGE = "IsChange";
-    public static String IDSERVER = "IdServer";
-    public static String IDUSER = "IdUser";
-    public static int SYNC = 1;
+    public static String LINK_WEB = "LinkWeb";
+    public static String IS_CHANGE = "IsChange";
+    public static String ID_SERVER = "IdServer";
+    public static String ID_USER = "IdUser";
     public static int NOT_SYNC = 0;
     public static String DATE = "date";
     public static int ALARM_HISTORY = 99;

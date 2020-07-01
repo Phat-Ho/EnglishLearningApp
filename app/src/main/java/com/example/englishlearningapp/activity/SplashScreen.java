@@ -56,9 +56,6 @@ public class SplashScreen extends AppCompatActivity {
         database.open();
         loginManager = new LoginManager(this);
         MappingView();
-        if(loginManager.isLogin()){
-            syncHistoryRemoteDbToLocalDb();
-        }
         CloseSplashScreen();
     }
 
@@ -81,68 +78,6 @@ public class SplashScreen extends AppCompatActivity {
         progressBarSplash = findViewById(R.id.splash_progress_bar);
     }
 
-    private void syncHistoryRemoteDbToLocalDb() {
-        final int userId = loginManager.getUserId();
-        String getHistoryUrl = Server.GET_HISTORY_URL + "userid=" + userId;
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest getHistoryRequest = new StringRequest(Request.Method.GET, getHistoryUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    if(jsonArray.length() > 0){
-                        for(int i =0; i<jsonArray.length(); i++) {
-                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                            int syncStatus = Integer.parseInt(jsonObject.get("syncStatus").toString());
-                            if(syncStatus == DatabaseContract.NOT_SYNC){
-                                int wordId = Integer.parseInt(jsonObject.get("wordId").toString());
-                                String date = jsonObject.get("date").toString();
-                                database.addHistory(wordId, dateTimeToMillis(date));
-                                updateRemoteHistory(SplashScreen.this, userId, wordId);
-                                Log.d(TAG, "onResponse: sync success form remote to local");
-                            }
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-            }
-        });
-        requestQueue.add(getHistoryRequest);
-    }
-
-    private void updateRemoteHistory(Context context, int userId, int wordId){
-        String updateHistoryUrl = Server.UPDATE_HISTORY_URL + "userid=" + userId + "&wordid=" + wordId;
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        StringRequest updateHistoryRequest = new StringRequest(Request.Method.GET, updateHistoryUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String message = (String) jsonObject.get("message");
-                    if(message.equals("success")){
-                        Log.d(TAG, "onResponse: sync success remote to local");
-                    }else{
-                        Log.d(TAG, "onResponse: sync fail remote to local");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-            }
-        });
-        requestQueue.add(updateHistoryRequest);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -155,20 +90,6 @@ public class SplashScreen extends AppCompatActivity {
         unregisterReceiver(networkChangeReceiver);
     }
 
-    private long dateTimeToMillis(String datetime){
-        Date date = null;
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        try {
-            date = dateFormatter.parse(datetime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if(date == null){
-            return 0;
-        }else{
-            return date.getTime();
-        }
-    }
 
     private void initNetworkChangeReceiver() {
         networkChangeReceiver = new NetworkChangeReceiver();
