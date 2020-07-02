@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.englishlearningapp.models.Choice;
+import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
 import com.example.englishlearningapp.models.Topic;
@@ -246,7 +247,7 @@ public class DatabaseAccess {
         return list;
     }
 
-    public Word getHistoryWordById(int wordId){
+    public Word getHistoryWordByWordId(int wordId){
         Word word = new Word();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
                 " FROM history JOIN av on av.id = history.wordId WHERE history.wordId = " + wordId + " GROUP BY history.wordId";
@@ -263,9 +264,42 @@ public class DatabaseAccess {
         return word;
     }
 
+    public HistoryWord getHistoryByWordId(int wordId){
+        HistoryWord historyWord = new HistoryWord();
+        String query = "SELECT * from history WHERE wordId = " + wordId + " GROUP BY wordId";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            historyWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            historyWord.setRemembered(cursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+            historyWord.setSearchTime(cursor.getInt(cursor.getColumnIndex(DatabaseContract.DATE)));
+            historyWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            historyWord.setUserId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
+            historyWord.setSynchronized(cursor.getInt(cursor.getColumnIndex(DatabaseContract.SYNCHRONIZED)));
+            historyWord.setLinkWeb(cursor.getString(cursor.getColumnIndex(DatabaseContract.LINK_WEB)));
+            historyWord.setIsChange(cursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+            historyWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }
+        cursor.close();
+        return historyWord;
+    }
 
-    public long addHistory(int pWordID, long pDate,int userId, int idServer){
-        int remembered = 0;
+    public HistoryWord getFavoriteByWordId(int wordId){
+        HistoryWord favoriteWord = new HistoryWord();
+        String query = "SELECT * from favorite WHERE wordId = " + wordId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            favoriteWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            favoriteWord.setRemembered(cursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+            favoriteWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            favoriteWord.setUserId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
+            favoriteWord.setIsChange(cursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+            favoriteWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }
+        cursor.close();
+        return favoriteWord;
+    }
+
+    public long addHistory(int pWordID, long pDate, int userId, int remembered, int idServer){
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.DATE, pDate);
@@ -300,17 +334,67 @@ public class DatabaseAccess {
     }
 
     public void updateHistoryIdUser(int idUser){
-        Log.d(TAG, "IdUser: " + idUser);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.ID_USER, idUser);
         database.update(DatabaseContract.HISTORY_TABLE, values, null, null);
     }
 
+    public void updateHistoryIsChange(int id){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.IS_CHANGE, 0);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+    }
+
+    public void updateFavoriteIsChange(int id){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.IS_CHANGE, 0);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
+    }
+
     public void setHistoryRememberByWordId(int wordId){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.REMEMBERED, 1);
+        values.put(DatabaseContract.IS_CHANGE, 1);
         String selection = "wordId = " + wordId;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
+    }
+
+    public HistoryWord getHistoryWordByIdServer(int idServer){
+        HistoryWord historyWord = new HistoryWord();
+        String query = "SELECT * from history WHERE IdServer = " + idServer;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            historyWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            historyWord.setRemembered(cursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+            historyWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            historyWord.setUserId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
+            historyWord.setIsChange(cursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+            historyWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }else{
+            historyWord.setId(0);
+        }
+        cursor.close();
+        return historyWord;
+    }
+
+    public HistoryWord getFavoriteWordByIdServer(int idServer){
+        HistoryWord favoriteWord = new HistoryWord();
+        String query = "SELECT * from favorite WHERE IdServer = " + idServer;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            favoriteWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            favoriteWord.setRemembered(cursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+            favoriteWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            favoriteWord.setUserId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
+            favoriteWord.setIsChange(cursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+            favoriteWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }else{
+            favoriteWord.setId(0);
+        }
+        cursor.close();
+        return favoriteWord;
     }
 
     public Cursor readHistory(){
@@ -344,11 +428,11 @@ public class DatabaseAccess {
         return dateFormat.format(date);
     }
 
-    public long addFavorite(int pWordID, int userId, int idServer){
+    public long addFavorite(int pWordID, int userId, int remembered, int idServer){
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
         value.put(DatabaseContract.ID_SERVER, idServer);
-        value.put(DatabaseContract.REMEMBERED, 0);
+        value.put(DatabaseContract.REMEMBERED, remembered);
         value.put(DatabaseContract.ID_USER, userId);
         value.put(DatabaseContract.IS_CHANGE, 0);
         return database.insert("favorite", null, value);
@@ -451,7 +535,7 @@ public class DatabaseAccess {
         return list;
     }
 
-    public Word getRememberedWordById(int wordId){
+    public Word getRememberedWordByWordId(int wordId){
         Word word = new Word();
         String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId WHERE av.id = " + wordId;
         Cursor cursor = database.rawQuery(query, null);

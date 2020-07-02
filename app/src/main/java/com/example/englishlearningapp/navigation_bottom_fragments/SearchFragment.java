@@ -172,7 +172,7 @@ public class SearchFragment extends Fragment {
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
-            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID,0);
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
             String sendDataUrl = Server.SEND_DATA_URL;
             final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -223,7 +223,7 @@ public class SearchFragment extends Fragment {
             });
             requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0,0);
+            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
