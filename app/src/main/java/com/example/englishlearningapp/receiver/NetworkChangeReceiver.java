@@ -236,11 +236,29 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             }else{
                                 for(int j = 0;j < length;j++){
                                     JSONObject dataObject = (JSONObject) dataArray.get(j);
-                                    String timeSearch = (String) dataObject.get("TimeSearch");
+                                    int isChange = dataObject.getInt("IsChange");
+                                    int wordId = dataObject.getInt("IdWord");
+                                    int userId = dataObject.getInt("IdUser");
+                                    int isRemembered = dataObject.getInt("Remembered");
+                                    int idServer = dataObject.getInt("Id");
+                                    String timeSearch = dataObject.getString("TimeSearch");
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                    Date date = null;
-                                    date = simpleDateFormat.parse(timeSearch);
-                                    databaseAccess.addHistory(dataObject.getInt("IdWord"), date.getTime(), dataObject.getInt("IdUser"), dataObject.getInt("Id"));
+                                    Date date = simpleDateFormat.parse(timeSearch);
+                                    if(isChange == 0){
+                                        databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer);
+                                    }
+                                    if(isChange == 1){
+                                        if(databaseAccess.getHistoryWordByIdServer(idServer).getId() == 0){
+                                            databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer);
+                                        }
+                                        databaseAccess.setHistoryRememberByWordId(wordId);
+                                    }
+
+                                    if(isRemembered == 1){
+                                        if(databaseAccess.getRememberedWordByWordId(wordId).getId() == 0){
+                                            databaseAccess.addRememberedWord(wordId, 0);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -251,7 +269,29 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             }else{
                                 for(int j = 0;j < length;j++){
                                     JSONObject dataObject = (JSONObject) dataArray.get(j);
-                                    databaseAccess.addFavorite(dataObject.getInt("IdWord"), dataObject.getInt("IdUser"), dataObject.getInt("Id"));
+                                    int isChange = dataObject.getInt("IsChange");
+                                    int wordId = dataObject.getInt("IdWord");
+                                    int userId = dataObject.getInt("IdUser");
+                                    int isRemembered = dataObject.getInt("Remembered");
+                                    int idServer = dataObject.getInt("Id");
+
+                                    if(isChange == 0){
+                                        databaseAccess.addFavorite(wordId, userId, isRemembered, idServer);
+                                    }
+
+                                    if(isChange == 1){
+                                        if(databaseAccess.getFavoriteWordByIdServer(idServer).getId() == 0){
+                                            databaseAccess.addFavorite(wordId, userId, isRemembered, idServer);
+                                        }else{
+                                            databaseAccess.setFavoriteRememberByWordId(wordId);
+                                        }
+                                    }
+
+                                    if(isRemembered == 1){
+                                        if(databaseAccess.getRememberedWordByWordId(wordId).getId() == 0){
+                                            databaseAccess.addRememberedWord(wordId, 0);
+                                        }
+                                    }
                                 }
                             }
                         }

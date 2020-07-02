@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
-    private static final int MEANING_CODE = 1;
+    public static final int MEANING_CODE = 1;
     ListView historyFragmentListView;
     ArrayList<Word> wordList = new ArrayList<>();
     HistoryAdapter historyAdapter;

@@ -30,7 +30,6 @@ public class HistoryViewPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        Log.d(TAG, "getItem: " + position);
         return fragmentList.get(position);
     }
 

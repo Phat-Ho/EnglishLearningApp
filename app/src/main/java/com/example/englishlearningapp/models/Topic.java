@@ -4,7 +4,21 @@ public class Topic {
     private int topicId;
     private String topicName;
     private String topicNameVie;
+    private String topicImage;
     private int active;
+    private int IdServer;
+
+    public Topic() {
+        this.topicId = 0;
+    }
+
+    public Topic(int topicId, String topicName, String topicNameVie, int active, int idServer) {
+        this.topicId = topicId;
+        this.topicName = topicName;
+        this.topicNameVie = topicNameVie;
+        this.active = active;
+        IdServer = idServer;
+    }
 
     public int getTopicId() {
         return topicId;
@@ -36,5 +50,21 @@ public class Topic {
 
     public void setActive(int active) {
         this.active = active;
+    }
+
+    public int getIdServer() {
+        return IdServer;
+    }
+
+    public void setIdServer(int idServer) {
+        IdServer = idServer;
+    }
+
+    public String getTopicImage() {
+        return topicImage;
+    }
+
+    public void setTopicImage(String topicImage) {
+        this.topicImage = topicImage;
     }
 }

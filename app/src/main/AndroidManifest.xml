@@ -20,8 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".activity.CreateRoomActivity"></activity>
         <activity android:name=".activity.ConnetedWordActivity" />
+
+        <activity android:name=".activity.TopicDetailActivity"></activity>
+
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.VietnameseMeaningActivity" />

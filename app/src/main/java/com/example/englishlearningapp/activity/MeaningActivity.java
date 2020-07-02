@@ -27,19 +27,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
 import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
+import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
@@ -304,7 +302,7 @@ public class MeaningActivity extends AppCompatActivity {
                 if (isSaved == false) {
 
                     if(loginManager.isLogin() && Server.haveNetworkConnection(MeaningActivity.this)){
-                        final long insertId = databaseAccess.addFavorite(wordId, 0,0);
+                        final long insertId = databaseAccess.addFavorite(wordId, 0, 0,0);
                         String sendDataUrl = Server.SEND_DATA_URL;
                         final RequestQueue requestQueue = Volley.newRequestQueue(MeaningActivity.this);
 
@@ -353,7 +351,7 @@ public class MeaningActivity extends AppCompatActivity {
                         });
                         requestQueue.add(request);
                     }else{ // No internet or no login add to local
-                        databaseAccess.addFavorite(wordId, 0,0);
+                        databaseAccess.addFavorite(wordId, 0, 0,0);
                     }
                 }
             }
@@ -372,7 +370,7 @@ public class MeaningActivity extends AppCompatActivity {
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(this) && pUserID > 0){
-            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0);
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
             String sendDataUrl = Server.SEND_DATA_URL;
             final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -423,7 +421,7 @@ public class MeaningActivity extends AppCompatActivity {
             });
             requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-            databaseAccess.addHistory(wordID, getCurrentTimeInMillis(), 0,0);
+            databaseAccess.addHistory(wordID, getCurrentTimeInMillis(), 0, 0,0);
             Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
@@ -464,11 +462,17 @@ public class MeaningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
                     databaseAccess1.setHistoryRememberByWordId(wordId);
+                    if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
+                        syncRememberedHistory(wordId);
+                    }
                     if(!isRememberSaved(wordId)){
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
                     }
                 }else if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
                     databaseAccess1.setFavoriteRememberByWordId(wordId);
+                    if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
+                        syncFavoriteHistory(wordId);
+                    }
                     if(!isRememberSaved(wordId)){
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
                     }
@@ -491,8 +495,112 @@ public class MeaningActivity extends AppCompatActivity {
         meaningPopup.show();
     }
 
+    public void syncRememberedHistory(int wordId){
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        HistoryWord history = databaseAccess.getHistoryByWordId(wordId);
+        final long searchTime = history.getSearchTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String dateString = simpleDateFormat.format(searchTime);
+        //Initial request body
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("table", "searchhistory");
+            JSONArray jsonArray1 = new JSONArray();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("Id", history.getId());
+            jsonObject1.put("IdUser", history.getUserId());
+            jsonObject1.put("IdWord", history.getWordId());
+            jsonObject1.put("Remembered", 1);
+            jsonObject1.put("Synchronized", history.getSynchronized());
+            jsonObject1.put("TimeSearch", dateString);
+            jsonObject1.put("LinkWeb", history.getLinkWeb());
+            jsonObject1.put("IsChange", 1);
+            jsonObject1.put("IdServer", history.getIdServer());
+            jsonArray1.put(jsonObject1);
+            jsonObject.put("data", jsonArray1);
+            jsonArray.put(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String sendDataUrl = Server.SEND_DATA_URL;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                if(response.length() > 0){
+                    try {
+                        JSONObject dataArray = (JSONObject) response.get(0);
+                        Log.d(TAG, "onResponse: " + dataArray);
+                        JSONArray array = (JSONArray) dataArray.get("data");
+                        JSONObject data = (JSONObject) array.get(0);
+                        int id = data.getInt("Id");
+                        databaseAccess.updateHistoryIsChange(id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error: ", error.getMessage());
+            }
+        });
+        requestQueue.add(request);
+    }
+
+    public void syncFavoriteHistory(int wordId){
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        HistoryWord favorite = databaseAccess.getFavoriteByWordId(wordId);
+        //Initial request body
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("table", "searchhistory");
+            JSONArray jsonArray1 = new JSONArray();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("Id", favorite.getId());
+            jsonObject1.put("IdUser", favorite.getUserId());
+            jsonObject1.put("IdWord", favorite.getWordId());
+            jsonObject1.put("Remembered", 1);
+            jsonObject1.put("IsChange", 1);
+            jsonObject1.put("IdServer", favorite.getIdServer());
+            jsonArray1.put(jsonObject1);
+            jsonObject.put("data", jsonArray1);
+            jsonArray.put(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String sendDataUrl = Server.SEND_DATA_URL;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                if(response.length() > 0){
+                    try {
+                        JSONObject dataArray = (JSONObject) response.get(0);
+                        Log.d(TAG, "onResponse: " + dataArray);
+                        JSONArray array = (JSONArray) dataArray.get("data");
+                        JSONObject data = (JSONObject) array.get(0);
+                        int id = data.getInt("Id");
+                        databaseAccess.updateFavoriteIsChange(id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error: ", error.getMessage());
+            }
+        });
+        requestQueue.add(request);
+    }
+
     private boolean isRememberSaved(int wordId){
-        if(databaseAccess.getRememberedWordById(wordId).getId() > 0){
+        if(databaseAccess.getRememberedWordByWordId(wordId).getId() > 0){
             return true;
         }else{
             return false;
