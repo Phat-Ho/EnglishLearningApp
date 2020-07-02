@@ -12,6 +12,7 @@ import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
+import com.example.englishlearningapp.models.Subject;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 
@@ -741,5 +742,43 @@ public class DatabaseAccess {
         cursor.close();
 
         return choiceList;
+    }
+
+    public ArrayList<Topic> getAllTopic(){
+        ArrayList<Topic> topicList = new ArrayList<>();
+        String query = "SELECT * FROM topic WHERE active = 1";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                Topic topic = new Topic();
+                topic.setTopicId(cursor.getInt(0));
+                topic.setTopicName(cursor.getString(1));
+                topic.setTopicNameVie(cursor.getString(2));
+                topic.setActive(cursor.getInt(3));
+                topic.setIdServer(cursor.getInt(4));
+                topic.setTopicImage("https://imperia.edu.my/wp-content/uploads/2019/12/english.jpg");
+                topicList.add(topic);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return topicList;
+    }
+
+    public Topic getTopicById(int id){
+        Topic topic = new Topic();
+        String query = "SELECT * FROM topic WHERE id = " + id + " AND active = 1";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            topic.setTopicId(cursor.getInt(0));
+            topic.setTopicName(cursor.getString(1));
+            topic.setTopicNameVie(cursor.getString(2));
+            topic.setActive(cursor.getInt(3));
+            topic.setIdServer(cursor.getInt(4));
+            topic.setTopicImage("https://imperia.edu.my/wp-content/uploads/2019/12/english.jpg");
+        }
+        cursor.close();
+
+        return topic;
     }
 }

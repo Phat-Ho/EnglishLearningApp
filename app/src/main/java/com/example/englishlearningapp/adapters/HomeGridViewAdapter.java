@@ -13,19 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.englishlearningapp.activity.CameraActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.VietnameseActivity;
-import com.example.englishlearningapp.fragments.SubjectsFragment;
+import com.example.englishlearningapp.fragments.TopicFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 
 import java.io.File;
@@ -36,7 +33,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 
     ArrayList subjectImages;
     Context context;
-    SubjectsFragment subjectsFragment = new SubjectsFragment();
+    TopicFragment topicFragment = new TopicFragment();
     HomeFragment homeFragment;
 
     public HomeGridViewAdapter(Context context, ArrayList subjectImages, HomeFragment homeFragment) {
@@ -67,7 +64,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 0:
                         /*Intent subjectIntent = new Intent(context, SubjectActivity.class);
                         context.startActivity(subjectIntent);*/
-                        mainHomeActivity.showFragment(subjectsFragment);
+                        mainHomeActivity.showFragment(topicFragment);
                         break;
                     case 1:
                         //Navigate to Vietnamese - English Dictionary
