@@ -22,6 +22,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishlearningapp.activity.CameraActivity;
+import com.example.englishlearningapp.activity.ConnetedWordActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.VietnameseActivity;
@@ -76,6 +77,10 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         break;
                     case 2:
                         onLaunchCamera();
+                        break;
+                    case 3:
+                        Intent connectedWordIntent = new Intent(context, ConnetedWordActivity.class);
+                        context.startActivity(connectedWordIntent);
                         break;
                 }
             }

@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -19,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.CameraActivity"></activity>
+        <activity android:name=".activity.CreateRoomActivity"></activity>
+        <activity android:name=".activity.ConnetedWordActivity" />
+        <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.VietnameseMeaningActivity" />
         <activity android:name=".activity.VietnameseActivity" />
@@ -53,6 +56,7 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.MainActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.englishlearningapp.fileprovider"

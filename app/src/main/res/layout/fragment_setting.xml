@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/word_reminder_enabled"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
             <Switch
                 android:trackTint="#03A9F4"
                 android:thumbTint="#03A9F4"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/number_of_words"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
 
             <Spinner
                 android:id="@+id/spinner_number_of_words"
