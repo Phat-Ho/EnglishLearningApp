@@ -1,129 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.CreateRoomActivity"
-    android:orientation="vertical">
+    tools:context=".activity.CreateRoomActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarCreateRoom"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="#03A9F4">
-            </androidx.appcompat.widget.Toolbar>
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarCreateRoom"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="#03A9F4">
+                </androidx.appcompat.widget.Toolbar>
+                <TextView
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create Room"/>
+
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:weightSum="5"
+            android:gravity="center_vertical">
+
             <TextView
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create Room"/>
+                android:layout_weight="3"
+                android:text="Number of players"
+                android:textSize="20sp"/>
 
-        </RelativeLayout>
+            <Spinner
+                android:layout_marginEnd="10dp"
+                android:layout_weight="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                style="@style/SpinnerTheme" />
+        </LinearLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Number of players"
-            android:textSize="18sp"/>
+            android:padding="10dp"
+            android:weightSum="5"
+            android:gravity="center_vertical">
 
-        <Spinner
-            android:layout_marginEnd="10dp"
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Time to answer"
+                android:textSize="20sp"/>
+
+            <Spinner
+                android:layout_marginEnd="10dp"
+                android:layout_weight="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                style="@style/SpinnerTheme" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            style="@style/SpinnerTheme" />
+            android:padding="10dp"
+            android:weightSum="5"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Difficulty (Number of characters)"
+                android:textSize="20sp"/>
+
+            <Spinner
+                android:layout_marginEnd="10dp"
+                android:layout_weight="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                style="@style/SpinnerTheme" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:weightSum="5"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Password"
+                android:textSize="20sp"/>
+            <Switch
+                android:trackTint="#03A9F4"
+                android:thumbTint="#03A9F4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="2" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_centerInParent="true"
+        android:text="Create"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Time to answer"
-            android:textSize="18sp"/>
-
-        <Spinner
-            android:layout_marginEnd="10dp"
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            style="@style/SpinnerTheme" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Difficulty (Number of characters)"
-            android:textSize="18sp"/>
-
-        <Spinner
-            android:layout_marginEnd="10dp"
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            style="@style/SpinnerTheme" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Password"
-            android:textSize="18sp"/>
-        <Switch
-            android:trackTint="#03A9F4"
-            android:thumbTint="#03A9F4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="2" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

@@ -3,14 +3,19 @@ package com.example.englishlearningapp.activity;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 
@@ -25,6 +30,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalVariable.changeStatusBarColor(this);
         setContentView(R.layout.activity_conneted_word);
         initView();
         SetUpToolbar();
@@ -37,6 +43,16 @@ public class ConnetedWordActivity extends AppCompatActivity {
         imgResource.add(R.drawable.home_ic_4);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
+        lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        Intent createRoomIntent = new Intent(ConnetedWordActivity.this, CreateRoomActivity.class);
+                        startActivity(createRoomIntent);
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
