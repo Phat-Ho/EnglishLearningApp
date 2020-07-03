@@ -36,7 +36,29 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:weightSum="5"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Room's name"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/edit_text_stroke"
+                android:hint="Name"
+                android:id="@+id/editTextRoomName"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,6 +75,7 @@
                 android:textSize="20sp"/>
 
             <Spinner
+                android:id="@+id/spinnerNumberOfPlayers"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="2"
                 android:layout_width="wrap_content"
@@ -72,16 +95,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Time to answer"
+                android:text="Time to answer (s)"
                 android:textSize="20sp"/>
 
-            <Spinner
-                android:layout_marginEnd="10dp"
-                android:layout_weight="2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dropdown"
-                style="@style/SpinnerTheme" />
+           <EditText
+               android:layout_marginEnd="10dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="2"
+               android:background="@drawable/edit_text_stroke"
+               android:hint="Timer"
+               android:id="@+id/editTextTimer"/>
         </LinearLayout>
 
         <LinearLayout
@@ -104,7 +128,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"
-                style="@style/SpinnerTheme" />
+                style="@style/SpinnerTheme"
+                android:id="@+id/spinnerDifficulty"/>
         </LinearLayout>
 
 
@@ -122,6 +147,7 @@
                 android:text="Password"
                 android:textSize="20sp"/>
             <Switch
+                android:id="@+id/switchPasswordConnectedWord"
                 android:trackTint="#03A9F4"
                 android:thumbTint="#03A9F4"
                 android:layout_width="wrap_content"
@@ -129,6 +155,14 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="2" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTextPasswordConnectedWord"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text_stroke"
+            android:hint="@string/password"/>
 
     </LinearLayout>
 
@@ -140,6 +174,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:layout_centerInParent="true"
-        android:text="Create"/>
+        android:text="Create"
+        android:id="@+id/buttonCreateRoom"/>
+
+
 
 </RelativeLayout>

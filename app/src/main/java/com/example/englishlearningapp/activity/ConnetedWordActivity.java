@@ -41,6 +41,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
         connectedWordToolbar = findViewById(R.id.toolbarConnectedWord);
         imgResource = new ArrayList<>();
         imgResource.add(R.drawable.home_ic_4);
+        imgResource.add(R.drawable.ic_join_room);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
