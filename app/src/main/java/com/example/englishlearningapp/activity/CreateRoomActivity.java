@@ -9,14 +9,27 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class CreateRoomActivity extends AppCompatActivity {
 
@@ -25,6 +38,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     EditText edtTimer, edtPasswordConnectedWord, edtRoomName;
     Switch swtPasswordConnectedWord;
     Button btnCreateRoom;
+    String[] numOfPlayers = {"2", "3", "4", "5"};
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -35,6 +49,8 @@ public class CreateRoomActivity extends AppCompatActivity {
         initView();
         SetUpToolbar();
         onClickButton();
+        handleSpinner();
+        handleSwitch();
     }
 
     private void initView(){
@@ -46,15 +62,62 @@ public class CreateRoomActivity extends AppCompatActivity {
         edtRoomName = findViewById(R.id.editTextRoomName);
         swtPasswordConnectedWord = findViewById(R.id.switchPasswordConnectedWord);
         btnCreateRoom = findViewById(R.id.buttonCreateRoom);
+        edtPasswordConnectedWord.setVisibility(View.INVISIBLE);
     }
 
     private void onClickButton(){
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String roomName = edtRoomName.getText().toString();
+                JSONObject roomObject = new JSONObject();
+                try {
+                    roomObject.put("name", roomName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                 startActivity(intent);
+                GlobalVariable.mSocket.emit("createRoom", roomObject);
                 finish();
+            }
+        });
+    }
+
+    private void handleSwitch(){
+        swtPasswordConnectedWord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    edtPasswordConnectedWord.setVisibility(View.VISIBLE);
+                } else {
+                    edtPasswordConnectedWord.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    private void handleSpinner(){
+        ArrayAdapter adapter = new ArrayAdapter(CreateRoomActivity.this, android.R.layout.simple_list_item_1, numOfPlayers);
+        spinnerNumOfPlayers.setAdapter(adapter);
+        spinnerNumOfPlayers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        Toast.makeText(CreateRoomActivity.this, "2 players", Toast.LENGTH_SHORT).show(); break;
+                    case 1:
+                        Toast.makeText(CreateRoomActivity.this, "3 players", Toast.LENGTH_SHORT).show(); break;
+                    case 2:
+                        Toast.makeText(CreateRoomActivity.this, "4 players", Toast.LENGTH_SHORT).show(); break;
+                    case 3:
+                        Toast.makeText(CreateRoomActivity.this, "5 players", Toast.LENGTH_SHORT).show(); break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
@@ -71,6 +134,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                 finish();
             }
         });
+        GlobalVariable.mSocket.connect();
     }
 
 

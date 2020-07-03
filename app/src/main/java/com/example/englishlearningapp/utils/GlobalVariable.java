@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.net.URISyntaxException;
 import java.util.HashSet;
 
 public class GlobalVariable extends Application {
@@ -50,5 +54,11 @@ public class GlobalVariable extends Application {
 
     }
 
+    public static Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://192.168.0.103:5002/");
+        } catch (URISyntaxException e) {}
+    }
 
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,6 +17,11 @@ import android.widget.Toast;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.github.nkzawa.emitter.Emitter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -34,6 +40,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_conneted_word);
         initView();
         SetUpToolbar();
+
     }
 
     private void initView(){
@@ -44,13 +51,17 @@ public class ConnetedWordActivity extends AppCompatActivity {
         imgResource.add(R.drawable.ic_join_room);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
+        GlobalVariable.mSocket.connect();
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
                         Intent createRoomIntent = new Intent(ConnetedWordActivity.this, CreateRoomActivity.class);
-                        startActivity(createRoomIntent);
+                        startActivity(createRoomIntent); break;
+                    case 1:
+                        Intent roomListIntent = new Intent(ConnetedWordActivity.this, RoomListActivity.class);
+                        startActivity(roomListIntent); break;
                 }
             }
         });
