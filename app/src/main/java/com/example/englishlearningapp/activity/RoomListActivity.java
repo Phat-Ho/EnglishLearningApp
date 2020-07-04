@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.adapters.RoomAdapter;
+import com.example.englishlearningapp.models.Room;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
@@ -23,8 +25,9 @@ import java.util.ArrayList;
 public class RoomListActivity extends AppCompatActivity {
 
     ListView lvRoomList;
-    ArrayList<String> arrRoom;
-    ArrayAdapter adapter;
+    ArrayList<Room> arrRoom;
+    RoomAdapter adapter;
+    Room room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +49,17 @@ public class RoomListActivity extends AppCompatActivity {
                     arrRoom.clear();
                     JSONObject jsonObject = (JSONObject) args[0];
                     try {
-                        JSONArray room = jsonObject.getJSONArray("room");
-                        for (int i = 0; i < room.length(); i++){
-                            JSONObject name = room.getJSONObject(i);
-                            String roomName = name.getString("name");
-                            arrRoom.add(roomName);
+                        JSONArray roomData = jsonObject.getJSONArray("room");
+                        for (int i = 0; i < roomData.length(); i++){
+                            JSONObject object = roomData.getJSONObject(i);
+                            String name = object.getString("name");
+                            Integer numOfPlayers = object.getInt("numOfPlayers");
+                            String password = object.getString("password");
+                            String timer = object.getString("timer");
+                            room = new Room(name, numOfPlayers, password, timer);
+                            arrRoom.add(room);
+                            adapter.notifyDataSetChanged();
                         }
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(RoomListActivity.this, arrRoom.toString(), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -65,13 +71,8 @@ public class RoomListActivity extends AppCompatActivity {
     private void initView(){
         lvRoomList = findViewById(R.id.listViewRoomList);
         arrRoom = new ArrayList<>();
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrRoom);
+        adapter = new RoomAdapter(this, R.layout.row_room_list_view, arrRoom);
         lvRoomList.setAdapter(adapter);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        finish();
-//    }
 }

@@ -70,16 +70,28 @@ public class CreateRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String roomName = edtRoomName.getText().toString();
-                JSONObject roomObject = new JSONObject();
-                try {
-                    roomObject.put("name", roomName);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                Integer numOfPlayers = Integer.parseInt(spinnerNumOfPlayers.getSelectedItem().toString());
+                String password = edtPasswordConnectedWord.getText().toString().trim();
+                String timer = edtTimer.getText().toString().trim();
+                if (roomName.equals("")){
+                    Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập tên phòng", Toast.LENGTH_SHORT).show();
+                } else if (timer.equals("")){
+                    Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập thời gian", Toast.LENGTH_SHORT).show();
+                } else {
+                    JSONObject roomObject = new JSONObject();
+                    try {
+                        roomObject.put("name", roomName);
+                        roomObject.put("numOfPlayers", numOfPlayers);
+                        roomObject.put("password", password);
+                        roomObject.put("timer", timer);
+                        Intent intent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
+                        startActivity(intent);
+                        GlobalVariable.mSocket.emit("createRoom", roomObject);
+                        finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Intent intent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
-                startActivity(intent);
-                GlobalVariable.mSocket.emit("createRoom", roomObject);
-                finish();
             }
         });
     }
@@ -100,26 +112,6 @@ public class CreateRoomActivity extends AppCompatActivity {
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(CreateRoomActivity.this, android.R.layout.simple_list_item_1, numOfPlayers);
         spinnerNumOfPlayers.setAdapter(adapter);
-        spinnerNumOfPlayers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        Toast.makeText(CreateRoomActivity.this, "2 players", Toast.LENGTH_SHORT).show(); break;
-                    case 1:
-                        Toast.makeText(CreateRoomActivity.this, "3 players", Toast.LENGTH_SHORT).show(); break;
-                    case 2:
-                        Toast.makeText(CreateRoomActivity.this, "4 players", Toast.LENGTH_SHORT).show(); break;
-                    case 3:
-                        Toast.makeText(CreateRoomActivity.this, "5 players", Toast.LENGTH_SHORT).show(); break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
