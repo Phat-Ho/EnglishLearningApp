@@ -120,13 +120,13 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     JSONObject dataObject = new JSONObject();
 
                     try {
-                        dataObject.put("Id", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
-                        dataObject.put("IdUser", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_USER)));
-                        dataObject.put("IdWord", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
-                        dataObject.put("Remembered", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
-                        dataObject.put("Synchronized", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.SYNCHRONIZED)));
-                        dataObject.put("IsChange", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
-                        dataObject.put("IdServer", favoriteCursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+                        dataObject.put("Id", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.ID)));
+                        dataObject.put("IdUser", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.ID_USER)));
+                        dataObject.put("IdWord", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.WORD_ID)));
+                        dataObject.put("Remembered", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+                        dataObject.put("Synchronized", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.SYNCHRONIZED)));
+                        dataObject.put("IsChange", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+                        dataObject.put("IdServer", favoriteCursor.getInt(favoriteCursor.getColumnIndex(DatabaseContract.ID_SERVER)));
                         dataFavoriteArray.put(dataObject);
                     } catch (JSONException e) {
                         e.printStackTrace();

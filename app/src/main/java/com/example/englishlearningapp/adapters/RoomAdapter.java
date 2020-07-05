@@ -67,6 +67,10 @@ public class RoomAdapter extends BaseAdapter {
 
         viewHolder.txtRoomName.setText(room.getName());
         viewHolder.txtRoomOwner.setText(room.getName());
+        viewHolder.imgPassword.setFocusable(false);
+        viewHolder.imgPassword.setFocusableInTouchMode(false);
+        viewHolder.imgBtnRoomInfo.setFocusable(false);
+        viewHolder.imgBtnRoomInfo.setFocusableInTouchMode(false);
         if (room.getPassword().equals("")){
             viewHolder.imgPassword.setVisibility(View.INVISIBLE);
         } else {

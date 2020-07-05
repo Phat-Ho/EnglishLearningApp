@@ -1,16 +1,26 @@
 package com.example.englishlearningapp.models;
 
 public class Room {
+    private int id;
     private String name;
     private Integer numOfPlayers;
     private String password;
     private String timer;
 
-    public Room(String name, Integer numOfPlayers, String password, String timer) {
+    public Room(int id, String name, Integer numOfPlayers, String password, String timer) {
+        this.id = id;
         this.name = name;
         this.numOfPlayers = numOfPlayers;
         this.password = password;
         this.timer = timer;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

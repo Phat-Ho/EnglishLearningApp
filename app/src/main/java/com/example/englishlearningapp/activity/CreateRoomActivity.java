@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,11 +21,14 @@ import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
+import com.example.englishlearningapp.models.Room;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,12 +37,14 @@ import java.util.ArrayList;
 
 public class CreateRoomActivity extends AppCompatActivity {
 
+    private static final String TAG = "CreateRoomActivity";
     Toolbar createRoomToolbar;
     Spinner spinnerNumOfPlayers, spinnerDifficulty;
     EditText edtTimer, edtPasswordConnectedWord, edtRoomName;
     Switch swtPasswordConnectedWord;
     Button btnCreateRoom;
     String[] numOfPlayers = {"2", "3", "4", "5"};
+    LoginManager loginManager;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -47,10 +53,12 @@ public class CreateRoomActivity extends AppCompatActivity {
         GlobalVariable.changeStatusBarColor(this);
         setContentView(R.layout.activity_create_room);
         initView();
+        loginManager = new LoginManager(this);
         SetUpToolbar();
         onClickButton();
         handleSpinner();
         handleSwitch();
+        GlobalVariable.mSocket.on("sendRoom", onSendRoom);
     }
 
     private void initView(){
@@ -66,6 +74,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     }
 
     private void onClickButton(){
+        final String username = loginManager.getUserName();
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,14 +89,15 @@ public class CreateRoomActivity extends AppCompatActivity {
                 } else {
                     JSONObject roomObject = new JSONObject();
                     try {
+                        JSONArray playerList = new JSONArray();
+                        playerList.put(username);
+                        roomObject.put("owner", username);
                         roomObject.put("name", roomName);
                         roomObject.put("numOfPlayers", numOfPlayers);
                         roomObject.put("password", password);
                         roomObject.put("timer", timer);
-                        Intent intent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
-                        startActivity(intent);
+                        roomObject.put("players", playerList);
                         GlobalVariable.mSocket.emit("createRoom", roomObject);
-                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -95,6 +105,28 @@ public class CreateRoomActivity extends AppCompatActivity {
             }
         });
     }
+
+    private Emitter.Listener onSendRoom = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send room: " + args[0].toString());
+                    JSONObject roomObj = (JSONObject) args[0];
+                    try {
+                        int roomId = roomObj.getInt("id");
+                        Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
+                        roomInfoIntent.putExtra("roomId", roomId);
+                        startActivity(roomInfoIntent);
+                        finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
     private void handleSwitch(){
         swtPasswordConnectedWord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
