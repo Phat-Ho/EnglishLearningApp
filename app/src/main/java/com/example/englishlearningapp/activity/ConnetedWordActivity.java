@@ -47,8 +47,8 @@ public class ConnetedWordActivity extends AppCompatActivity {
         lvConnectedWord = findViewById(R.id.listViewConnectedWord);
         connectedWordToolbar = findViewById(R.id.toolbarConnectedWord);
         imgResource = new ArrayList<>();
-        imgResource.add(R.drawable.home_ic_4);
-        imgResource.add(R.drawable.ic_join_room);
+        imgResource.add(R.drawable.ic_logo);
+        imgResource.add(R.drawable.ic_logo);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
         GlobalVariable.mSocket.connect();

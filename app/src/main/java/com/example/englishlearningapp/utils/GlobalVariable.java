@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 
 public class GlobalVariable extends Application {
     private static GlobalVariable instance = null;
+    private static final String TAG = "GlobalVariable";
     private GlobalVariable(Context context){
         instance = (GlobalVariable) context.getApplicationContext();
     };
@@ -28,22 +30,6 @@ public class GlobalVariable extends Application {
             instance = new GlobalVariable(context);
         }
         return instance;
-    }
-    private HashSet<Integer> randomNumbers = new HashSet<>();
-
-    public boolean addToHashSet(int num){
-        return randomNumbers.add(num);
-    }
-    public int getHashSetSize(){
-        return randomNumbers.size();
-    }
-
-    public HashSet getHashSet(){
-        return randomNumbers;
-    }
-
-    public void clearHashSet(){
-        randomNumbers.clear();
     }
 
     public static void changeStatusBarColor(Activity activity){
@@ -57,8 +43,10 @@ public class GlobalVariable extends Application {
     public static Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.0.103:5002/");
-        } catch (URISyntaxException e) {}
+            mSocket = IO.socket(Server.SOCKET_HOST);
+        } catch (URISyntaxException e) {
+            Log.d(TAG, "instance initializer: " + e.getMessage());
+        }
     }
 
 }

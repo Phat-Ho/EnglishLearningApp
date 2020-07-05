@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
         ArrayList subjectNames = new ArrayList<>(Arrays.asList(getResources().getString(R.string.subject_learning),
                 getResources().getString(R.string.vietnamese),
                 "Camera"));
-        ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.home_ic_1, R.drawable.home_ic_2, R.drawable.home_ic_3, R.drawable.home_ic_4));
+        ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.ic_logo, R.drawable.ic_logo, R.drawable.ic_logo, R.drawable.ic_logo));
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
         databaseAccess = DatabaseAccess.getInstance(getContext());
