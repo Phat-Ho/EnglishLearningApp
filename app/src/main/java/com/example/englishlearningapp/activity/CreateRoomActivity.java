@@ -45,11 +45,13 @@ public class CreateRoomActivity extends AppCompatActivity {
     Button btnCreateRoom;
     String[] numOfPlayers = {"2", "3", "4", "5"};
     LoginManager loginManager;
+    GlobalVariable globalVariable;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        globalVariable = GlobalVariable.getInstance(this);
         GlobalVariable.changeStatusBarColor(this);
         setContentView(R.layout.activity_create_room);
         initView();
@@ -64,7 +66,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GlobalVariable.mSocket.on("sendRoomOwner", onSendRoom);
+        globalVariable.mSocket.once("sendRoomOwner", onSendRoom);
     }
 
     private void initView(){
@@ -103,7 +105,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                         roomObject.put("password", password);
                         roomObject.put("timer", timer);
                         roomObject.put("players", playerList);
-                        GlobalVariable.mSocket.emit("createRoom", roomObject);
+                        globalVariable.mSocket.emit("createRoom", roomObject);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -165,7 +167,6 @@ public class CreateRoomActivity extends AppCompatActivity {
                 finish();
             }
         });
-        GlobalVariable.mSocket.connect();
     }
 
 

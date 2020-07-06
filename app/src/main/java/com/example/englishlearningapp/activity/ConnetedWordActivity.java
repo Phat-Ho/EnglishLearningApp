@@ -31,21 +31,18 @@ public class ConnetedWordActivity extends AppCompatActivity {
     ConnectedWordAdapter adapter;
     ArrayList<Integer> imgResource;
     Toolbar connectedWordToolbar;
+    GlobalVariable globalVariable;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalVariable.changeStatusBarColor(this);
+        globalVariable = GlobalVariable.getInstance(this);
+        globalVariable.mSocket.connect();
         setContentView(R.layout.activity_conneted_word);
         initView();
         SetUpToolbar();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GlobalVariable.mSocket.connect();
     }
 
     private void initView(){
@@ -56,7 +53,6 @@ public class ConnetedWordActivity extends AppCompatActivity {
         imgResource.add(R.drawable.ic_logo);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
-        GlobalVariable.mSocket.connect();
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

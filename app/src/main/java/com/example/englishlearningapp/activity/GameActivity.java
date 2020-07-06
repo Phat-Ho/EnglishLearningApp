@@ -25,6 +25,7 @@ public class GameActivity extends AppCompatActivity {
     TextView txtPlayerNumber, txtTimer, txtCurrentWord;
     EditText edtWord;
     ImageButton imgBtnSend;
+    GlobalVariable globalVariable;
     ListView lvPlayerLeft;
     int roomId;
     @Override
@@ -34,14 +35,22 @@ public class GameActivity extends AppCompatActivity {
         InitialView();
         GetIntentData();
         HandleSendWord();
+        globalVariable = GlobalVariable.getInstance(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        GlobalVariable.mSocket.on("sendGame", onSendGame);
-        GlobalVariable.mSocket.on("sendTimer", onSendTimer);
+        globalVariable.mSocket.on("sendGame", onSendGame);
+        globalVariable.mSocket.on("sendTimer", onSendTimer);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        globalVariable.mSocket.off("sendGame", onSendGame);
+        globalVariable.mSocket.off("sendTimer", onSendTimer);
     }
 
     private Emitter.Listener onSendGame = new Emitter.Listener() {
@@ -57,6 +66,7 @@ public class GameActivity extends AppCompatActivity {
                         String currentWord = gameObj.getString("currentWord");
                         Log.d(TAG, "currentWord: " + currentWord);
                         txtCurrentWord.setText(currentWord);
+                        Log.d(TAG, "text: " + txtCurrentWord.getText().toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -82,6 +92,7 @@ public class GameActivity extends AppCompatActivity {
     private void GetIntentData() {
         Intent intent = getIntent();
         roomId = intent.getIntExtra("roomId", 0);
+        txtCurrentWord.setText(intent.getStringExtra("currentWord"));
     }
 
     private void HandleSendWord() {
@@ -89,7 +100,7 @@ public class GameActivity extends AppCompatActivity {
         imgBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GlobalVariable.mSocket.emit("sendWord", word);
+                globalVariable.mSocket.emit("sendWord", word);
             }
         });
     }

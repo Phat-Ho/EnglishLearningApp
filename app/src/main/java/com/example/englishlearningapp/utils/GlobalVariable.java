@@ -21,9 +21,9 @@ public class GlobalVariable extends Application {
     private static final String TAG = "GlobalVariable";
     private GlobalVariable(Context context){
         instance = (GlobalVariable) context.getApplicationContext();
-    };
+    }
 
-    public GlobalVariable(){}
+    public GlobalVariable() { }
 
     public static GlobalVariable getInstance(Context context) {
         if(instance == null){
@@ -40,7 +40,7 @@ public class GlobalVariable extends Application {
 
     }
 
-    public static Socket mSocket;
+    public Socket mSocket;
     {
         try {
             mSocket = IO.socket(Server.SOCKET_HOST);

@@ -36,11 +36,13 @@ public class RoomListActivity extends AppCompatActivity {
     RoomAdapter adapter;
     Room room;
     LoginManager loginManager;
+    GlobalVariable globalVariable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
+        globalVariable = GlobalVariable.getInstance(this);
         initView();
         SetUpToolbar();
         loginManager = new LoginManager(this);
@@ -49,10 +51,9 @@ public class RoomListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GlobalVariable.mSocket.emit("getRoom");
-        GlobalVariable.mSocket.on("roomList", onRetrieveRoomList);
-        GlobalVariable.mSocket.on("sendRoomList", onRetrieveRoomList);
-        GlobalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.emit("getRoom");
+        globalVariable.mSocket.on("roomList", onRetrieveRoomList);
+        globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
     }
 
     private Emitter.Listener onRetrieveRoomList = new Emitter.Listener() {
@@ -132,7 +133,7 @@ public class RoomListActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                GlobalVariable.mSocket.emit("joinRoom", jsonObject);
+                globalVariable.mSocket.emit("joinRoom", jsonObject);
             }
         });
     }

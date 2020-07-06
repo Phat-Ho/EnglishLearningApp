@@ -34,6 +34,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     MaterialButton btnStart;
     ArrayAdapter playerAdapter;
     ArrayList<String> playerList = new ArrayList<>();
+    GlobalVariable globalVariable;
     int roomId;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -41,6 +42,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_info);
+        globalVariable = GlobalVariable.getInstance(this);
         GetIntentData();
         initView();
         SetUpListView();
@@ -51,8 +53,15 @@ public class RoomInfoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GlobalVariable.mSocket.on("sendRoomInfo", onSendRoom);
-        GlobalVariable.mSocket.on("sendGame", onSendGame);
+        globalVariable.mSocket.on("sendRoomInfo", onSendRoom);
+        globalVariable.mSocket.once("sendGame", onSendGame);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+        globalVariable.mSocket.off("sendGame", onSendGame);
     }
 
     private void SetUpListView() {
@@ -78,7 +87,7 @@ public class RoomInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(playerList.size() > 1){
-                    GlobalVariable.mSocket.emit("startGame", roomId);
+                    globalVariable.mSocket.emit("startGame", roomId);
                 }
             }
         });
@@ -124,9 +133,16 @@ public class RoomInfoActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.d(TAG, "send game: " + args[0].toString());
-                    Intent gameIntent = new Intent(RoomInfoActivity.this, GameActivity.class);
-                    startActivity(gameIntent);
-                    finish();
+                    JSONObject gameObj = (JSONObject) args[0];
+                    try {
+                        String currentWord = gameObj.getString("currentWord");
+                        Intent gameIntent = new Intent(RoomInfoActivity.this, GameActivity.class);
+                        gameIntent.putExtra("currentWord", currentWord);
+                        startActivity(gameIntent);
+                        finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
