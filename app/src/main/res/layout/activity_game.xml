@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.GameActivity"
+    android:background="@color/light_gray">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/game_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#03A9F4">
+            </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:id="@+id/txt_game_title"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""/>
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/txt_game_player_number"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:text="Số lượng người chơi: 10"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:id="@+id/txt_game_timer"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/colorRed"
+        android:textSize="30sp"
+        android:text="10s"
+        android:layout_gravity="center_horizontal"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/text_view_stroke_3"
+        android:layout_marginHorizontal="30dp"
+        android:paddingTop="15dp">
+
+        <TextView
+            android:id="@+id/txt_game_previous_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="School"
+            android:textColor="@color/colorRed"
+            android:textSize="25sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <EditText
+                android:id="@+id/edt_game_word"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:hint="Nhập từ" />
+
+            <ImageButton
+                android:id="@+id/btn_game_send"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_send"/>
+        </LinearLayout>
+        
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thứ tự người chơi"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+
+    <ListView
+        android:id="@+id/lv_game_player_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="5dp"/>
+
+</LinearLayout>

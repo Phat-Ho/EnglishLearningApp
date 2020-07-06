@@ -58,7 +58,13 @@ public class CreateRoomActivity extends AppCompatActivity {
         onClickButton();
         handleSpinner();
         handleSwitch();
-        GlobalVariable.mSocket.on("sendRoom", onSendRoom);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GlobalVariable.mSocket.on("sendRoomOwner", onSendRoom);
     }
 
     private void initView(){
@@ -112,12 +118,13 @@ public class CreateRoomActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "send room: " + args[0].toString());
+                    Log.d(TAG, "send room owner: " + args[0].toString());
                     JSONObject roomObj = (JSONObject) args[0];
                     try {
                         int roomId = roomObj.getInt("id");
                         Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                         roomInfoIntent.putExtra("roomId", roomId);
+                        roomInfoIntent.putExtra("name", loginManager.getUserName());
                         startActivity(roomInfoIntent);
                         finish();
                     } catch (JSONException e) {

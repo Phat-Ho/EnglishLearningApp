@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
@@ -157,7 +158,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "onResponse: " + response);
                 int resLength = response.length();
-                if(resLength != 0){
+                if(resLength == 0){
                     //Do nothing
                 }else{
                     for (int i = 0; i < resLength; i++) {
@@ -193,7 +194,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error: ", error.getMessage());
+                Log.e("Error: ", Objects.requireNonNull(error.getMessage()));
             }
         });
         requestQueue.add(sendDataRequest);

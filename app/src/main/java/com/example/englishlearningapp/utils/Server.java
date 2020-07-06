@@ -8,13 +8,13 @@ import android.net.NetworkInfo;
 public class Server
 {
     public static String host = "http://192.168.1.14/";
-    public static String backend_host = "http://192.168.31.58:5001/";
+    public static String backend_host = "http://192.168.1.10:5001/";
     public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
     public static String LOGIN_URL = backend_host + "api/hash/login?";
     public static String SEND_DATA_URL = backend_host + "api/sync/sendDataToServer";
     public static String GET_DATA_URL = backend_host + "api/sync/getDataFromServer?IdUser=";
     public static String CHECK_USER_URL = backend_host + "api/hash/checkUser?";
-    public static String SOCKET_HOST = "http://192.168.31.58:5002/";
+    public static String SOCKET_HOST = "http://192.168.1.10:5002/";
 
     public static String UNSPLASH = "https://api.unsplash.com/search/photos?client_id=";
     public static String UNSPLASH_ACCESS_KEY = "061504391baa1996b6f650a91bab50949b2fa5be97e3483b8228b934518a536f&";

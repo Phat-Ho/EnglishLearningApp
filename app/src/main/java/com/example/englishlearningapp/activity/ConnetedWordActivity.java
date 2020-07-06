@@ -40,7 +40,12 @@ public class ConnetedWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_conneted_word);
         initView();
         SetUpToolbar();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GlobalVariable.mSocket.connect();
     }
 
     private void initView(){

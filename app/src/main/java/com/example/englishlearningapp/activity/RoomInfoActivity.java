@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.github.nkzawa.emitter.Emitter;
+import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,21 +31,58 @@ public class RoomInfoActivity extends AppCompatActivity {
     Toolbar toolbarRoomInfo;
     ListView listViewRoomInfo;
     TextView roomInfoTitleTxt, roomInfoOwnerTxt;
+    MaterialButton btnStart;
     ArrayAdapter playerAdapter;
     ArrayList<String> playerList = new ArrayList<>();
+    int roomId;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_info);
+        GetIntentData();
         initView();
-        SetUpToolbar();
         SetUpListView();
-        GlobalVariable.mSocket.on("sendRoomInfo", onSendRoom);
+        SetUpToolbar();
+        HandleStartGame();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GlobalVariable.mSocket.on("sendRoomInfo", onSendRoom);
+        GlobalVariable.mSocket.on("sendGame", onSendGame);
+    }
 
+    private void SetUpListView() {
+        playerAdapter = new ArrayAdapter(RoomInfoActivity.this, android.R.layout.simple_list_item_1, playerList);
+        listViewRoomInfo.setAdapter(playerAdapter);
+    }
+
+    private void GetIntentData() {
+        Intent intent = getIntent();
+        roomId = intent.getIntExtra("roomId", 0);
+        String name = intent.getStringExtra("name");
+        if(name != null){
+            playerList.add(name);
+        }
+        ArrayList<String> players = intent.getStringArrayListExtra("players");
+        if(players != null){
+            playerList.addAll(players);
+        }
+    }
+
+    private void HandleStartGame() {
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playerList.size() > 1){
+                    GlobalVariable.mSocket.emit("startGame", roomId);
+                }
+            }
+        });
+    }
 
     private Emitter.Listener onSendRoom = new Emitter.Listener() {
         @Override
@@ -52,7 +90,7 @@ public class RoomInfoActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "send room: " + args[0].toString());
+                    Log.d(TAG, "send room info: " + args[0].toString());
                     JSONObject roomObj = (JSONObject) args[0];
                     try {
                         JSONArray playerArray = roomObj.getJSONArray("players");
@@ -60,15 +98,15 @@ public class RoomInfoActivity extends AppCompatActivity {
                         roomInfoTitleTxt.setText(owner + "'s Room");
                         roomInfoOwnerTxt.setText(owner);
                         int length = playerArray.length();
-                        if(length > 0 && playerArray != null){
-                            playerList.clear();
+                        if(length > 0){
                             ArrayList<String> temp = new ArrayList<>();
                             for (int i = 0; i < length; i++) {
                                 temp.add(playerArray.getString(i));
                             }
+                            playerList.clear();
                             playerList.addAll(temp);
-                            playerAdapter = new ArrayAdapter(RoomInfoActivity.this, android.R.layout.simple_list_item_1, playerList);
-                            listViewRoomInfo.setAdapter(playerAdapter);
+                            Log.d(TAG, "player List: " + playerList.toString());
+                            playerAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -78,14 +116,24 @@ public class RoomInfoActivity extends AppCompatActivity {
         }
     };
 
-    private void SetUpListView() {
-        Intent intent = getIntent();
-        int roomId = intent.getIntExtra("roomId", 0);
-        Log.d(TAG, "Room id: " + roomId);
-        GlobalVariable.mSocket.emit("getRoomById", roomId);
-    }
+    private Emitter.Listener onSendGame = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.d(TAG, "args: " + args.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send game: " + args[0].toString());
+                    Intent gameIntent = new Intent(RoomInfoActivity.this, GameActivity.class);
+                    startActivity(gameIntent);
+                    finish();
+                }
+            });
+        }
+    };
 
     private void initView(){
+        btnStart = findViewById(R.id.buttonStartGame);
         toolbarRoomInfo = findViewById(R.id.toolbarRoomInfo);
         listViewRoomInfo = findViewById(R.id.listViewPlayer);
         roomInfoTitleTxt = findViewById(R.id.room_info_title_txt);
