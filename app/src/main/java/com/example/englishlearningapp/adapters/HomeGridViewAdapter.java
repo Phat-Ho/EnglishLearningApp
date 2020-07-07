@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,6 +28,8 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.VietnameseActivity;
 import com.example.englishlearningapp.fragments.TopicFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
+import com.example.englishlearningapp.utils.LoginManager;
+import com.example.englishlearningapp.utils.Server;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,11 +41,13 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     Context context;
     TopicFragment topicFragment = new TopicFragment();
     HomeFragment homeFragment;
+    LoginManager loginManager;
 
     public HomeGridViewAdapter(Context context, ArrayList subjectImages, HomeFragment homeFragment) {
         this.context = context;
         this.subjectImages = subjectImages;
         this.homeFragment = homeFragment;
+        this.loginManager = new LoginManager(context);
     }
 
     @Override
@@ -78,8 +83,12 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                         onLaunchCamera();
                         break;
                     case 3:
-                        Intent connectedWordIntent = new Intent(context, ConnetedWordActivity.class);
-                        context.startActivity(connectedWordIntent);
+                        if(loginManager.isLogin()){
+                            Intent connectedWordIntent = new Intent(context, ConnetedWordActivity.class);
+                            context.startActivity(connectedWordIntent);
+                        }else{
+                            Toast.makeText(context, "Đăng nhập để có thể vào game", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }
