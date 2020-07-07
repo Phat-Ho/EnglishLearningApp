@@ -12,80 +12,77 @@
         android:layout_weight="2"
         android:src="@drawable/ic_logo_welcome"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
 
     <TextView
-        android:layout_weight="1"
         android:id="@+id/welcome_txt_quest_detail"
         android:textStyle="bold"
-        android:layout_marginTop="30dp"
         android:layout_gravity="center"
         android:textSize="26sp"
         android:text="Xin chào"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:layout_weight="1"
         android:id="@+id/welcome_txt_topic"
         android:textColor="@color/colorPrimary"
         android:layout_gravity="center"
         android:textSize="22sp"
+        android:layout_marginTop="10dp"
         android:text="(Topic School)"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:textColor="#E91E63"
         android:textSize="16sp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:text="Vui lòng trả lời câu hỏi trước khi chuyển đến chủ đề"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_weight="1"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_marginRight="50dp"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/welcome_btn_1"
-                android:textSize="18sp"
-                android:textColor="#2196F3"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="150dp"
                 android:layout_height="70dp"
-                android:text="Hello"
                 android:layout_marginRight="50dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeWidth="2dp"
-                app:cornerRadius="10dp"/>
+                android:text="Hello"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                app:cornerRadius="10dp"
+                app:strokeWidth="2dp" />
 
             <TextView
                 android:id="@+id/welcome_txt_meaning_1"
-                android:textStyle="bold"
-                android:textColor="#E91E63"
-                android:layout_gravity="center"
-                android:text="Xin chào"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"/>
+                android:layout_gravity="center"
+                android:text="Xin chào"
+                android:textColor="#E91E63"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -97,24 +94,24 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/welcome_btn_2"
-                android:textSize="18sp"
-                android:textColor="#2196F3"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="150dp"
                 android:layout_height="70dp"
                 android:text="Nice"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeWidth="2dp"
-                app:cornerRadius="10dp"/>
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                app:cornerRadius="10dp"
+                app:strokeWidth="2dp" />
 
             <TextView
                 android:id="@+id/welcome_txt_meaning_2"
-                android:textStyle="bold"
-                android:textColor="#E91E63"
-                android:layout_gravity="center"
-                android:text="Đẹp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"/>
+                android:layout_gravity="center"
+                android:text="Đẹp"
+                android:textColor="#E91E63"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -190,13 +187,12 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:layout_weight="1"
         android:id="@+id/welcome_btn_next"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tiếp tục"/>
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:text="Tiếp tục" />
 
 
 </LinearLayout>
