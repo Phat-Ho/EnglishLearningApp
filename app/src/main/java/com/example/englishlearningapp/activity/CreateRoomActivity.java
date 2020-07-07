@@ -89,21 +89,24 @@ public class CreateRoomActivity extends AppCompatActivity {
                 String roomName = edtRoomName.getText().toString();
                 Integer numOfPlayers = Integer.parseInt(spinnerNumOfPlayers.getSelectedItem().toString());
                 String password = edtPasswordConnectedWord.getText().toString().trim();
-                String timer = edtTimer.getText().toString().trim();
+                String time = edtTimer.getText().toString().trim();
                 if (roomName.equals("")){
                     Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập tên phòng", Toast.LENGTH_SHORT).show();
-                } else if (timer.equals("")){
+                } else if (time.equals("")){
                     Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập thời gian", Toast.LENGTH_SHORT).show();
                 } else {
                     JSONObject roomObject = new JSONObject();
                     try {
                         JSONArray playerList = new JSONArray();
-                        playerList.put(username);
+                        JSONObject playerObj = new JSONObject();
+                        playerObj.put("playerId", loginManager.getUserId());
+                        playerObj.put("playerName", username);
+                        playerList.put(playerObj);
                         roomObject.put("owner", username);
                         roomObject.put("name", roomName);
                         roomObject.put("numOfPlayers", numOfPlayers);
                         roomObject.put("password", password);
-                        roomObject.put("timer", timer);
+                        roomObject.put("time", time);
                         roomObject.put("players", playerList);
                         globalVariable.mSocket.emit("createRoom", roomObject);
                     } catch (JSONException e) {
@@ -126,7 +129,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                         roomInfoIntent.putExtra("roomId", roomId);
-                        roomInfoIntent.putExtra("name", loginManager.getUserName());
+                        roomInfoIntent.putExtra("playerName", loginManager.getUserName());
                         startActivity(roomInfoIntent);
                         finish();
                     } catch (JSONException e) {

@@ -8,19 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.RoomAdapter;
+import com.example.englishlearningapp.models.Player;
 import com.example.englishlearningapp.models.Room;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
-import com.google.android.material.button.MaterialButton;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +52,13 @@ public class RoomListActivity extends AppCompatActivity {
         globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        globalVariable.mSocket.off("roomList", onRetrieveRoomList);
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+    }
+
     private Emitter.Listener onRetrieveRoomList = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -72,8 +75,8 @@ public class RoomListActivity extends AppCompatActivity {
                             String name = object.getString("name");
                             Integer numOfPlayers = object.getInt("numOfPlayers");
                             String password = object.getString("password");
-                            String timer = object.getString("timer");
-                            room = new Room(id, name, numOfPlayers, password, timer);
+                            String time = object.getString("time");
+                            room = new Room(id, name, numOfPlayers, password, time);
                             arrRoom.add(room);
                             adapter.notifyDataSetChanged();
                         }
@@ -98,13 +101,16 @@ public class RoomListActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         int length = playerArray.length();
                         if(length > 0){
-                            ArrayList<String> temp = new ArrayList<>();
+                            ArrayList<Player> temp = new ArrayList<>();
                             for (int i = 0; i < length; i++) {
-                                temp.add(playerArray.getString(i));
+                                int id = playerArray.getJSONObject(i).getInt("playerId");
+                                String name = playerArray.getJSONObject(i).getString("playerName");
+                                Player player = new Player(id, name);
+                                temp.add(player);
                             }
                             Intent roomInfoIntent = new Intent(RoomListActivity.this, RoomInfoActivity.class);
                             roomInfoIntent.putExtra("roomId", roomId);
-                            roomInfoIntent.putStringArrayListExtra("players", temp);
+                            roomInfoIntent.putExtra("playerList", temp);
                             startActivity(roomInfoIntent);
                         }
                     } catch (JSONException e) {
@@ -127,9 +133,12 @@ public class RoomListActivity extends AppCompatActivity {
                 int roomId = arrRoom.get(position).getId();
                 String playerName = loginManager.getUserName();
                 JSONObject jsonObject = new JSONObject();
+                JSONObject playerObj = new JSONObject();
                 try {
                     jsonObject.put("roomId", roomId);
-                    jsonObject.put("playerName", playerName);
+                    playerObj.put("playerId", loginManager.getUserId());
+                    playerObj.put("playerName", playerName);
+                    jsonObject.put("player", playerObj);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

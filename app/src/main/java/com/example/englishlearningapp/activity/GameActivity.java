@@ -11,14 +11,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.adapters.PlayerListGameAdapter;
+import com.example.englishlearningapp.models.Player;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
@@ -27,15 +33,25 @@ public class GameActivity extends AppCompatActivity {
     ImageButton imgBtnSend;
     GlobalVariable globalVariable;
     ListView lvPlayerLeft;
+    ArrayList<Player> playerList = new ArrayList<>();
+    PlayerListGameAdapter playerAdapter;
     int roomId;
+    LoginManager loginManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         InitialView();
         GetIntentData();
+        SetUpListView();
         HandleSendWord();
         globalVariable = GlobalVariable.getInstance(this);
+        loginManager = new LoginManager(this);
+    }
+
+    private void SetUpListView() {
+        playerAdapter = new PlayerListGameAdapter(this, playerList);
+        lvPlayerLeft.setAdapter(playerAdapter);
     }
 
     @Override
@@ -63,10 +79,30 @@ public class GameActivity extends AppCompatActivity {
                     JSONObject gameObj = (JSONObject) args[0];
                     try {
                         JSONArray playerOrderArray = gameObj.getJSONArray("playerOrder");
+                        ArrayList<Player> temp = new ArrayList<>();
+                        int eliminatedId = gameObj.getInt("eliminatedPlayer");
+                        if(eliminatedId == loginManager.getUserId()){
+                            Toast.makeText(GameActivity.this, "You have been eliminated", Toast.LENGTH_SHORT).show();
+                        }
+                        int length = playerOrderArray.length();
+                        if(length > 0) {
+                            for (int i = 0; i < length; i++) {
+                                int id = playerOrderArray.getJSONObject(i).getInt("playerId");
+                                String name = playerOrderArray.getJSONObject(i).getString("playerName");
+                                Player player = new Player(id, name);
+                                temp.add(player);
+                            }
+                        }
+                        playerList.clear();
+                        playerList.addAll(temp);
+                        playerAdapter.notifyDataSetChanged();
+
+                        if(length == 1){
+                            Toast.makeText(GameActivity.this, playerList.get(0).getName() + " is the winner", Toast.LENGTH_SHORT).show();
+                        }
+
                         String currentWord = gameObj.getString("currentWord");
-                        Log.d(TAG, "currentWord: " + currentWord);
                         txtCurrentWord.setText(currentWord);
-                        Log.d(TAG, "text: " + txtCurrentWord.getText().toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -92,15 +128,26 @@ public class GameActivity extends AppCompatActivity {
     private void GetIntentData() {
         Intent intent = getIntent();
         roomId = intent.getIntExtra("roomId", 0);
+        playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
         txtCurrentWord.setText(intent.getStringExtra("currentWord"));
     }
 
     private void HandleSendWord() {
-        final String word = edtWord.getText().toString();
         imgBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariable.mSocket.emit("sendWord", word);
+                String word = edtWord.getText().toString();
+                Log.d(TAG, "HandleSendWord: " + word);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("word", word);
+                    jsonObject.put("id", roomId);
+                    jsonObject.put("playerId", loginManager.getUserId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                globalVariable.mSocket.emit("sendWord", jsonObject);
+                edtWord.setText(null);
             }
         });
     }
