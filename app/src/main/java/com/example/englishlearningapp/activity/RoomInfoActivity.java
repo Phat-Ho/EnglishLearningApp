@@ -48,8 +48,8 @@ public class RoomInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_info);
         globalVariable = GlobalVariable.getInstance(this);
         loginManager = new LoginManager(this);
-        GetIntentData();
         initView();
+        GetIntentData();
         SetUpListView();
         SetUpToolbar();
         HandleStartGame();
@@ -69,6 +69,19 @@ public class RoomInfoActivity extends AppCompatActivity {
         globalVariable.mSocket.off("sendGame", onSendGame);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("roomId", roomId);
+            jsonObj.put("playerId", loginManager.getUserId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        globalVariable.mSocket.emit("leaveRoom", jsonObj);
+    }
+
     private void SetUpListView() {
         playerAdapter = new PlayerListRoomAdapter(this, playerList);
         listViewRoomInfo.setAdapter(playerAdapter);
@@ -77,11 +90,18 @@ public class RoomInfoActivity extends AppCompatActivity {
     private void GetIntentData() {
         Intent intent = getIntent();
         roomId = intent.getIntExtra("roomId", 0);
+        String roomOwner = intent.getStringExtra("roomOwner");
+        String roomName = intent.getStringExtra("roomName");
+
+        roomInfoTitleTxt.setText(roomName);
+        roomInfoOwnerTxt.setText(roomOwner);
         String playerName = intent.getStringExtra("playerName");
         int playerId = loginManager.getUserId();
+
         if(playerName != null){
             Player player = new Player(playerId, playerName);
             playerList.add(player);
+
         }
         ArrayList<Player> players = (ArrayList<Player>) intent.getSerializableExtra("playerList");
         if(players != null){
@@ -111,9 +131,6 @@ public class RoomInfoActivity extends AppCompatActivity {
                     JSONObject roomObj = (JSONObject) args[0];
                     try {
                         JSONArray playerArray = roomObj.getJSONArray("players");
-                        String owner = roomObj.getString("owner");
-                        roomInfoTitleTxt.setText(owner + "'s Room");
-                        roomInfoOwnerTxt.setText(owner);
                         int length = playerArray.length();
                         if(length > 0){
                             ArrayList<Player> temp = new ArrayList<>();
@@ -147,6 +164,11 @@ public class RoomInfoActivity extends AppCompatActivity {
                     Log.d(TAG, "send game: " + args[0].toString());
                     JSONObject gameObj = (JSONObject) args[0];
                     try {
+                        int gameId = gameObj.getInt("id");
+                        JSONObject joinGameObj = new JSONObject();
+                        joinGameObj.put("gameId", gameId);
+                        joinGameObj.put("roomId", roomId);
+                        globalVariable.mSocket.emit("joinGame", joinGameObj);
                         String currentWord = gameObj.getString("currentWord");
                         JSONArray playersOrder = gameObj.getJSONArray("playerOrder");
                         ArrayList<Player> temp = new ArrayList<>();
@@ -161,7 +183,7 @@ public class RoomInfoActivity extends AppCompatActivity {
                         }
                         Intent gameIntent = new Intent(RoomInfoActivity.this, GameActivity.class);
                         gameIntent.putExtra("currentWord", currentWord);
-                        gameIntent.putExtra("roomId", roomId);
+                        gameIntent.putExtra("gameId", gameId);
                         gameIntent.putExtra("playerList", temp);
                         startActivity(gameIntent);
                         finish();

@@ -126,9 +126,13 @@ public class CreateRoomActivity extends AppCompatActivity {
                     JSONObject roomObj = (JSONObject) args[0];
                     try {
                         int roomId = roomObj.getInt("id");
+                        String roomOwner = roomObj.getString("owner");
+                        String roomName = roomObj.getString("name");
                         Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                         roomInfoIntent.putExtra("roomId", roomId);
                         roomInfoIntent.putExtra("playerName", loginManager.getUserName());
+                        roomInfoIntent.putExtra("roomOwner", roomOwner);
+                        roomInfoIntent.putExtra("roomName", roomName);
                         startActivity(roomInfoIntent);
                         finish();
                     } catch (JSONException e) {

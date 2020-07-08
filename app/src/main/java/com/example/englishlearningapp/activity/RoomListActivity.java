@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.RoomAdapter;
@@ -27,10 +28,9 @@ public class RoomListActivity extends AppCompatActivity {
 
     private static final String TAG = "RoomListActivity";
     ListView lvRoomList;
-    ArrayList<Room> arrRoom;
+    ArrayList<Room> arrRoom = new ArrayList<>();
     Toolbar toolbarRoomList;
     RoomAdapter adapter;
-    Room room;
     LoginManager loginManager;
     GlobalVariable globalVariable;
 
@@ -42,12 +42,12 @@ public class RoomListActivity extends AppCompatActivity {
         initView();
         SetUpToolbar();
         loginManager = new LoginManager(this);
+        globalVariable.mSocket.emit("getRoom");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        globalVariable.mSocket.emit("getRoom");
         globalVariable.mSocket.on("roomList", onRetrieveRoomList);
         globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
     }
@@ -65,10 +65,11 @@ public class RoomListActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    arrRoom.clear();
+                    Log.d(TAG, "on room list: " + args[0].toString());
                     JSONObject jsonObject = (JSONObject) args[0];
                     try {
                         JSONArray roomData = jsonObject.getJSONArray("roomList");
+                        ArrayList<Room> temp = new ArrayList<>();
                         for (int i = 0; i < roomData.length(); i++){
                             JSONObject object = roomData.getJSONObject(i);
                             int id = object.getInt("id");
@@ -76,10 +77,14 @@ public class RoomListActivity extends AppCompatActivity {
                             Integer numOfPlayers = object.getInt("numOfPlayers");
                             String password = object.getString("password");
                             String time = object.getString("time");
-                            room = new Room(id, name, numOfPlayers, password, time);
-                            arrRoom.add(room);
-                            adapter.notifyDataSetChanged();
+                            JSONArray playerArr = object.getJSONArray("players");
+                            Room room = new Room(id, name, numOfPlayers, password, time, playerArr.length());
+                            temp.add(room);
                         }
+                        Log.d(TAG, "temp room: " + temp.toString());
+                        arrRoom.clear();
+                        arrRoom.addAll(temp);
+                        adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -99,6 +104,8 @@ public class RoomListActivity extends AppCompatActivity {
                     try {
                         JSONArray playerArray = roomObj.getJSONArray("players");
                         int roomId = roomObj.getInt("id");
+                        String roomOwner = roomObj.getString("owner");
+                        String roomName = roomObj.getString("name");
                         int length = playerArray.length();
                         if(length > 0){
                             ArrayList<Player> temp = new ArrayList<>();
@@ -111,7 +118,10 @@ public class RoomListActivity extends AppCompatActivity {
                             Intent roomInfoIntent = new Intent(RoomListActivity.this, RoomInfoActivity.class);
                             roomInfoIntent.putExtra("roomId", roomId);
                             roomInfoIntent.putExtra("playerList", temp);
+                            roomInfoIntent.putExtra("roomOwner", roomOwner);
+                            roomInfoIntent.putExtra("roomName", roomName);
                             startActivity(roomInfoIntent);
+                            finish();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -124,25 +134,28 @@ public class RoomListActivity extends AppCompatActivity {
     private void initView(){
         lvRoomList = findViewById(R.id.listViewRoomList);
         toolbarRoomList = findViewById(R.id.toolbarRoomList);
-        arrRoom = new ArrayList<>();
         adapter = new RoomAdapter(this, R.layout.row_room_list_view, arrRoom);
         lvRoomList.setAdapter(adapter);
         lvRoomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int roomId = arrRoom.get(position).getId();
-                String playerName = loginManager.getUserName();
-                JSONObject jsonObject = new JSONObject();
-                JSONObject playerObj = new JSONObject();
-                try {
-                    jsonObject.put("roomId", roomId);
-                    playerObj.put("playerId", loginManager.getUserId());
-                    playerObj.put("playerName", playerName);
-                    jsonObject.put("player", playerObj);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(arrRoom.get(position).getPlayerCount() >= arrRoom.get(position).getNumOfPlayers()){
+                    Toast.makeText(RoomListActivity.this, "Room is full", Toast.LENGTH_SHORT).show();
+                }else{
+                    int roomId = arrRoom.get(position).getId();
+                    String playerName = loginManager.getUserName();
+                    JSONObject jsonObject = new JSONObject();
+                    JSONObject playerObj = new JSONObject();
+                    try {
+                        jsonObject.put("roomId", roomId);
+                        playerObj.put("playerId", loginManager.getUserId());
+                        playerObj.put("playerName", playerName);
+                        jsonObject.put("player", playerObj);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    globalVariable.mSocket.emit("joinRoom", jsonObject);
                 }
-                globalVariable.mSocket.emit("joinRoom", jsonObject);
             }
         });
     }

@@ -218,7 +218,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private String getMeaning(String str){
-        String meaning = str;
+        String meaning;
         if(str.contains(")")){
             if(str.indexOf(",", str.indexOf(")")) != -1){
                 meaning = str.substring(str.indexOf(")") + 2, str.indexOf(",", str.indexOf(")")));

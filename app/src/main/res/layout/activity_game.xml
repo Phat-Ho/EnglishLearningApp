@@ -58,7 +58,8 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/text_view_stroke_3"
         android:layout_marginHorizontal="30dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:weightSum="5">
 
         <TextView
             android:id="@+id/txt_game_previous_word"
@@ -67,12 +68,26 @@
             android:text="School"
             android:textColor="@color/colorRed"
             android:textSize="25sp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/txt_game_word_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trường học"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:paddingHorizontal="10dp"
+            android:layout_weight="3"
+            android:textAlignment="center"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1"
             android:layout_gravity="center_horizontal">
 
             <EditText
@@ -83,9 +98,9 @@
 
             <ImageButton
                 android:id="@+id/btn_game_send"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_send"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_send" />
         </LinearLayout>
         
 

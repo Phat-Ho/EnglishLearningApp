@@ -42,9 +42,7 @@ public class RoomAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        TextView txtRoomName, txtRoomOwner;
-        ImageView imgPassword;
-        ImageButton imgBtnRoomInfo;
+        TextView txtRoomName, txtRoomOwner, txtRoomPlayerCount;
     }
 
     @Override
@@ -56,8 +54,7 @@ public class RoomAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.txtRoomName = convertView.findViewById(R.id.textViewRoomName);
             viewHolder.txtRoomOwner = convertView.findViewById(R.id.textViewRoomOwner);
-            viewHolder.imgPassword = convertView.findViewById(R.id.imageViewPassword);
-            viewHolder.imgBtnRoomInfo = convertView.findViewById(R.id.imageButtonRoomInfo);
+            viewHolder.txtRoomPlayerCount = convertView.findViewById(R.id.textViewRoomPlayer);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -67,15 +64,7 @@ public class RoomAdapter extends BaseAdapter {
 
         viewHolder.txtRoomName.setText(room.getName());
         viewHolder.txtRoomOwner.setText(room.getName());
-        viewHolder.imgPassword.setFocusable(false);
-        viewHolder.imgPassword.setFocusableInTouchMode(false);
-        viewHolder.imgBtnRoomInfo.setFocusable(false);
-        viewHolder.imgBtnRoomInfo.setFocusableInTouchMode(false);
-        if (room.getPassword().equals("")){
-            viewHolder.imgPassword.setVisibility(View.INVISIBLE);
-        } else {
-            viewHolder.imgPassword.setVisibility(View.VISIBLE);
-        }
+        viewHolder.txtRoomPlayerCount.setText(room.getPlayerCount() + "/" + room.getNumOfPlayers());
 
         return convertView;
     }

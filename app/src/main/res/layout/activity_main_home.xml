@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainHomeActivity">
+    tools:context=".activity.MainHomeActivity"
+    android:background="@color/light_gray">
 
     <FrameLayout
         android:id="@+id/container"
@@ -15,9 +16,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/navigation_bottom"
             android:layout_gravity="bottom"
-            android:background="@color/clear_btn_color"
-            app:itemIconTint="@color/navigation_item_color"
-            app:itemTextColor="@color/navigation_item_color"
+            android:background="@color/common_google_signin_btn_text_dark_focused"
+            app:itemIconTint="@color/colorWhite"
+            app:itemTextColor="@color/colorWhite"
             app:menu="@menu/navigation_bottom_menu"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
     </FrameLayout>
