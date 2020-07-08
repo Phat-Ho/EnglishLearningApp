@@ -100,14 +100,14 @@ public class HistoryFavoriteFragment extends Fragment {
     }
 
     private void SetUpSpinner() {
-        String[] listViewType = new String[]{"Mở rộng", "Thu gọn"};
+        String[] listViewType = new String[]{getString(R.string.history_show_more), getString(R.string.history_show_less)};
         ArrayAdapter<String> spinnerViewAdapter = new ArrayAdapter<String>(getActivity(),
                                                         R.layout.spinner_white_text, listViewType);
         spinnerViewAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         historyFavSpinnerType.setAdapter(spinnerViewAdapter);
         historyFavSpinnerType.setSelection(prefsManager.getViewType());
 
-        String[] listSortType = new String[]{"A  -  Z", "Thời gian"};
+        String[] listSortType = new String[]{"A  -  Z", getString(R.string.history_time)};
         ArrayAdapter<String> spinnerSortAdapter = new ArrayAdapter<String>(getActivity(),
                                                         R.layout.spinner_white_text, listSortType);
         spinnerSortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

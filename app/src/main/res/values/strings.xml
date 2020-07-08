@@ -37,6 +37,12 @@
     <string name="no_result_found">No result found</string>
     <string name="vietnamese_english">Vietnamese - English</string>
     <string name="connected_word">Connected Word</string>
+    <string name="history_show_more">Show more</string>
+    <string name="history_show_less">Show less</string>
+    <string name="history_time">Time</string>
+    <string name="please_enter_email">Please enter Email</string>
+    <string name="please_enter_password">Please enter Password</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

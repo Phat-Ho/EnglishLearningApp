@@ -153,9 +153,11 @@ public class LoginFragment extends Fragment {
         final String email = txtEmail.getText().toString().trim();
         final String password = txtPassword.getText().toString().trim();
 
-        if(email.isEmpty() || password.isEmpty()){
-            textInputLayoutPassword.setError("Hãy nhập email và password");
-        }else{
+        if(email.isEmpty()){
+            textInputLayoutEmail.setError(getString(R.string.please_enter_email));
+        } else if (password.isEmpty()){
+            textInputLayoutPassword.setError(getString(R.string.please_enter_password));
+        } else{
             setLoginProgressBarVisibility(true);
             //Bắt đầu gọi webservice để thực hiện đăng nhập thông qua thư viện Volley
             final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

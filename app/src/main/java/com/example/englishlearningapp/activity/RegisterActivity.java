@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "Register Activity";
     TextInputEditText registerEmail;
     TextInputEditText registerPassword;
-    MaterialButton registerButton;
+    MaterialButton registerButton, btnLoginWithAccount;
     ProgressBar registerProgressBar;
     TextInputLayout registerTextInputPassword, registerTextInputEmail;
     String REGISTER_URL = Server.REGISTER_URL;
@@ -77,6 +77,13 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        btnLoginWithAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void MappingView() {
@@ -86,6 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerProgressBar = findViewById(R.id.register_progressbar);
         registerTextInputPassword = findViewById(R.id.register_text_input);
         registerTextInputEmail = findViewById(R.id.register_text_layout_email);
+        btnLoginWithAccount = findViewById(R.id.buttonLoginWithAccount);
     }
 
     private void Register() {

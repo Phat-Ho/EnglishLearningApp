@@ -25,7 +25,7 @@
             app:tabIndicator="@color/colorPrimary"
             app:tabIndicatorHeight="3dp"
             app:tabGravity="fill"
-            style="@style/Widget.MaterialComponents.TabLayout"/>
+            style="@style/Widget.MaterialComponents.TabLayout" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager

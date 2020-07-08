@@ -37,4 +37,9 @@
     <string name="no_result_found">Không có kết quả</string>
     <string name="vietnamese_english">Việt - Anh</string>
     <string name="connected_word">Nối chữ</string>
+    <string name="history_show_more">Mở rộng</string>
+    <string name="history_show_less">Rút gọn</string>
+    <string name="history_time">Thời gian</string>
+    <string name="please_enter_email">Vui lòng nhập Email</string>
+    <string name="please_enter_password">Vui lòng nhập Password</string>
 </resources>

@@ -16,7 +16,6 @@
             android:id="@+id/navigation_bottom"
             android:layout_gravity="bottom"
             android:background="@color/clear_btn_color"
-            android:alpha="0.7"
             app:itemIconTint="@color/navigation_item_color"
             app:itemTextColor="@color/navigation_item_color"
             app:menu="@menu/navigation_bottom_menu"

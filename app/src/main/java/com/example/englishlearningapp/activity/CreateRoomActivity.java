@@ -72,7 +72,6 @@ public class CreateRoomActivity extends AppCompatActivity {
     private void initView(){
         createRoomToolbar = findViewById(R.id.toolbarCreateRoom);
         spinnerNumOfPlayers = findViewById(R.id.spinnerNumberOfPlayers);
-        spinnerDifficulty = findViewById(R.id.spinnerDifficulty);
         edtTimer = findViewById(R.id.editTextTimer);
         edtPasswordConnectedWord = findViewById(R.id.editTextPasswordConnectedWord);
         edtRoomName = findViewById(R.id.editTextRoomName);
