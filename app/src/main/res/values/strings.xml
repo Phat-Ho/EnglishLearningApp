@@ -4,7 +4,7 @@
     <string name="password">Password</string>
     <string name="login">Sign in</string>
     <string name="register">Register</string>
-    <string name="create_new_account">Create a new account</string>
+    <string name="create_new_account">Create account</string>
     <string name="login_with_account">Login With Account</string>
     <string name="login_with_google">Login With Google</string>
     <string name="login_with_facebook">Login With Facebook</string>

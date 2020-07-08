@@ -89,6 +89,7 @@
         android:paddingRight="15dp"
         android:gravity="center">
 
+
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,12 +105,14 @@
             android:text="@string/login"
             />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_marginTop="10dp"
-            android:id="@+id/buttonRegisterLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_new_account" />
+            <com.google.android.material.button.MaterialButton
+                android:layout_marginTop="10dp"
+                android:id="@+id/buttonRegisterLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_new_account" />
+
+
     </LinearLayout>
 
 </LinearLayout>
