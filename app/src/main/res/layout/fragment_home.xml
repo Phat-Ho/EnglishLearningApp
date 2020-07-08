@@ -28,5 +28,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/recylerViewHome"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:clipToPadding="true"/>
 </LinearLayout>
