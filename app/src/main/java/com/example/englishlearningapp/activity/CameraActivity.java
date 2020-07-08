@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,15 +16,28 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.example.englishlearningapp.utils.LoginManager;
+import com.example.englishlearningapp.utils.Server;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CameraActivity extends AppCompatActivity {
@@ -33,6 +47,7 @@ public class CameraActivity extends AppCompatActivity {
     ArrayList<String> arrCaptureText;
     ArrayAdapter adapter;
     DatabaseAccess databaseAccess;
+    LoginManager loginManager;
 
     private static final String TAG = "MainActivity";
     private static final int requestPermissionID = 101;
@@ -64,6 +79,7 @@ public class CameraActivity extends AppCompatActivity {
                     int wordId = wordList.get(0).getId();
                     int remembered = wordList.get(0).getRemembered();
                     moveToMeaningActivity(html, word, wordId, remembered);
+                    saveHistory(wordId, loginManager.getUserId());
                 }
             }
         });
@@ -109,98 +125,67 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    public void saveHistory(final int wordID, final int pUserID){
+        final long currentDateTime = System.currentTimeMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String dateString = simpleDateFormat.format(currentDateTime);
+        //Nếu có internet và đã login thì add vô server vào local với sync status = success
+        if(Server.haveNetworkConnection(this) && pUserID > 0){
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
+            String sendDataUrl = Server.SEND_DATA_URL;
+            final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-//    private void startCameraResource() {
-//        {
-//            final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-//            final CustomTextRecognizer customTextRecognizer = new CustomTextRecognizer(textRecognizer, 300, 300);
-//
-//            if (!textRecognizer.isOperational()) {
-//                Log.w(TAG, "Detector dependencies not loaded yet");
-//            } else {
-//
-//                //Initialize camerasource to use high resolution and set Autofocus on.
-//                mCameraSource = new CameraSource.Builder(getApplicationContext(), customTextRecognizer)
-//                        .setFacing(CameraSource.CAMERA_FACING_BACK)
-//                        .setRequestedPreviewSize(1280, 1024)
-//                        .setAutoFocusEnabled(true)
-//                        .setRequestedFps(2.0f)
-//                        .build();
-//
-//                /**
-//                 * Add call back to SurfaceView and check if camera permission is granted.
-//                 * If permission is granted we can start our cameraSource and pass it to surfaceView
-//                 */
-//                mCameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
-//                    @Override
-//                    public void surfaceCreated(SurfaceHolder holder) {
-//                        try {
-//
-//                            if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-//                                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//
-//                                ActivityCompat.requestPermissions(CameraActivity.this,
-//                                        new String[]{Manifest.permission.CAMERA},
-//                                        requestPermissionID);
-//                                return;
-//                            }
-//                            mCameraSource.start(mCameraView.getHolder());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//                    }
-//
-//                    /**
-//                     * Release resources for cameraSource
-//                     */
-//                    @Override
-//                    public void surfaceDestroyed(SurfaceHolder holder) {
-//                        mCameraSource.stop();
-//                    }
-//                });
-//
-//                //Set the TextRecognizer's Processor.
-//                customTextRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
-//                    @Override
-//                    public void release() {
-//                    }
-//
-//                    /**
-//                     * Detect all the text from camera using TextBlock and the values into a stringBuilder
-//                     * which will then be set to the textView.
-//                     * */
-//                    @Override
-//                    public void receiveDetections(Detector.Detections<TextBlock> detections) {
-//                        final SparseArray<TextBlock> items = detections.getDetectedItems();
-//
-//                        if (items.size() != 0 ){
-//
-//
-//                            mTextView.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    StringBuilder stringBuilder = new StringBuilder();
-//                                    TextBlock newitem = items.valueAt(0);
-//                                    String itemValue = newitem.getValue();
-//                                    for(int i=0;i<items.size();i++) {
-//                                        TextBlock item = items.valueAt(i);
-//                                        stringBuilder.append(item.getValue());
-//                                        stringBuilder.append("\n");
-//                                    }
-//                                    Log.d("AAA", itemValue);
-//                                    mTextView.setText(stringBuilder.toString());
-//                                }
-//                            });
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//    }
+            //Initial request body
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("table", "searchhistory");
+                JSONArray jsonArray1 = new JSONArray();
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Id", insertId);
+                jsonObject1.put("IdUser", pUserID);
+                jsonObject1.put("IdWord", wordID);
+                jsonObject1.put("Remembered", 0);
+                jsonObject1.put("Synchronized", 0);
+                jsonObject1.put("TimeSearch", dateString);
+                jsonObject1.put("LinkWeb", "");
+                jsonObject1.put("IsChange", 0);
+                jsonObject1.put("IdServer", 0);
+                jsonArray1.put(jsonObject1);
+                jsonObject.put("data", jsonArray1);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    if(response.length() > 0){
+                        try {
+                            JSONObject dataArray = (JSONObject) response.get(0);
+                            Log.d(TAG, "onResponse: " + dataArray);
+                            JSONArray array = (JSONArray) dataArray.get("data");
+                            JSONObject data = (JSONObject) array.get(0);
+                            int idServer = data.getInt("IdServer");
+                            databaseAccess.updateHistoryIdServer(insertId, idServer);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Error: ", error.getMessage());
+                }
+            });
+            requestQueue.add(request);
+        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
+            Log.d(TAG, "saveHistory: no internet or no login, add to local");
+        }
+    }
 
 
 }
