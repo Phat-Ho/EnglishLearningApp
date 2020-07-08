@@ -42,4 +42,5 @@
     <string name="history_time">Thời gian</string>
     <string name="please_enter_email">Vui lòng nhập Email</string>
     <string name="please_enter_password">Vui lòng nhập Password</string>
+    <string name="reset_password">Lấy lại mật khẩu</string>
 </resources>
