@@ -42,6 +42,7 @@
     <string name="history_time">Time</string>
     <string name="please_enter_email">Please enter Email</string>
     <string name="please_enter_password">Please enter Password</string>
+    <string name="reset_password">Reset Password</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

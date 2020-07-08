@@ -1,7 +1,11 @@
 package com.example.englishlearningapp.fragments;
 
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -59,14 +63,17 @@ public class ForgotPasswordFragment extends Fragment {
 
     Toolbar tbForgotPassword;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
         tbForgotPassword = view.findViewById(R.id.toolbarForgotPassword);
+        tbForgotPassword.setTitle("");
         getActivity().setActionBar(tbForgotPassword);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        tbForgotPassword.getNavigationIcon().setColorFilter(getActivity().getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         tbForgotPassword.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
