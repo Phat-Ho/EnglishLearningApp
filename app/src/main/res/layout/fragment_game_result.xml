@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.GameResultFragment"
+    android:background="#99FFF5"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/hello_blank_fragment"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_next_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="@string/hello_blank_fragment"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="5dp"
+        android:layout_marginTop="10dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_result_exit"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Thoát"
+            android:backgroundTint="@color/colorRed"
+            android:visibility="gone"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_result_continue"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/colorBlue"
+            android:text="Tiếp tục"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</LinearLayout>

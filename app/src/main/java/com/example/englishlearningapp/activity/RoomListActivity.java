@@ -68,7 +68,7 @@ public class RoomListActivity extends AppCompatActivity {
                     Log.d(TAG, "on room list: " + args[0].toString());
                     JSONObject jsonObject = (JSONObject) args[0];
                     try {
-                        JSONArray roomData = jsonObject.getJSONArray("roomList");
+                        JSONArray roomData = jsonObject.getJSONArray("activeRoom");
                         ArrayList<Room> temp = new ArrayList<>();
                         for (int i = 0; i < roomData.length(); i++){
                             JSONObject object = roomData.getJSONObject(i);
