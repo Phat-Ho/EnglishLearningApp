@@ -9,6 +9,32 @@
     android:layout_gravity="center">
 
     <!-- TODO: Update blank fragment layout -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/setting_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#03A9F4"
+                android:layout_gravity="center_horizontal">
+            </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <TextView
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"

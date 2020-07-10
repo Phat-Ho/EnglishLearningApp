@@ -4,10 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="56dp">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/setting_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#03A9F4"
+                android:layout_gravity="center_horizontal">
+            </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
+
     <RelativeLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
@@ -28,155 +65,125 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+
+
+    <TextView
         android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+        android:id="@+id/textViewRowItem"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:text="@string/name"
+        android:textColor="#F44336"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/textViewRowItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/text_view_profile_background"
-            android:text="@string/name"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/profile_edt_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:text=""/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
+    <EditText
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edit_text_stroke"
+        android:id="@+id/profile_edt_name"
         android:layout_width="match_parent"
+        android:layout_height="35sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:text=""/>
+
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="Email"
+        android:textColor="#F44336"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"/>
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_view_profile_background"
-            android:text="Email"
-            android:textColor="#FFFF"
-            android:textSize="24sp"
-            android:layout_marginLeft="20dp"/>
-
-        <EditText
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:id="@+id/profile_edt_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text=""
-            android:focusable="false"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
+    <EditText
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/profile_edt_email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="35sp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        android:focusable="false"
+        android:background="@drawable/edit_text_stroke"/>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_view_profile_background"
-            android:text="@string/phone_number"
-            android:textColor="#FFFF"
-            android:textSize="24sp"
-            android:layout_marginLeft="20dp"/>
-
-        <EditText
-            android:id="@+id/profile_edt_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text=""
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:layout_marginTop="10dp"
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phone_number"
+        android:textColor="#F44336"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"/>
+
+    <EditText
+        android:layout_marginTop="5dp"
+        android:id="@+id/profile_edt_number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_view_profile_background"
-            android:text="@string/date_of_birth"
-            android:textColor="#FFFF"
-            android:textSize="24sp"
-            android:layout_marginLeft="20dp"/>
-
-        <EditText
-            android:id="@+id/profile_edt_dob"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/textView4"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:focusable="false"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-
-    </LinearLayout>
+        android:layout_height="35sp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/edit_text_stroke"/>
 
 
-    <LinearLayout
+    <TextView
         android:layout_marginTop="10dp"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date_of_birth"
+        android:textColor="#F44336"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"/>
+
+    <EditText
+        android:layout_marginTop="5dp"
+        android:id="@+id/profile_edt_dob"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_view_profile_background"
-            android:text="@string/language"
-            android:textColor="#FFFF"
-            android:textSize="24sp"
-            android:layout_marginLeft="20dp"/>
+        android:layout_height="35sp"
+        android:layout_toEndOf="@+id/textView4"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:focusable="false"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_text_stroke"/>
 
-        <LinearLayout
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/language"
+        android:textColor="#F44336"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"/>
+
+
+    <RelativeLayout
+        android:background="@drawable/custom_spinner"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="35sp"
+        android:layout_gravity="center">
+        <Spinner
+            android:id="@+id/profile_language_spinner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <RelativeLayout
-                android:background="@drawable/custom_spinner"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-                <Spinner
-                    android:id="@+id/profile_language_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-
-
-        </LinearLayout>
-    </LinearLayout>
-
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
     <LinearLayout
         android:weightSum="2"
         android:layout_marginTop="30dp"
@@ -212,5 +219,11 @@
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
+
+</LinearLayout>
+        
+    </ScrollView>
+
+
 
 </LinearLayout>
