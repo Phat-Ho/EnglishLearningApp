@@ -15,6 +15,7 @@ import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
+import com.example.englishlearningapp.utils.LoginManager;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class WelcomeActivity extends AppCompatActivity {
     DatabaseAccess databaseAccess;
     ArrayList<Choice> choiceList = null;
     ArrayList<Question> questionList = null;
+    LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +89,22 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeTxtMeaning4 = findViewById(R.id.welcome_txt_meaning_4);
         welcomeTxtQuestDetail = findViewById(R.id.welcome_txt_quest_detail);
         welcomeTxtTopic = findViewById(R.id.welcome_txt_topic);
+        loginManager = new LoginManager(WelcomeActivity.this);
     }
 
     private void HandleEvent(){
         welcomeBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                if (loginManager.isLogin() == true){
+                    Intent intent = new Intent(WelcomeActivity.this, MainHomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 

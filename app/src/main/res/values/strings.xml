@@ -43,6 +43,7 @@
     <string name="please_enter_email">Please enter Email</string>
     <string name="please_enter_password">Please enter Password</string>
     <string name="reset_password">Reset Password</string>
+    <string name="language">Language</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
