@@ -64,24 +64,16 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-//        btnLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-//                startActivity(loginIntent);
-//                finish();
-//            }
-//        });
-
     }
 
-    public void setLocale(String localeCode){
+    private void setLocale(String localeCode){
         Locale myLocale = new Locale(localeCode);
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
+
     }
 
     private void MappingView() {

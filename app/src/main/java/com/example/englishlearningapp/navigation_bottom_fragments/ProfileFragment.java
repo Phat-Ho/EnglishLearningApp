@@ -1,20 +1,28 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +30,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,10 +43,12 @@ import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.LoginActivity;
 import com.example.englishlearningapp.activity.MainActivity;
+import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONException;
@@ -46,6 +58,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -68,6 +81,9 @@ public class ProfileFragment extends Fragment {
     int userId = 0;
     Boolean isLogin = false;
     String REGISTER_URL = Server.REGISTER_URL;
+    Spinner spinnerLanguage;
+    String[] languages = new String[]{"Tiếng Việt", "English"};
+    SharedPreferences sharedPreferences;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -113,6 +129,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         MappingView(view);
         SetUserData();
+        handleSpinner();
         return view;
     }
 
@@ -313,5 +330,63 @@ public class ProfileFragment extends Fragment {
         btnProfileLogout = view.findViewById(R.id.profile_btn_logout);
         btnProfileSave = view.findViewById(R.id.profile_btn_save);
         progressBarProfile = view.findViewById(R.id.profile_progress_bar);
+        spinnerLanguage = view.findViewById(R.id.profile_language_spinner);
+        sharedPreferences = getActivity().getSharedPreferences("LanguageCheck", Context.MODE_PRIVATE);
+    }
+
+    private void handleSpinner(){
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
+        spinnerLanguage.setAdapter(adapter);
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", -1));
+        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            Boolean firstEvent = false;
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (firstEvent){
+                    if (position == 0) {
+                        setLocale("vi", 0);
+                    } else {
+                        setLocale("en", 1);
+                    }
+                    Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
+                    getActivity().finish();
+                    mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(mainHomeIntent);
+//                    getActivity().recreate();
+//                    FragmentManager manager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction trans = manager.beginTransaction();
+//                    trans.remove(ProfileFragment);
+//                    trans.commit();
+//                    manager.popBackStack();
+
+//                    getActivity().getSupportFragmentManager().beginTransaction().detach(ProfileFragment.this).attach(ProfileFragment.this).addToBackStack(null).commit();
+//                    firstEvent = false;
+                } else {
+                    if (position == 0) {
+                        setLocale("vi", 0);
+                    } else {
+                        setLocale("en", 1);
+                    }
+                    firstEvent = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setLocale(String localeCode, int position){
+        Locale myLocale = new Locale(localeCode);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("language", position);
+        editor.commit();
     }
 }

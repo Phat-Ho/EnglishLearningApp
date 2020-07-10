@@ -1,144 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-    <ImageView
-        android:id="@+id/imageViewAvatar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="19dp"
-        app:srcCompat="@drawable/person2"
-        tools:layout_marginTop="10dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignBottom="@+id/imageViewAvatar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
-
-    <TextView
-        android:id="@+id/textViewRowItem"
+    <RelativeLayout
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageViewAvatar"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/text_view_profile_background"
-        android:text="@string/name"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewRowItem"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/text_view_profile_background"
-        android:text="Email"
-        android:textColor="#FFFF"
-        android:textSize="24sp" />
+        <ImageView
+            android:id="@+id/imageViewAvatar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:srcCompat="@drawable/person2"/>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/text_view_profile_background"
-        android:text="@string/phone_number"
-        android:textColor="#FFFF"
-        android:textSize="24sp" />
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/imageViewAvatar"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/text_view_profile_background"
-        android:text="@string/date_of_birth"
-        android:textColor="#FFFF"
-        android:textSize="24sp" />
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/profile_edt_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageViewAvatar"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/textViewRowItem"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text=""/>
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/profile_edt_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_edt_name"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/textView2"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text=""
-        android:focusable="false"/>
+        <TextView
+            android:id="@+id/textViewRowItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/text_view_profile_background"
+            android:text="@string/name"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/profile_edt_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_edt_email"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/textView3"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text="" />
+        <EditText
+            android:id="@+id/profile_edt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text=""/>
 
-    <EditText
-        android:id="@+id/profile_edt_dob"
-        android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_edt_number"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/textView4"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:focusable="false"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_view_profile_background"
+            android:text="Email"
+            android:textColor="#FFFF"
+            android:textSize="24sp"
+            android:layout_marginLeft="20dp"/>
+
+        <EditText
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/profile_edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text=""
+            android:focusable="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_view_profile_background"
+            android:text="@string/phone_number"
+            android:textColor="#FFFF"
+            android:textSize="24sp"
+            android:layout_marginLeft="20dp"/>
+
+        <EditText
+            android:id="@+id/profile_edt_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text=""
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_view_profile_background"
+            android:text="@string/date_of_birth"
+            android:textColor="#FFFF"
+            android:textSize="24sp"
+            android:layout_marginLeft="20dp"/>
+
+        <EditText
+            android:id="@+id/profile_edt_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/textView4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:focusable="false"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_view_profile_background"
+            android:text="@string/language"
+            android:textColor="#FFFF"
+            android:textSize="24sp"
+            android:layout_marginLeft="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:background="@drawable/custom_spinner"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <Spinner
+                    android:id="@+id/profile_language_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="2"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profile_btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="@string/logout"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profile_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Save"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/profile_progress_bar"
@@ -149,28 +213,4 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profile_edt_dob"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/profile_btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:text="@string/logout" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/profile_btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Save" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>
