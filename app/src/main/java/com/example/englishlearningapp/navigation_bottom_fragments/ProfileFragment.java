@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
@@ -42,6 +43,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.LoginActivity;
 import com.example.englishlearningapp.activity.MainActivity;
+import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.utils.LoginManager;
@@ -334,14 +336,37 @@ public class ProfileFragment extends Fragment {
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
         spinnerLanguage.setAdapter(adapter);
-        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0));
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", -1));
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            Boolean firstEvent = false;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
-                    setLocale("vi", 0);
+                if (firstEvent){
+                    if (position == 0) {
+                        setLocale("vi", 0);
+                    } else {
+                        setLocale("en", 1);
+                    }
+                    Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
+                    getActivity().finish();
+                    mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(mainHomeIntent);
+//                    getActivity().recreate();
+//                    FragmentManager manager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction trans = manager.beginTransaction();
+//                    trans.remove(ProfileFragment);
+//                    trans.commit();
+//                    manager.popBackStack();
+
+//                    getActivity().getSupportFragmentManager().beginTransaction().detach(ProfileFragment.this).attach(ProfileFragment.this).addToBackStack(null).commit();
+//                    firstEvent = false;
                 } else {
-                    setLocale("en", 1);
+                    if (position == 0) {
+                        setLocale("vi", 0);
+                    } else {
+                        setLocale("en", 1);
+                    }
+                    firstEvent = true;
                 }
             }
 
