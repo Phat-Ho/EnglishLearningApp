@@ -67,4 +67,16 @@ public class Topic {
     public void setTopicImage(String topicImage) {
         this.topicImage = topicImage;
     }
+
+    @Override
+    public String toString() {
+        return "Topic{" +
+                "topicId=" + topicId +
+                ", topicName='" + topicName + '\'' +
+                ", topicNameVie='" + topicNameVie + '\'' +
+                ", topicImage='" + topicImage + '\'' +
+                ", active=" + active +
+                ", IdServer=" + IdServer +
+                '}';
+    }
 }
