@@ -181,6 +181,7 @@ public class ProfileFragment extends Fragment {
         StringRequest registerRequest = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.d(TAG, "onResponse: "+ response);
                 int userId = Integer.parseInt(response);
                 Log.d(TAG, "onResponse: " + response);
                 if (userId > 0) {

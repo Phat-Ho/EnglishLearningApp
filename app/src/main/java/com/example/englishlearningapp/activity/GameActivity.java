@@ -72,6 +72,7 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.on("sendGame", onSendGame);
         globalVariable.mSocket.on("sendTimer", onSendTimer);
         globalVariable.mSocket.on("sendResult", onSendResult);
+        globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
         globalVariable.mSocket.once("sendGameEnd", onSendGameEnd);
     }
 
@@ -82,6 +83,8 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.off("sendGame", onSendGame);
         globalVariable.mSocket.off("sendTimer", onSendTimer);
         globalVariable.mSocket.off("sendGameEnd");
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.off("sendResult");
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("gameId", gameId);
@@ -105,6 +108,44 @@ public class GameActivity extends AppCompatActivity {
                         String nextPlayer = resultObj.getString("nextPlayer");
                         int eliminatedPlayerId = resultObj.getInt("eliminatedPlayerId");
                         showResult(isCorrect, nextPlayer, eliminatedPlayerId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onSendRoomInfo = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send room info: " + args[0].toString());
+                    JSONObject roomObj = (JSONObject) args[0];
+                    try {
+                        JSONArray playerArray = roomObj.getJSONArray("players");
+                        int roomId = roomObj.getInt("id");
+                        String roomOwner = roomObj.getString("owner");
+                        String roomName = roomObj.getString("name");
+                        int length = playerArray.length();
+                        if(length > 0){
+                            ArrayList<Player> temp = new ArrayList<>();
+                            for (int i = 0; i < length; i++) {
+                                int id = playerArray.getJSONObject(i).getInt("playerId");
+                                String name = playerArray.getJSONObject(i).getString("playerName");
+                                Player player = new Player(id, name);
+                                temp.add(player);
+                            }
+                            Intent roomInfoIntent = new Intent(GameActivity.this, RoomInfoActivity.class);
+                            roomInfoIntent.putExtra("roomId", roomId);
+                            roomInfoIntent.putExtra("playerList", temp);
+                            roomInfoIntent.putExtra("roomOwner", roomOwner);
+                            roomInfoIntent.putExtra("roomName", roomName);
+                            startActivity(roomInfoIntent);
+                            finish();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

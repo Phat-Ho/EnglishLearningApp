@@ -25,6 +25,7 @@ import com.example.englishlearningapp.activity.ConnetedWordActivity;
 
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.TopicActivity;
 import com.example.englishlearningapp.activity.VietnameseActivity;
 import com.example.englishlearningapp.fragments.TopicFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
@@ -39,7 +40,6 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 
     ArrayList subjectImages;
     Context context;
-    TopicFragment topicFragment = new TopicFragment();
     HomeFragment homeFragment;
     LoginManager loginManager;
 
@@ -72,7 +72,8 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 0:
                         /*Intent subjectIntent = new Intent(context, SubjectActivity.class);
                         context.startActivity(subjectIntent);*/
-                        mainHomeActivity.showFragment(topicFragment);
+                        Intent topicIntent = new Intent(context, TopicActivity.class);
+                        context.startActivity(topicIntent);
                         break;
                     case 1:
                         //Navigate to Vietnamese - English Dictionary

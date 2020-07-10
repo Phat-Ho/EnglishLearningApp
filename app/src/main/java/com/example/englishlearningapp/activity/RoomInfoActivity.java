@@ -101,13 +101,17 @@ public class RoomInfoActivity extends AppCompatActivity {
         if(playerName != null){
             Player player = new Player(playerId, playerName);
             playerList.add(player);
-
         }
         ArrayList<Player> players = (ArrayList<Player>) intent.getSerializableExtra("playerList");
         if(players != null){
             playerList.addAll(players);
         }
-        Log.d(TAG, "GetIntentData: player List: " + playerList.toString());
+
+        if(playerList.get(0).getId() == playerId){
+            btnStart.setVisibility(View.VISIBLE);
+        }else{
+            btnStart.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void HandleStartGame() {
@@ -140,6 +144,12 @@ public class RoomInfoActivity extends AppCompatActivity {
                                 String name = playerArray.getJSONObject(i).getString("playerName");
                                 Player player = new Player(id, name);
                                 temp.add(player);
+                            }
+
+                            if(temp.get(0).getId() == loginManager.getUserId()){
+                                btnStart.setVisibility(View.VISIBLE);
+                            }else{
+                                btnStart.setVisibility(View.INVISIBLE);
                             }
                             playerList.clear();
                             playerList.addAll(temp);

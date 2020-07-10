@@ -26,8 +26,6 @@ import java.util.ArrayList;
 public class TopicFragment extends Fragment {
 
     private static final String TAG = "TopicFragment";
-    TextView subjectScore;
-    TextView subjectLevel;
     RecyclerView subjectRecyclerView;
     ArrayList<Topic> topicList;
     SubjectAdapter subjectAdapter;
