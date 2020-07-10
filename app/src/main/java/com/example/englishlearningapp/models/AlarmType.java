@@ -34,4 +34,13 @@ public class AlarmType {
     public void setChecked(boolean checked) {
         isChecked = checked;
     }
+
+    @Override
+    public String toString() {
+        return "AlarmType{" +
+                "alarmId=" + alarmId +
+                ", alarmName='" + alarmName + '\'' +
+                ", isChecked=" + isChecked +
+                '}';
+    }
 }

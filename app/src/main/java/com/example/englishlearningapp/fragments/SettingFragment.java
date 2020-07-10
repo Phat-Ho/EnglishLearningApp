@@ -230,6 +230,8 @@ public class SettingFragment extends Fragment {
                 }
             }
         }
+
+        Log.d(TAG, "SetUpListView: alarm List: " + alarmTypeList.toString());
         lvAdapter = new SettingListViewAdapter(this, alarmTypeList);
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -254,7 +256,6 @@ public class SettingFragment extends Fragment {
             }
         });
         lvSetting.setAdapter(lvAdapter);
-        Log.d("beanbean", alarmTypeList.get(16).isChecked + "");
     }
 
     public void reStartSwitch(){
