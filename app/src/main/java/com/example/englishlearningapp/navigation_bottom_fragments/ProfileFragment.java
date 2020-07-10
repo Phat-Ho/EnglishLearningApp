@@ -31,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
@@ -170,26 +171,30 @@ public class ProfileFragment extends Fragment {
         String email = loginManager.getUserEmail();
         String password = loginManager.getUserPassword();
 
-        final JSONObject parameter = new JSONObject();
+        final JSONObject body = new JSONObject();
         try {
-            parameter.put("Id", loginManager.getUserId());
-            parameter.put("Name", name);
-            parameter.put("Email", email);
-            parameter.put("Password", password);
-            parameter.put("NumberPhone", phoneNo);
-            parameter.put("Birthday", dob);
+            body.put("Id", loginManager.getUserId());
+            body.put("Name", name);
+            body.put("Email", email);
+            body.put("Password", password);
+            body.put("NumberPhone", phoneNo);
+            body.put("Birthday", dob);
         } catch (JSONException error){
             Log.d(TAG, "Register Json error: " + error.getMessage());
         }
 
         setProfileProgressBarVisibility(true);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        StringRequest registerRequest = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
+        JsonObjectRequest registerRequest = new JsonObjectRequest(Request.Method.POST,REGISTER_URL, body,new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 Log.d(TAG, "onResponse: "+ response);
-                int userId = Integer.parseInt(response);
-                Log.d(TAG, "onResponse: " + response);
+                int userId = 0;
+                try {
+                    userId = response.getInt("IdUser");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if (userId > 0) {
                     //Save user info to login manager
                     loginManager.setUserName(name);
@@ -207,17 +212,7 @@ public class ProfileFragment extends Fragment {
                 setProgressBarDelay(2000, "Đã xảy ra lỗi");
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
             }
-        }){
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                return parameter.toString().getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-        };
+        });
         requestQueue.add(registerRequest);
     }
 
