@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
-import com.example.englishlearningapp.models.Subject;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 

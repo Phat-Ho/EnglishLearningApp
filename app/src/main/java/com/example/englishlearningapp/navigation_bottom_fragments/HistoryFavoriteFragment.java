@@ -1,6 +1,5 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +22,6 @@ import com.example.englishlearningapp.fragments.RememberedFragment;
 import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.

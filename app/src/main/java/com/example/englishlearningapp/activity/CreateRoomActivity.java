@@ -1,16 +1,11 @@
 package com.example.englishlearningapp.activity;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -19,21 +14,18 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
-import com.example.englishlearningapp.models.Room;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 public class CreateRoomActivity extends AppCompatActivity {
 

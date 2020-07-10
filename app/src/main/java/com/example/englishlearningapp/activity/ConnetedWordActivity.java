@@ -8,20 +8,14 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
 import com.example.englishlearningapp.utils.GlobalVariable;
-import com.github.nkzawa.emitter.Emitter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

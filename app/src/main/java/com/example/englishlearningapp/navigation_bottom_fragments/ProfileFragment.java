@@ -2,14 +2,10 @@ package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -28,10 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,14 +34,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.activity.LoginActivity;
-import com.example.englishlearningapp.activity.MainActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
-import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
-import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONException;

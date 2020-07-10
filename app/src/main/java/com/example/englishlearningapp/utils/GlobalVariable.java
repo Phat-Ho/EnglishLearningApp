@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -14,7 +12,6 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
-import java.util.HashSet;
 
 public class GlobalVariable extends Application {
     private static GlobalVariable instance = null;

@@ -20,17 +20,14 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.englishlearningapp.activity.CameraActivity;
 import com.example.englishlearningapp.activity.ConnetedWordActivity;
 
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.TopicActivity;
 import com.example.englishlearningapp.activity.VietnameseActivity;
-import com.example.englishlearningapp.fragments.TopicFragment;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
 import com.example.englishlearningapp.utils.LoginManager;
-import com.example.englishlearningapp.utils.Server;
 
 import java.io.File;
 import java.util.ArrayList;
