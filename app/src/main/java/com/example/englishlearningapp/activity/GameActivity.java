@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.PlayerListGameAdapter;
+import com.example.englishlearningapp.models.HistoryGameWord;
 import com.example.englishlearningapp.models.Player;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -36,7 +37,7 @@ public class GameActivity extends AppCompatActivity {
     EditText edtWord;
     ImageButton imgBtnSend;
     TextView txtResult, txtNextPlayer;
-    MaterialButton btnExit, btnContinue, btnGameExit, btnGameContinue;
+    MaterialButton btnExit, btnContinue, btnGameExit, btnGameContinue, btnGameHistory;
     GlobalVariable globalVariable;
     ListView lvPlayerLeft;
     FrameLayout gameFrameLayout;
@@ -58,6 +59,12 @@ public class GameActivity extends AppCompatActivity {
         GetIntentData();
         SetUpListView();
         HandleButtonEvent();
+        globalVariable.mSocket.on("sendGame", onSendGame);
+        globalVariable.mSocket.on("sendTimer", onSendTimer);
+        globalVariable.mSocket.on("sendResult", onSendResult);
+        globalVariable.mSocket.once("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.once("sendGameEnd", onSendGameEnd);
+        globalVariable.mSocket.on("sendHistoryWord", onSendHistoryWord);
     }
 
     private void SetUpListView() {
@@ -69,11 +76,6 @@ public class GameActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        globalVariable.mSocket.on("sendGame", onSendGame);
-        globalVariable.mSocket.on("sendTimer", onSendTimer);
-        globalVariable.mSocket.on("sendResult", onSendResult);
-        globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
-        globalVariable.mSocket.once("sendGameEnd", onSendGameEnd);
     }
 
     @Override
@@ -82,9 +84,8 @@ public class GameActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy: game activity");
         globalVariable.mSocket.off("sendGame", onSendGame);
         globalVariable.mSocket.off("sendTimer", onSendTimer);
-        globalVariable.mSocket.off("sendGameEnd");
-        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
-        globalVariable.mSocket.off("sendResult");
+        globalVariable.mSocket.off("sendResult", onSendResult);
+        globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("gameId", gameId);
@@ -108,6 +109,41 @@ public class GameActivity extends AppCompatActivity {
                         String nextPlayer = resultObj.getString("nextPlayer");
                         int eliminatedPlayerId = resultObj.getInt("eliminatedPlayerId");
                         showResult(isCorrect, nextPlayer, eliminatedPlayerId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onSendHistoryWord = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send history word: " + args[0].toString());
+                    JSONArray historyArr = (JSONArray) args[0];
+                    try {
+                        int len = historyArr.length();
+                        if(len > 0){
+                            ArrayList<HistoryGameWord> temp = new ArrayList<>();
+                            for (int i = 0; i < len; i++) {
+                                String word = historyArr.getJSONObject(i).getString("word");
+                                String playerName = historyArr.getJSONObject(i).getString("playerName");
+                                HistoryGameWord historyWord = new HistoryGameWord(word, playerName);
+                                temp.add(historyWord);
+                            }
+
+                            Intent historyIntent = new Intent(GameActivity.this, GameHistoryActivity.class);
+                            historyIntent.putExtra("gameHistoryWord", temp);
+                            globalVariable.mSocket.off("sendGame", onSendGame);
+                            globalVariable.mSocket.off("sendTimer", onSendTimer);
+                            globalVariable.mSocket.off("sendResult", onSendResult);
+                            globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
+                            startActivity(historyIntent);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -143,6 +179,10 @@ public class GameActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            globalVariable.mSocket.off("sendGame", onSendGame);
+                            globalVariable.mSocket.off("sendTimer", onSendTimer);
+                            globalVariable.mSocket.off("sendResult", onSendResult);
+                            globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
                             startActivity(roomInfoIntent);
                             finish();
                         }
@@ -186,24 +226,18 @@ public class GameActivity extends AppCompatActivity {
             txtResult.setText("Đúng");
             txtNextPlayer.setText("Tiếp theo: " + pNextPlayer);
         }
-        if(pIsCorrect.equals("false")){
+        if(pIsCorrect.equals("false") || pIsCorrect.equals("timeOut") || pIsCorrect.equals("wordExisted")){
             txtResult.setTextColor(getResources().getColor(R.color.colorRed));
-            txtResult.setText("Sai");
-            if(playerId == loginManager.getUserId()){
-                globalVariable.mSocket.off("sendGame");
-                globalVariable.mSocket.off("sendResult");
-                globalVariable.mSocket.off("sendTimer");
-                txtNextPlayer.setText("Bạn đã bị loại");
-                btnExit.setVisibility(View.VISIBLE);
-                btnContinue.setVisibility(View.VISIBLE);
-            }else{
-                txtNextPlayer.setText("Tiếp theo: " + pNextPlayer);
-                btnExit.setVisibility(View.GONE);
-                btnContinue.setVisibility(View.GONE);
+            if(pIsCorrect.equals("false")){
+                txtResult.setText("Sai");
             }
-        }
-        if(pIsCorrect.equals("timeOut")){
-            txtResult.setText("Hết giờ");
+            if(pIsCorrect.equals("timeOut")){
+                txtResult.setText("Hết giờ");
+            }
+            if(pIsCorrect.equals("wordExisted")){
+                txtResult.setText("Đã tồn tại");
+            }
+
             if(playerId == loginManager.getUserId()){
                 globalVariable.mSocket.off("sendGame");
                 globalVariable.mSocket.off("sendResult");
@@ -361,6 +395,13 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btnGameHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariable.mSocket.emit("getHistoryWord", gameId);
+            }
+        });
     }
 
     private void InitialView() {
@@ -380,5 +421,6 @@ public class GameActivity extends AppCompatActivity {
         gameFrameLayout = findViewById(R.id.game_frame_layout);
         btnGameContinue = findViewById(R.id.btn_game_continue);
         btnGameExit = findViewById(R.id.btn_game_exit);
+        btnGameHistory = findViewById(R.id.btn_game_history);
     }
 }

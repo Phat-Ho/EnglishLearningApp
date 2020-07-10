@@ -53,8 +53,8 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         globalVariable.mSocket.off("roomList", onRetrieveRoomList);
         globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
     }

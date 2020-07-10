@@ -20,10 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.TopicActivity"></activity>
-        <activity android:name=".activity.GameActivity" />
+        <activity android:name=".activity.GameHistoryActivity"></activity>
+        <activity android:name=".activity.TopicActivity" />
+        <activity android:name=".activity.GameActivity"/>
         <activity android:name=".activity.RoomListActivity" />
-        <activity android:name=".activity.RoomInfoActivity" />
+        <activity android:name=".activity.RoomInfoActivity"/>
         <activity android:name=".activity.CreateRoomActivity" />
         <activity android:name=".activity.ConnetedWordActivity" />
         <activity android:name=".activity.TopicDetailActivity" />

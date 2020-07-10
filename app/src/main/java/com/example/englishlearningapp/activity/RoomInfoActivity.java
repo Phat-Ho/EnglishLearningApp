@@ -52,25 +52,21 @@ public class RoomInfoActivity extends AppCompatActivity {
         SetUpListView();
         SetUpToolbar();
         HandleStartGame();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         globalVariable.mSocket.on("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.once("sendGame", onSendGame);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
-        globalVariable.mSocket.off("sendGame", onSendGame);
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+        globalVariable.mSocket.off("sendGame", onSendGame);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("roomId", roomId);
@@ -194,6 +190,8 @@ public class RoomInfoActivity extends AppCompatActivity {
                         gameIntent.putExtra("currentWord", currentWord);
                         gameIntent.putExtra("gameId", gameId);
                         gameIntent.putExtra("playerList", temp);
+                        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+                        globalVariable.mSocket.off("sendGame", onSendGame);
                         startActivity(gameIntent);
                         finish();
                     } catch (JSONException e) {

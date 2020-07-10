@@ -28,7 +28,7 @@
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text="Connected Word Game"/>
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -184,6 +184,13 @@
             android:layout_width="250dp"
             android:backgroundTint="@color/colorRed"
             android:text="Thoát" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_game_history"
+            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:backgroundTint="#8F8F8F"
+            android:text="Lịch sử" />
 
     </LinearLayout>
 
