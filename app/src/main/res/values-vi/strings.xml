@@ -44,4 +44,5 @@
     <string name="please_enter_password">Vui lòng nhập Password</string>
     <string name="reset_password">Lấy lại mật khẩu</string>
     <string name="language">Ngôn ngữ</string>
+    <string name="account">Tài khoản</string>
 </resources>

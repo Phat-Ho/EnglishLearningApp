@@ -322,37 +322,58 @@ public class ProfileFragment extends Fragment {
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
         spinnerLanguage.setAdapter(adapter);
         spinnerLanguage.setSelection(sharedPreferences.getInt("language", -1));
+
+
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            int check = 0;
             Boolean firstEvent = false;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (firstEvent){
-                    if (position == 0) {
-                        setLocale("vi", 0);
-                    } else {
-                        setLocale("en", 1);
-                    }
-                    Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
-                    getActivity().finish();
-                    mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mainHomeIntent);
-//                    getActivity().recreate();
-//                    FragmentManager manager = getActivity().getSupportFragmentManager();
-//                    FragmentTransaction trans = manager.beginTransaction();
-//                    trans.remove(ProfileFragment);
-//                    trans.commit();
-//                    manager.popBackStack();
-
-//                    getActivity().getSupportFragmentManager().beginTransaction().detach(ProfileFragment.this).attach(ProfileFragment.this).addToBackStack(null).commit();
-//                    firstEvent = false;
-                } else {
-                    if (position == 0) {
-                        setLocale("vi", 0);
-                    } else {
-                        setLocale("en", 1);
-                    }
+                if (!firstEvent){
                     firstEvent = true;
+                    return;
                 }
+                if (position == 0) {
+                    setLocale("vi", 0);
+                } else {
+                    setLocale("en", 1);
+                }
+                Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
+                getActivity().finish();
+                mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainHomeIntent);
+
+
+
+
+//                if (firstEvent){
+//                    if (position == 0) {
+//                        setLocale("vi", 0);
+//                    } else {
+//                        setLocale("en", 1);
+//                    }
+//                    Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
+//                    getActivity().finish();
+//                    mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(mainHomeIntent);
+////                    getActivity().recreate();
+////                    FragmentManager manager = getActivity().getSupportFragmentManager();
+////                    FragmentTransaction trans = manager.beginTransaction();
+////                    trans.remove(ProfileFragment);
+////                    trans.commit();
+////                    manager.popBackStack();
+//
+////                    getActivity().getSupportFragmentManager().beginTransaction().detach(ProfileFragment.this).attach(ProfileFragment.this).addToBackStack(null).commit();
+////                    firstEvent = false;
+//                }
+//                else {
+//                    if (position == 0) {
+//                        setLocale("vi", 0);
+//                    } else {
+//                        setLocale("en", 1);
+//                    }
+//                    firstEvent = true;
+//                }
             }
 
             @Override
