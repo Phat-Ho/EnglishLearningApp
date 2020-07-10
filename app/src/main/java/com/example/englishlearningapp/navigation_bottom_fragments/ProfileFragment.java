@@ -1,8 +1,10 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -44,6 +46,7 @@ import com.example.englishlearningapp.activity.RegisterActivity;
 import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.example.englishlearningapp.utils.SharedPrefsManager;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONException;
@@ -78,6 +81,7 @@ public class ProfileFragment extends Fragment {
     String REGISTER_URL = Server.REGISTER_URL;
     Spinner spinnerLanguage;
     String[] languages = new String[]{"Tiếng Việt", "English"};
+    SharedPreferences sharedPreferences;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -324,18 +328,20 @@ public class ProfileFragment extends Fragment {
         btnProfileSave = view.findViewById(R.id.profile_btn_save);
         progressBarProfile = view.findViewById(R.id.profile_progress_bar);
         spinnerLanguage = view.findViewById(R.id.profile_language_spinner);
+        sharedPreferences = getActivity().getSharedPreferences("LanguageCheck", Context.MODE_PRIVATE);
     }
 
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
         spinnerLanguage.setAdapter(adapter);
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0));
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0){
-                    setLocale("vi");
+                    setLocale("vi", 0);
                 } else {
-                    setLocale("en");
+                    setLocale("en", 1);
                 }
             }
 
@@ -346,12 +352,15 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void setLocale(String localeCode){
+    private void setLocale(String localeCode, int position){
         Locale myLocale = new Locale(localeCode);
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("language", position);
+        editor.commit();
     }
 }
