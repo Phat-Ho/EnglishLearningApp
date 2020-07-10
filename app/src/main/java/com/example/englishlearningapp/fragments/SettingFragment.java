@@ -247,12 +247,14 @@ public class SettingFragment extends Fragment {
                     alarmPropsManager.setAlarmType(alarmId);
                     //Set isChecked props of selected item to true
                     alarmTypeList.get(position).setChecked(true);
-                    reStartSwitch();
+//                    reStartSwitch();
+                    swtReminder.setChecked(false);
                 }
                 lvAdapter.notifyDataSetChanged();
             }
         });
         lvSetting.setAdapter(lvAdapter);
+        Log.d("beanbean", alarmTypeList.get(16).isChecked + "");
     }
 
     public void reStartSwitch(){

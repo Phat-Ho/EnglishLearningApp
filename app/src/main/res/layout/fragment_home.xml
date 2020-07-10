@@ -17,7 +17,7 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/text_view_stroke"
         android:drawableRight="@drawable/ic_search"
-        android:hint="Search box"
+        android:hint="Search"
         android:paddingHorizontal="15dp"
         android:imeOptions="actionNext"
         android:inputType="text"

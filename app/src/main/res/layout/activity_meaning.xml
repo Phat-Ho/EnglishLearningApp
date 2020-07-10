@@ -41,7 +41,7 @@
         android:id="@+id/meaning_auto_complete_search_box"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="Search box"
+        android:hint="Search"
         android:drawableRight="@drawable/ic_search"
         android:background="@drawable/text_view_stroke"
         android:layout_marginHorizontal="20dp"

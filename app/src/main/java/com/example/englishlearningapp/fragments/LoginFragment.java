@@ -158,6 +158,8 @@ public class LoginFragment extends Fragment {
         } else if (password.isEmpty()){
             textInputLayoutPassword.setError(getString(R.string.please_enter_password));
         } else{
+            textInputLayoutEmail.setErrorEnabled(false);
+            textInputLayoutPassword.setErrorEnabled(false);
             setLoginProgressBarVisibility(true);
             //Bắt đầu gọi webservice để thực hiện đăng nhập thông qua thư viện Volley
             final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

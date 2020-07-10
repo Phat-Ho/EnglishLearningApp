@@ -47,8 +47,6 @@ public class TopicFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_subject, container, false);
-        subjectScore = view.findViewById(R.id.subject_score);
-        subjectLevel = view.findViewById(R.id.subject_level);
         subjectRecyclerView = view.findViewById(R.id.subject_recyclerview);
         return view;
     }
