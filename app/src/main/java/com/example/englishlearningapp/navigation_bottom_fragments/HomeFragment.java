@@ -161,18 +161,20 @@ public class HomeFragment extends Fragment {
                 String wordHeader = word.get(0).getWord();
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
+                String youtubeLink = databaseAccess.getWordsById(wordId).getYoutubeLink();
                 saveHistory(word.get(0).getId(), loginManager.getUserId());
-                RefreshScreen(wordHeader, wordHtml, wordId);
+                RefreshScreen(wordHeader, wordHtml, wordId, youtubeLink);
                 hideSoftKeyBoard();
             }
         });
     }
 
-    private void RefreshScreen(String word, String html, int wordId) {
+    private void RefreshScreen(String word, String html, int wordId, String youtubeLink) {
         Intent intent = new Intent(getContext(), MeaningActivity.class);
         intent.putExtra("word", word);
         intent.putExtra("html", html);
         intent.putExtra("id", wordId);
+        intent.putExtra("youtubeLink", youtubeLink);
         startActivity(intent);
     }
 

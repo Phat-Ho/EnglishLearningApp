@@ -115,6 +115,7 @@ public class DatabaseAccess {
             word.setDescription(cursor.getString(cursor.getColumnIndex("description")));
             word.setPronounce(cursor.getString(cursor.getColumnIndex("pronounce")));
             word.setHtml(cursor.getString(cursor.getColumnIndex("html")));
+            word.setYoutubeLink(cursor.getString(cursor.getColumnIndex("YoutubeLink")));
         }
         cursor.close();
         return word;

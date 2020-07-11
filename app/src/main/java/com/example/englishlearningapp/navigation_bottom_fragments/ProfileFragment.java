@@ -321,7 +321,7 @@ public class ProfileFragment extends Fragment {
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
         spinnerLanguage.setAdapter(adapter);
-        spinnerLanguage.setSelection(sharedPreferences.getInt("language", -1));
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 1));
 
 
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -338,11 +338,12 @@ public class ProfileFragment extends Fragment {
                 } else {
                     setLocale("en", 1);
                 }
-                Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
-                getActivity().finish();
-                mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(mainHomeIntent);
-
+                if (firstEvent == false) {
+                    Intent mainHomeIntent = new Intent(getActivity(), MainHomeActivity.class);
+                    getActivity().finish();
+                    mainHomeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(mainHomeIntent);
+                }
 
 
 

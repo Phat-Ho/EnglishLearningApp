@@ -49,6 +49,9 @@ import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -76,6 +79,9 @@ public class MeaningActivity extends AppCompatActivity {
     PopupHistoryAdapter popupHistoryAdapter;
     PopupRemindedAdapter popupRemindedAdapter;
     ArrayList<MyDate> historyDateList, remindedDateList;
+    YouTubePlayerView youTubePlayerView;
+    private YouTubePlayerView ytPlayer;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +226,18 @@ public class MeaningActivity extends AppCompatActivity {
                 saveHistory(dbWord.get(0).getId(), loginManager.getUserId());
             }
         } else {
+            final String youtubeLink = intent.getStringExtra("youtubeLink");
+            if (youtubeLink != null){
+                ytPlayer.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                    @Override
+                    public void onReady(YouTubePlayer youTubePlayer) {
+                        youTubePlayer.loadVideo(youtubeLink, 0);
+                    }
+                });
+            } else {
+                ytPlayer.setVisibility(View.INVISIBLE);
+            }
+
             contentHtml = intent.getStringExtra("html");
             ProcessingHTML(contentHtml);
             final String word = intent.getStringExtra("word");
@@ -271,6 +289,7 @@ public class MeaningActivity extends AppCompatActivity {
                 }
             }
         });
+        ytPlayer = findViewById(R.id.youtube_player_view);
     }
 
     @Override

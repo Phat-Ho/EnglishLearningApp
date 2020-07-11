@@ -9,6 +9,12 @@ public class Word implements Parcelable {
     private String pronounce;
     private String html;
     private int remembered;
+    private String youtubeLink;
+
+
+    public static Creator<Word> getCREATOR() {
+        return CREATOR;
+    }
 
     public Word() {
         this.id = 0;
@@ -98,6 +104,14 @@ public class Word implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
     }
 
     @Override

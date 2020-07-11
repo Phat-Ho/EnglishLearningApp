@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     androidTestImplementation 'androidx.test:core:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
