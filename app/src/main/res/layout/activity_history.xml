@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.HistoryActivity">
+    tools:context=".activity.GameHistoryActivity"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/history_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/history_tabLayout"
-            android:layout_width="match_parent"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:title=""/>
+        <TextView
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabIndicator="@color/colorPrimary"
-            app:tabIndicatorHeight="3dp"
-            app:tabGravity="fill"
-            style="@style/Widget.MaterialComponents.TabLayout" />
+            android:text="Lịch sử game"/>
+        </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/history_viewPager"
+    <ListView
+        android:id="@+id/history_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_margin="20dp"
+        android:padding="5dp"/>
+</LinearLayout>

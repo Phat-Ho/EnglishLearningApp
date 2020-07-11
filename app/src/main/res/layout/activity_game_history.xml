@@ -4,7 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".activity.GameHistoryActivity"
+tools:context=".activity.InGameHistoryActivity"
 android:orientation="vertical">
 
 <com.google.android.material.appbar.AppBarLayout
@@ -37,8 +37,8 @@ android:orientation="vertical">
     android:id="@+id/game_history_lv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
-    android:padding="10dp"
+    android:layout_margin="15dp"
+    android:padding="5dp"
     android:background="@drawable/text_view_stroke_2"/>
 
 </LinearLayout>

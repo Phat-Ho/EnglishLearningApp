@@ -45,6 +45,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
         imgResource = new ArrayList<>();
         imgResource.add(R.drawable.ic_logo);
         imgResource.add(R.drawable.ic_logo);
+        imgResource.add(R.drawable.ic_logo);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,6 +58,9 @@ public class ConnetedWordActivity extends AppCompatActivity {
                     case 1:
                         Intent roomListIntent = new Intent(ConnetedWordActivity.this, RoomListActivity.class);
                         startActivity(roomListIntent); break;
+                    case 2:
+                        Intent gameHistoryIntent = new Intent(ConnetedWordActivity.this, GameHistoryActivity.class);
+                        startActivity(gameHistoryIntent); break;
                 }
             }
         });

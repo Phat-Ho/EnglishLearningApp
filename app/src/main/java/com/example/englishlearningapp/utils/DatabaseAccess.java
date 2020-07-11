@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.englishlearningapp.models.Choice;
+import com.example.englishlearningapp.models.Game;
+import com.example.englishlearningapp.models.HistoryGameWord;
 import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
@@ -779,5 +781,57 @@ public class DatabaseAccess {
         cursor.close();
 
         return topic;
+    }
+
+    public long addGame(long date, String roomName){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.DATE, date);
+        values.put("roomName", roomName);
+        return database.insert("game_history", null, values);
+    }
+
+    public long addGameWord(long gameId, String word, String playerName){
+        ContentValues values = new ContentValues();
+        values.put("gameId", gameId);
+        values.put("word", word);
+        values.put("player_name", playerName);
+        return database.insert("game_history_detail", null, values);
+    }
+
+    public ArrayList<Game> getAllGame(){
+        ArrayList<Game> gameList = new ArrayList<>();
+        String query = "SELECT * FROM game_history";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                long gameDate = cursor.getLong(cursor.getColumnIndex("date"));
+                String roomName = cursor.getString(cursor.getColumnIndex("roomName"));
+                Game game = new Game(id, gameDate, roomName);
+                gameList.add(game);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return gameList;
+    }
+
+    public ArrayList<HistoryGameWord> getGameDetailById(int pId){
+        ArrayList<HistoryGameWord> gameWords = new ArrayList<>();
+        String query = "SELECT * FROM game_history_detail WHERE gameId = " + pId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                int gameId = cursor.getInt(cursor.getColumnIndex("gameId"));
+                String word = cursor.getString(cursor.getColumnIndex("word"));
+                String playerName = cursor.getString(cursor.getColumnIndex("player_name"));
+                HistoryGameWord gameWord = new HistoryGameWord(id, gameId, word, playerName);
+                gameWords.add(gameWord);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return gameWords;
     }
 }

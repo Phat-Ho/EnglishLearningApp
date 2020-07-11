@@ -45,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
     ArrayList<Player> playerList = new ArrayList<>();
     PlayerListGameAdapter playerAdapter;
     int gameId;
+    long gameDBId;
     LoginManager loginManager;
     DatabaseAccess databaseAccess;
 
@@ -136,7 +137,7 @@ public class GameActivity extends AppCompatActivity {
                                 temp.add(historyWord);
                             }
 
-                            Intent historyIntent = new Intent(GameActivity.this, GameHistoryActivity.class);
+                            Intent historyIntent = new Intent(GameActivity.this, InGameHistoryActivity.class);
                             historyIntent.putExtra("gameHistoryWord", temp);
                             globalVariable.mSocket.off("sendGame", onSendGame);
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
@@ -203,17 +204,33 @@ public class GameActivity extends AppCompatActivity {
                     Log.d(TAG, "send game end: " + args[0].toString());
                     globalVariable.mSocket.off("sendGame", onSendGame);
                     globalVariable.mSocket.off("sendTimer", onSendTimer);
-                    String winner = args[0].toString();
-                    gameFrameLayout.setVisibility(View.VISIBLE);
-                    txtResult.setVisibility(View.INVISIBLE);
-                    txtNextPlayer.setText(winner + " là người chiến thắng");
-                    txtNextPlayer.setTextColor(getResources().getColor(R.color.colorRed));
-                    gameBtnWrapper.setVisibility(View.VISIBLE);
-                    lvPlayerLeft.setVisibility(View.GONE);
-                    txtPlayersOrder.setVisibility(View.GONE);
-                    btnExit.setVisibility(View.GONE);
-                    btnContinue.setVisibility(View.GONE);
-                    txtTimer.setVisibility(View.INVISIBLE);
+                    JSONObject obj = (JSONObject) args[0];
+
+                    String winner = null;
+                    JSONArray array = null;
+                    try {
+                        winner = obj.getString("winner");
+                        array = obj.getJSONArray("historyWord");
+
+                        gameFrameLayout.setVisibility(View.VISIBLE);
+                        txtResult.setVisibility(View.INVISIBLE);
+                        txtNextPlayer.setText(winner + " là người chiến thắng");
+                        txtNextPlayer.setTextColor(getResources().getColor(R.color.colorRed));
+                        gameBtnWrapper.setVisibility(View.VISIBLE);
+                        lvPlayerLeft.setVisibility(View.GONE);
+                        txtPlayersOrder.setVisibility(View.GONE);
+                        btnExit.setVisibility(View.GONE);
+                        btnContinue.setVisibility(View.GONE);
+                        txtTimer.setVisibility(View.INVISIBLE);
+                        int len = array.length();
+                        for (int i = 0; i < len; i++) {
+                            String word = array.getJSONObject(i).getString("word");
+                            String playerName = array.getJSONObject(i).getString("playerName");
+                            databaseAccess.addGameWord(gameDBId, word, playerName);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -322,6 +339,7 @@ public class GameActivity extends AppCompatActivity {
     private void GetIntentData() {
         Intent intent = getIntent();
         gameId = intent.getIntExtra("gameId", 0);
+        gameDBId = intent.getLongExtra("gameDBId", 0);
         playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
 
         if(playerList.get(0).getId() != loginManager.getUserId()){

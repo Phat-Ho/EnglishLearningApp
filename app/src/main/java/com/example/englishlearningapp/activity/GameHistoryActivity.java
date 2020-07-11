@@ -1,54 +1,70 @@
 package com.example.englishlearningapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.adapters.HistoryGameAdapter;
+import com.example.englishlearningapp.adapters.GameHistoryAdapter;
+import com.example.englishlearningapp.models.Game;
 import com.example.englishlearningapp.models.HistoryGameWord;
+import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 
 public class GameHistoryActivity extends AppCompatActivity {
-    Toolbar historyGameToolbar;
-    ListView historyGameListView;
-    HistoryGameAdapter adapter;
-    ArrayList<HistoryGameWord> wordList = new ArrayList<>();
+    Toolbar historyToolbar;
+    ListView historyListView;
+    ArrayList<Game> gameList;
+    DatabaseAccess databaseAccess;
+    GameHistoryAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_history);
-        SetUpView();
+        GlobalVariable.changeStatusBarColor(GameHistoryActivity.this);
+        setContentView(R.layout.activity_history);
+        databaseAccess = DatabaseAccess.getInstance(this);
+        MappingView();
         SetUpToolbar();
         SetUpListView();
     }
 
-    private void SetUpView() {
-        historyGameToolbar = findViewById(R.id.game_history_toolbar);
-        historyGameListView = findViewById(R.id.game_history_lv);
-    }
-
     private void SetUpListView() {
-        ArrayList<HistoryGameWord> tempList = (ArrayList<HistoryGameWord>) getIntent().getSerializableExtra("gameHistoryWord");
-        wordList.addAll(tempList);
-        adapter = new HistoryGameAdapter(this, wordList);
-        historyGameListView.setAdapter(adapter);
+        gameList = databaseAccess.getAllGame();
+        adapter = new GameHistoryAdapter(this, gameList);
+        historyListView.setAdapter(adapter);
+        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<HistoryGameWord> wordList = databaseAccess.getGameDetailById(gameList.get(position).getId());
+                Intent intent = new Intent(GameHistoryActivity.this, InGameHistoryActivity.class);
+                intent.putExtra("gameHistoryWord", wordList);
+                startActivity(intent);
+            }
+        });
     }
 
     private void SetUpToolbar() {
-        setSupportActionBar(historyGameToolbar);
-        historyGameToolbar.setTitle("");
-        setSupportActionBar(historyGameToolbar);
+        historyToolbar.setTitle("");
+        setSupportActionBar(historyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        historyGameToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        historyToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    private void MappingView() {
+        historyToolbar = findViewById(R.id.history_toolbar);
+        historyListView = findViewById(R.id.history_lv);
     }
 }

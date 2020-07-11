@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.GameHistoryActivity"></activity>
+        <activity android:name=".activity.InGameHistoryActivity"></activity>
         <activity android:name=".activity.TopicActivity" />
         <activity android:name=".activity.GameActivity"/>
         <activity android:name=".activity.RoomListActivity" />
@@ -56,7 +56,7 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HistoryActivity" />
+        <activity android:name=".activity.GameHistoryActivity" />
         <activity android:name=".activity.ScheduleActivity" />
         <activity android:name=".activity.MainHomeActivity" />
         <activity android:name=".activity.RegisterActivity" />

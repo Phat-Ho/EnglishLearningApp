@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.PlayerListRoomAdapter;
 import com.example.englishlearningapp.models.Player;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
@@ -38,6 +39,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     ArrayList<Player> playerList = new ArrayList<>();
     GlobalVariable globalVariable;
     LoginManager loginManager;
+    DatabaseAccess databaseAccess;
     int roomId;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -47,6 +49,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_info);
         globalVariable = GlobalVariable.getInstance(this);
         loginManager = new LoginManager(this);
+        databaseAccess = DatabaseAccess.getInstance(this);
         initView();
         GetIntentData();
         SetUpListView();
@@ -186,13 +189,18 @@ public class RoomInfoActivity extends AppCompatActivity {
                                 temp.add(player);
                             }
                         }
+                        long date = gameObj.getLong("date");
+                        String roomName = gameObj.getString("roomName");
+                        long gameDBId = databaseAccess.addGame(date, roomName);
                         Intent gameIntent = new Intent(RoomInfoActivity.this, GameActivity.class);
                         gameIntent.putExtra("currentWord", currentWord);
                         gameIntent.putExtra("gameId", gameId);
                         gameIntent.putExtra("playerList", temp);
+                        gameIntent.putExtra("gameDBId", gameDBId);
                         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
                         globalVariable.mSocket.off("sendGame", onSendGame);
                         startActivity(gameIntent);
+
                         finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
