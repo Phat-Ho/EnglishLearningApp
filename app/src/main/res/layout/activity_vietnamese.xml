@@ -39,6 +39,7 @@
 
 
     <EditText
+        android:background="@drawable/text_view_stroke"
         android:id="@+id/vn_edt_search"
         android:layout_margin="10dp"
         android:layout_width="match_parent"

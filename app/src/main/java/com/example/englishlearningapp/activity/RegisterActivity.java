@@ -99,15 +99,19 @@ public class RegisterActivity extends AppCompatActivity {
         final String password = registerPassword.getText().toString().trim();
 
         //Kiểm chứng email và password
-        if(!isValidEmail(email)){
-            registerTextInputEmail.setError("Email không hợp lệ");
-        }else{
-            if(!isValidPassword(password)){
-                registerTextInputPassword.setError("Password phải nhiều hơn 8 kí tự, gôm cả chữ và số");
-            }else{
-                registerProgressBar.setVisibility(View.VISIBLE);
-                registerButton.setVisibility(View.GONE);
-                registerUser(email, password);
+        if (email.isEmpty()){
+            registerTextInputEmail.setError(getResources().getString(R.string.please_enter_email));
+        } else {
+            if (!isValidEmail(email)) {
+                registerTextInputEmail.setError(getResources().getString(R.string.invalid_email));
+            } else {
+                if (!isValidPassword(password)) {
+                    registerTextInputPassword.setError(getResources().getString(R.string.invalid_password));
+                } else {
+                    registerProgressBar.setVisibility(View.VISIBLE);
+                    registerButton.setVisibility(View.GONE);
+                    registerUser(email, password);
+                }
             }
         }
     }

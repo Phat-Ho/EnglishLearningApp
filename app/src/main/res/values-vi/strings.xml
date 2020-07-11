@@ -9,6 +9,7 @@
     <string name="login_with_google">Đăng nhập bằng Google</string>
     <string name="login_with_facebook">Đăng nhập bằng Facebook</string>
     <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="forgot_password2">Quên mật khẩu</string>
     <string name="or_sign_in_with">Hoặc đăng nhập bằng </string>
     <string name="navigation_home">Trang chủ</string>
     <string name="navigation_search">Tìm kiếm</string>
@@ -45,4 +46,6 @@
     <string name="reset_password">Lấy lại mật khẩu</string>
     <string name="language">Ngôn ngữ</string>
     <string name="account">Tài khoản</string>
+    <string name="invalid_email">Email không hợp lệ</string>
+    <string name="invalid_password">Password phải nhiều hơn 8 kí tự, gôm cả chữ và số</string>
 </resources>

@@ -9,6 +9,7 @@
     <string name="login_with_google">Login With Google</string>
     <string name="login_with_facebook">Login With Facebook</string>
     <string name="forgot_password">Forgot your password?</string>
+    <string name="forgot_password2">Forgot your password</string>
     <string name="or_sign_in_with">Or sign in with </string>
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Search</string>
@@ -45,7 +46,8 @@
     <string name="reset_password">Reset Password</string>
     <string name="language">Language</string>
     <string name="account">Account</string>
-
+    <string name="invalid_email">Invalid Email</string>
+    <string name="invalid_password">Password must be more than 8 characters including alphabet and number</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
