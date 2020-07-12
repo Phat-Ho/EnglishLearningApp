@@ -421,7 +421,10 @@ public class DatabaseAccess {
     }
 
     public long getHistoryWordsCount(){
-        return DatabaseUtils.queryNumEntries(database, DatabaseContract.HISTORY_TABLE);
+        String query = "SELECT * FROM history GROUP BY wordId";
+        Cursor cursor = database.rawQuery(query, null);
+        return cursor.getCount();
+//        return DatabaseUtils.queryNumEntries(database, DatabaseContract.HISTORY_TABLE);
     }
 
     public String getDatetime(){

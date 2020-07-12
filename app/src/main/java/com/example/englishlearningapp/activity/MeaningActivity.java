@@ -1,8 +1,11 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 
 import android.app.Activity;
@@ -49,6 +52,7 @@ import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -79,7 +83,6 @@ public class MeaningActivity extends AppCompatActivity {
     PopupHistoryAdapter popupHistoryAdapter;
     PopupRemindedAdapter popupRemindedAdapter;
     ArrayList<MyDate> historyDateList, remindedDateList;
-    YouTubePlayerView youTubePlayerView;
     private YouTubePlayerView ytPlayer;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -143,25 +146,47 @@ public class MeaningActivity extends AppCompatActivity {
 
                 String wordHtml = word.get(0).getHtml();
                 int wordId = word.get(0).getId();
+                String ytLink = databaseAccess.getWordsById(wordId).getYoutubeLink();
                 saveHistory(word.get(0).getId(), loginManager.getUserId());
-                RefreshScreen(wordHeader, wordHtml, wordId);
+
+                RefreshScreen(wordHeader, wordHtml, wordId, ytLink);
                 hideSoftKeyBoard();
             }
         });
     }
 
-    private void RefreshScreen(String word, String html, int wordId) {
+    private void RefreshScreen(String word, String html, int wordId, String youtubeLink) {
         Intent intent = new Intent(this, MeaningActivity.class);
         intent.putExtra("word", word);
         intent.putExtra("html", html);
         intent.putExtra("id", wordId);
+        intent.putExtra("youtubeLink", youtubeLink);
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("beanbean", "onStart: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("beanbean", "onREStart: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("beanbean", "onResume: ");
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.d("beanbean", "onNewIntent: ");
+
         if(intent.hasExtra("show_popup")){
             int wordId = intent.getIntExtra("id", 0);
             String word = intent.getStringExtra("word");
@@ -169,8 +194,36 @@ public class MeaningActivity extends AppCompatActivity {
             showPopup(wordId, word, description);
         }
         if(intent.hasExtra("word")){
+//            ytPlayer.release();
+
             String contentHtml = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
+            final String ytLink = intent.getStringExtra("youtubeLink");
+            if (ytLink != null){
+                ytPlayer.setVisibility(View.VISIBLE);
+                ytPlayer.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+
+//                    @Override
+//                    public void onReady(YouTubePlayer youTubePlayer) {
+//                        youTubePlayer.loadVideo(ytLink, 0);
+//                    }
+
+
+                    @Override
+                    public void onReady(YouTubePlayer youTubePlayer) {
+                        super.onReady(youTubePlayer);
+                        youTubePlayer.loadVideo(ytLink, 0);
+                    }
+
+//                    @Override
+//                    public void onCurrentSecond(YouTubePlayer youTubePlayer, float second) {
+//                        youTubePlayer.loadVideo(ytLink, second);
+//
+//                    }
+                });
+            } else {
+                ytPlayer.setVisibility(View.GONE);
+            }
             int start = contentHtml.indexOf("<h1>");
             int end = contentHtml.indexOf("<h2>");
             String replacement = "";
@@ -235,7 +288,7 @@ public class MeaningActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                ytPlayer.setVisibility(View.INVISIBLE);
+                ytPlayer.setVisibility(View.GONE);
             }
 
             contentHtml = intent.getStringExtra("html");
@@ -295,6 +348,7 @@ public class MeaningActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("beanbean", "onDestroy: ");
         tts.shutdown();
     }
 

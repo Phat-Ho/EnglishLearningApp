@@ -69,7 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/youtube_player_view"
-                app:autoPlay="false"/>
+                app:autoPlay="false"
+                app:enableAutomaticInitialization="false"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
