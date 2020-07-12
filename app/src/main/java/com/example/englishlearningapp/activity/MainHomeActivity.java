@@ -103,6 +103,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == HomeGridViewAdapter.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk

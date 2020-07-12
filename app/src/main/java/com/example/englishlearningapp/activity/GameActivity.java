@@ -2,10 +2,12 @@ package com.example.englishlearningapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -207,6 +209,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d(TAG, "send game end: " + args[0].toString());
                     globalVariable.mSocket.off("sendGame", onSendGame);
                     globalVariable.mSocket.off("sendTimer", onSendTimer);
+                    hideSoftKeyBoard();
                     JSONObject obj = (JSONObject) args[0];
 
                     String winner = null;
@@ -296,6 +299,7 @@ public class GameActivity extends AppCompatActivity {
                         if(playerOrderArray.getJSONObject(0).getInt("playerId") != loginManager.getUserId() || playerOrderArray.length() == 1){
                             edtWord.setVisibility(View.GONE);
                             imgBtnSend.setVisibility(View.GONE);
+                            hideSoftKeyBoard();
                         }else {
                             edtWord.setVisibility(View.VISIBLE);
                             imgBtnSend.setVisibility(View.VISIBLE);
@@ -452,5 +456,13 @@ public class GameActivity extends AppCompatActivity {
         btnGameContinue = findViewById(R.id.btn_game_continue);
         btnGameExit = findViewById(R.id.btn_game_exit);
         btnGameHistory = findViewById(R.id.btn_game_history);
+    }
+
+    private void hideSoftKeyBoard() {
+        View v = getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

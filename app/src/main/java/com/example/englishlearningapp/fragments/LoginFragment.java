@@ -250,7 +250,6 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getActivity(), "Error: " + error.getMessage() == null ? "null pointer" : error.getMessage(), Toast.LENGTH_SHORT).show();
                         setLoginProgressBarVisibility(false);
                     }
-
                 }
             });
             requestQueue.add(loginRequest);
