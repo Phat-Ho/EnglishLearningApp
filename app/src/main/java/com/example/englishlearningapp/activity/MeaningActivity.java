@@ -149,6 +149,7 @@ public class MeaningActivity extends AppCompatActivity {
                 link = ytLink;
                 if(ytPlayer != null){
                     ytPlayer.pause();
+
                 }
                 saveHistory(word.get(0).getId(), loginManager.getUserId());
                 RefreshScreen(wordHeader, wordHtml, wordId, ytLink);
@@ -244,6 +245,16 @@ public class MeaningActivity extends AppCompatActivity {
                 txtWordHtml.setText("Không tìm thấy kết quả. Vui lòng bỏ /s/ và /ed/ khi tra từ");
                 imgBtnPronounce.setVisibility(View.INVISIBLE);
             } else {
+                int wordId = dbWord.get(0).getId();
+                final String youtubeLink = databaseAccess.getWordsById(wordId).getYoutubeLink();
+
+                link = youtubeLink;
+                if (youtubeLink != null){
+//                ytPlayerView.removeYouTubePlayerListener(playVideo);
+                    ytPlayerView.addYouTubePlayerListener(playVideo);
+                } else {
+                    ytPlayerView.setVisibility(View.GONE);
+                }
                 contentHtml = dbWord.get(0).getHtml();
                 ProcessingHTML(contentHtml);
                 loadingImage(dbWord.get(0).getWord());
@@ -294,15 +305,15 @@ public class MeaningActivity extends AppCompatActivity {
             Log.d("beanbean", "onStateChange: " + state.toString());
             if(state.toString().equals("PAUSED")){
                 Log.d(TAG, "onLink: " + link);
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
                         youTubePlayer.loadVideo(link, 0);
 
-                    }
-                };
-                Handler handler = new Handler();
-                handler.postDelayed(runnable, 1000);
+//                    }
+//                };
+//                Handler handler = new Handler();
+//                handler.postDelayed(runnable, 1000);
             }
         }
     }
@@ -314,6 +325,7 @@ public class MeaningActivity extends AppCompatActivity {
         String toBeReplaced = contentHtml.substring(start, end);
         String wordHtml = toBeReplaced;
         String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));

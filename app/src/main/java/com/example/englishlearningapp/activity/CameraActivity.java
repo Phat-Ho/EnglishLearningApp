@@ -118,15 +118,11 @@ public class CameraActivity extends AppCompatActivity {
                 TextBlock item = items.valueAt(i);
                 String[] words = item.getValue().split(" ");
                 for (String word: words) {
-                    String contentHTML = databaseAccess.getWords(word).get(0).getHtml();
-                    int start = contentHTML.indexOf("<h1>");
-                    int end = contentHTML.indexOf("<li>") + 4;
-                    String firstReplaced = contentHTML.substring(start, end);
-                    String firstWord = contentHTML.replace(firstReplaced, "");
-                    int start2 = firstWord.indexOf("</li>");
-                    int end2 = firstWord.lastIndexOf(">") + 1;
-                    String secondReplaced = firstWord.substring(start2, end2);
-                    String meaning = firstWord.replace(secondReplaced, "");
+                    String description = databaseAccess.getWords(word).get(0).getDescription();
+                    int start = 0;
+                    int end = description.indexOf(":" + 1);
+                    String toBeReplaced = description.substring(start, end);
+                    String meaning = description.replace(toBeReplaced,"");
                     arrCaptureText.add(word + ": " + meaning);
                 }
             }
