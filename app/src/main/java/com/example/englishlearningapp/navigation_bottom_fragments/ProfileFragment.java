@@ -38,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.fragments.LoginFragment;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.google.android.material.button.MaterialButton;
@@ -75,6 +76,7 @@ public class ProfileFragment extends Fragment {
     Spinner spinnerLanguage;
     String[] languages = new String[]{"Tiếng Việt", "English"};
     SharedPreferences sharedPreferences;
+    DatabaseAccess databaseAccess;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -110,6 +112,7 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         loginManager = new LoginManager(getActivity());
+        databaseAccess = DatabaseAccess.getInstance(getActivity());
         Log.d(TAG, "isLogin: " + loginManager.isLogin());
     }
 
@@ -119,7 +122,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         MappingView(view);
-        SetUserData();
         handleSpinner();
         return view;
     }
@@ -128,6 +130,12 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         HandleButtonEvent();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        SetUserData();
     }
 
     private void HandleButtonEvent() {
@@ -139,6 +147,9 @@ public class ProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
                     LoginFragment loginFragment = new LoginFragment();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, loginFragment).commit();
+                    databaseAccess.clearFavorite();
+                    databaseAccess.clearHistory();
+                    databaseAccess.clearRemembered();
                 }else{
                     Toast.makeText(getActivity(), "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
                 }
@@ -254,7 +265,6 @@ public class ProfileFragment extends Fragment {
         String dob;
         String userPhoneNo;
 
-
         if(isLogin){
             userId = loginManager.getUserId();
             userName = loginManager.getUserName();
@@ -367,5 +377,14 @@ public class ProfileFragment extends Fragment {
         public void onNothingSelected(AdapterView<?> parent) {
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        txtProfileEmail.setText("");
+        edtProfileName.setText("");
+        edtProfilePhoneNo.setText("");
+        edtProfileDOB.setText("");
     }
 }

@@ -167,6 +167,18 @@ public class DatabaseAccess {
         return wordList;
     }
 
+    public void clearHistory(){
+        database.delete(DatabaseContract.HISTORY_TABLE, null, null);
+    }
+
+    public void clearFavorite(){
+        database.delete(DatabaseContract.FAVORITE_TABLE, null, null);
+    }
+
+    public void clearRemembered(){
+        database.delete(DatabaseContract.REMEMBERED_TABLE, null, null);
+    }
+
     public ArrayList<Word> getHistoryWordsWithDuplicateSortByAZ(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +

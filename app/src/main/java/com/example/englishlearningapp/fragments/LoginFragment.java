@@ -50,6 +50,15 @@ public class LoginFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "LoginFragment";
+    MaterialButton btnLogin, btnRegister, btnForgotPassword;
+    TextInputEditText txtEmail, txtPassword;
+    ProgressBar loginProgressBar;
+    TextInputLayout textInputLayoutPassword, textInputLayoutEmail;
+    public String LOGIN_URL = Server.LOGIN_URL;
+    NetworkChangeReceiver networkChangeReceiver = null;
+    LoginManager loginManager;
+    DatabaseAccess databaseAccess;
+    boolean isRegistered = false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,15 +94,6 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
-    MaterialButton btnLogin, btnRegister, btnForgotPassword;
-    TextInputEditText txtEmail, txtPassword;
-    ProgressBar loginProgressBar;
-    TextInputLayout textInputLayoutPassword, textInputLayoutEmail;
-    public String LOGIN_URL = Server.LOGIN_URL;
-    NetworkChangeReceiver networkChangeReceiver = null;
-    LoginManager loginManager;
-    DatabaseAccess databaseAccess;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -280,6 +280,7 @@ public class LoginFragment extends Fragment {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         networkChangeReceiver = new NetworkChangeReceiver();
         getActivity().registerReceiver(networkChangeReceiver, intentFilter);
+        isRegistered = true;
     }
 
     private void setLoginProgressBarVisibility(boolean isVisible){
@@ -297,8 +298,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(networkChangeReceiver != null){
+        if(networkChangeReceiver != null && isRegistered){
             getActivity().unregisterReceiver(networkChangeReceiver);
+            networkChangeReceiver = null;
+            isRegistered = false;
         }
+        txtEmail.setText("");
+        txtPassword.setText("");
     }
 }
