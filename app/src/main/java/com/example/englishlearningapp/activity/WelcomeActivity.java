@@ -218,6 +218,7 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeBtn2.setEnabled(false);
         welcomeBtn3.setEnabled(false);
         welcomeBtn4.setEnabled(false);
+        welcomeBtnNext.setVisibility(View.VISIBLE);
     }
 
     private int randomIndex(int arraySize){

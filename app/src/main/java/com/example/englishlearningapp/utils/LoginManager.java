@@ -91,6 +91,6 @@ public class LoginManager {
     public void logout(){
         editor = sharedPreferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 }

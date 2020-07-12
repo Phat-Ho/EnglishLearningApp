@@ -231,7 +231,7 @@ public class SettingFragment extends Fragment {
             }
         }
 
-        Log.d(TAG, "SetUpListView: alarm List: " + alarmTypeList.toString());
+        Log.d(TAG, "SetUpListView: alarm List length: " + alarmTypeList.size());
         lvAdapter = new SettingListViewAdapter(this, alarmTypeList);
         lvSetting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -272,7 +272,7 @@ public class SettingFragment extends Fragment {
         }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
             wordList = db.getFavoriteWords();
         }else{
-            wordList = db.getWordsRememberByTopicId(alarmId);
+            wordList = db.getWordsByTopicId(alarmId);
         }
 
         settingPopup.setContentView(R.layout.popup_setting);

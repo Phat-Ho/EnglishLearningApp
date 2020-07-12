@@ -246,8 +246,11 @@ public class LoginFragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    setLoginProgressBarVisibility(false);
+                    if(error != null){
+                        Toast.makeText(getActivity(), "Error: " + error.getMessage() == null ? "null pointer" : error.getMessage(), Toast.LENGTH_SHORT).show();
+                        setLoginProgressBarVisibility(false);
+                    }
+
                 }
             });
             requestQueue.add(loginRequest);

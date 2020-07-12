@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/text_view_stroke"
         android:drawableRight="@drawable/ic_search"
         android:hint="Search"
@@ -52,7 +52,7 @@
         android:nextFocusUp="@id/meaning_auto_complete_search_box_home"/>
 
     <RelativeLayout
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

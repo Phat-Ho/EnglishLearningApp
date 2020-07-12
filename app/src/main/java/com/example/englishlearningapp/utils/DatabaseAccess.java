@@ -607,23 +607,23 @@ public class DatabaseAccess {
     }
 
     public int getWordCountByTopicId(int topicId){
-        ArrayList<Word> wordList;
-        wordList = getWordsRememberByTopicId(topicId);
-        return wordList.size();
+        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE idTopic LIKE '%," + topicId + ",%'" + "LIMIT 100", null);
+        return cursor.getCount();
     }
 
-    public void setTopicRemember(int wordId, int topicId){
+    public long setTopicRemember(int wordId, int topicId){
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.REMEMBERED, 1);
-        String selection = "wordId = " + wordId + " AND " + "topicId = " + topicId;
-        database.update(DatabaseContract.TOPIC_REMEMBER_TABLE, values, selection, null);
+        values.put(DatabaseContract.WORD_ID, wordId);
+        values.put(DatabaseContract.TOPIC_ID, topicId);
+        return database.insert(DatabaseContract.TOPIC_REMEMBER_TABLE, null, values);
     }
 
     public ArrayList<Word> getWordsRememberByTopicId(int topicId) {
         ArrayList<Word> list = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT av.id, av.word, av.html, av.description, av.pronounce, topicRemember.remembered " +
-                                                "FROM topicRemember JOIN av on topicRemember.wordId = av.id " +
-                                                "WHERE topicRemember.topicId = " + topicId, null);
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink, topicRemember.wordId " +
+                "FROM av LEFT JOIN topicRemember ON av.id = topicRemember.wordId " +
+                "WHERE av.idTopic like '%," + topicId + ",%' AND topicRemember.wordId NOT NULL";
+        Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Word word = new Word();
@@ -632,7 +632,8 @@ public class DatabaseAccess {
             word.setHtml(cursor.getString(2));
             word.setDescription(cursor.getString(3));
             word.setPronounce(cursor.getString(4));
-            word.setRemembered(cursor.getInt(5));
+            word.setYoutubeLink(cursor.getString(5));
+            word.setRemembered(1);
             list.add(word);
             cursor.moveToNext();
         }
@@ -643,9 +644,10 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getWordAlarmByTopicId(int topicId) {
         ArrayList<Word> list = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT av.id, av.word, av.html, av.description, av.pronounce, topicRemember.remembered " +
-                "FROM topicRemember JOIN av on topicRemember.wordId = av.id " +
-                "WHERE topicRemember.topicId = " + topicId + " AND topicRemember.remembered <> 1", null);
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink, topicRemember.wordId " +
+                "FROM av LEFT JOIN topicRemember ON av.id = topicRemember.wordId " +
+                "WHERE av.idTopic like '%," + topicId + ",%' AND topicRemember.wordId IS NULL";
+        Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Word word = new Word();
@@ -654,13 +656,13 @@ public class DatabaseAccess {
             word.setHtml(cursor.getString(2));
             word.setDescription(cursor.getString(3));
             word.setPronounce(cursor.getString(4));
-            word.setRemembered(cursor.getInt(5));
+            word.setYoutubeLink(cursor.getString(5));
+            word.setRemembered(0);
             list.add(word);
             cursor.moveToNext();
         }
         cursor.close();
         return list;
-
     }
 
     public ArrayList<MyDate> getRemindedWordDateById(int wordId){

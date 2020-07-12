@@ -8,5 +8,6 @@
         android:id="@+id/row_popup_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="22sp"
         android:text="date"/>
 </LinearLayout>

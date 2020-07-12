@@ -194,7 +194,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error: ", Objects.requireNonNull(error.getMessage()));
+                if(error != null){
+                    Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                }
             }
         });
         requestQueue.add(sendDataRequest);
@@ -305,7 +307,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error: ", error.getMessage());
+                if(error != null){
+                    Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                }
             }
         });
         requestQueue.add(getDataRequest);

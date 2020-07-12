@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
-    android:layout_height="400dp"
+    android:layout_height="450dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/backgroundPopup"
     android:layout_gravity="center"
-    android:padding="15dp">
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/popup_txt_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="hello"
+        android:textSize="30sp"
         android:textColor="@color/black"
         android:textStyle="bold"/>
     <TextView
@@ -20,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="description"
+        android:textSize="27sp"
         android:textColor="@color/black"/>
     <TextView
         android:id="@+id/popup_meaning_txt_history"
@@ -27,23 +29,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Lịch sử tra từ"
+        android:textSize="22sp"
         android:textColor="@color/levelTextColor"/>
+
     <ListView
         android:id="@+id/popup_lv_history"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="10dp"/>
+        android:layout_height="79dp"
+        android:layout_marginStart="10dp" />
     <TextView
         android:id="@+id/popup_meaning_txt_reminded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Lịch sử nhắc nhở"
+        android:textSize="22sp"
         android:textColor="@color/levelTextColor" />
     <ListView
         android:id="@+id/popup_lv_reminder"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="79dp"
         android:layout_marginStart="10dp"/>
 
     <LinearLayout
@@ -60,7 +65,7 @@
             android:textColor="@color/black"
             app:strokeColor="@color/black"
             android:layout_marginEnd="20dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            style="@style/Widget.MaterialComponents.Button"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/popup_btn_not_remember"

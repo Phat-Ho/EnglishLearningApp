@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Word"
         android:textColor="@color/black"
-        android:textSize="28sp"/>
+        android:textSize="23sp"/>
 
     <TextView
         android:id="@+id/txt_room_name"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Player"
         android:textColor="@color/colorAccent"
-        android:textSize="28sp"
+        android:textSize="23sp"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"/>
 
