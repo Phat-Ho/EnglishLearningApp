@@ -292,7 +292,7 @@ public class MeaningActivity extends AppCompatActivity {
             super.onStateChange(youTubePlayer, state);
             ytPlayer = youTubePlayer;
             Log.d("beanbean", "onStateChange: " + state.toString());
-            if(state.toString().equals("MU")){
+            if(state.toString().equals("PAUSED")){
                 Log.d(TAG, "onLink: " + link);
                 Runnable runnable = new Runnable() {
                     @Override
