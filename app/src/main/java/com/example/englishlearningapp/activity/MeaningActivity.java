@@ -166,30 +166,6 @@ public class MeaningActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("beanbean", "onStart: ");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("beanbean", "onREStart: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("beanbean", "onResume: ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("beanbean", "onStop: ");
-    }
-
     PlayVideo playVideo = new PlayVideo();
 
     @Override
@@ -316,7 +292,7 @@ public class MeaningActivity extends AppCompatActivity {
             super.onStateChange(youTubePlayer, state);
             ytPlayer = youTubePlayer;
             Log.d("beanbean", "onStateChange: " + state.toString());
-            if(state.toString().equals("PAUSED")){
+            if(state.toString().equals("MU")){
                 Log.d(TAG, "onLink: " + link);
                 Runnable runnable = new Runnable() {
                     @Override
@@ -338,6 +314,7 @@ public class MeaningActivity extends AppCompatActivity {
         String toBeReplaced = contentHtml.substring(start, end);
         String wordHtml = toBeReplaced;
         String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             txtWordHtml.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
             txtContentHtml.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
@@ -372,6 +349,7 @@ public class MeaningActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d("beanbean", "onDestroy: ");
         tts.shutdown();
+        ytPlayerView.release();
     }
 
     private void addToFavorite(Intent intent){
