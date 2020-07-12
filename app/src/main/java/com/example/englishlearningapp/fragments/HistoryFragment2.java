@@ -132,14 +132,16 @@ public class HistoryFragment2 extends Fragment {
     }
 
     public void sortItemListView(int sortType){
-        if(sortType == SharedPrefsManager.BY_ALPHABET){
-            wordList.clear();
-            wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByAZ());
-            arrayAdapter.notifyDataSetChanged();
-        }else{
-            wordList.clear();
-            wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByTimeLatest());
-            arrayAdapter.notifyDataSetChanged();
+        if(databaseAccess != null){
+            if(sortType == SharedPrefsManager.BY_ALPHABET){
+                wordList.clear();
+                wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByAZ());
+                arrayAdapter.notifyDataSetChanged();
+            }else{
+                wordList.clear();
+                wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByTimeLatest());
+                arrayAdapter.notifyDataSetChanged();
+            }
         }
     }
 

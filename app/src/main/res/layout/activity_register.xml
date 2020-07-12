@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:text="@string/login_with_account"
-        ></com.google.android.material.button.MaterialButton>
+        android:layout_marginTop="15dp" />
 
 <!--    <com.google.android.material.button.MaterialButton-->
 <!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->

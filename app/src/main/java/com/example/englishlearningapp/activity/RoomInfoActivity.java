@@ -62,6 +62,21 @@ public class RoomInfoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
     }
 
     @Override

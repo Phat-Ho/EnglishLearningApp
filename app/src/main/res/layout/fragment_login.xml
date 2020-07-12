@@ -115,14 +115,6 @@
         android:paddingRight="15dp"
         android:gravity="center">
 
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forgot_password"
-            android:id="@+id/buttonForgotPassword"
-            style="@style/Widget.MaterialComponents.Button.TextButton"/>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSignIn"
             android:layout_width="wrap_content"
@@ -131,12 +123,21 @@
             android:text="@string/login"
             />
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginTop="10dp"
-                android:id="@+id/buttonRegisterLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/create_new_account" />
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginTop="10dp"
+            android:id="@+id/buttonRegisterLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_new_account"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:id="@+id/buttonForgotPassword"
+            android:textColor="@color/colorRed"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
 
     </LinearLayout>

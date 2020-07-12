@@ -38,6 +38,7 @@ public class VietnameseMeaningActivity extends AppCompatActivity {
     }
 
     private void SetUpToolbar() {
+        vnMeaningToolbar.setTitle("");
         setSupportActionBar(vnMeaningToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         vnMeaningToolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -31,11 +31,12 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateRoomActivity";
     Toolbar createRoomToolbar;
-    Spinner spinnerNumOfPlayers, spinnerDifficulty;
-    EditText edtTimer, edtPasswordConnectedWord, edtRoomName;
+    Spinner spinnerNumOfPlayers, spinnerTime;
+    EditText edtPasswordConnectedWord, edtRoomName;
     Switch swtPasswordConnectedWord;
     Button btnCreateRoom;
-    String[] numOfPlayers = {"2", "3", "4", "5"};
+    String[] numOfPlayers = {"2", "3", "4", "5", "6", "7"};
+    String[] playTime = {"5", "10", "15", "20", "25", "30", "45", "60"};
     LoginManager loginManager;
     GlobalVariable globalVariable;
 
@@ -44,10 +45,10 @@ public class CreateRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         globalVariable = GlobalVariable.getInstance(this);
+        loginManager = new LoginManager(this);
         GlobalVariable.changeStatusBarColor(this);
         setContentView(R.layout.activity_create_room);
         initView();
-        loginManager = new LoginManager(this);
         SetUpToolbar();
         onClickButton();
         handleSpinner();
@@ -64,12 +65,13 @@ public class CreateRoomActivity extends AppCompatActivity {
     private void initView(){
         createRoomToolbar = findViewById(R.id.toolbarCreateRoom);
         spinnerNumOfPlayers = findViewById(R.id.spinnerNumberOfPlayers);
-        edtTimer = findViewById(R.id.editTextTimer);
+        spinnerTime = findViewById(R.id.spinnerTimeToAnswer);
         edtPasswordConnectedWord = findViewById(R.id.editTextPasswordConnectedWord);
         edtRoomName = findViewById(R.id.editTextRoomName);
         swtPasswordConnectedWord = findViewById(R.id.switchPasswordConnectedWord);
         btnCreateRoom = findViewById(R.id.buttonCreateRoom);
         edtPasswordConnectedWord.setVisibility(View.INVISIBLE);
+        edtRoomName.setText(loginManager.getUserName() + "'s room");
     }
 
     private void onClickButton(){
@@ -80,12 +82,10 @@ public class CreateRoomActivity extends AppCompatActivity {
                 String roomName = edtRoomName.getText().toString();
                 Integer numOfPlayers = Integer.parseInt(spinnerNumOfPlayers.getSelectedItem().toString());
                 String password = edtPasswordConnectedWord.getText().toString().trim();
-                String time = edtTimer.getText().toString().trim();
+                int time = Integer.parseInt(spinnerTime.getSelectedItem().toString());
                 if (roomName.equals("")){
                     Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập tên phòng", Toast.LENGTH_SHORT).show();
-                } else if (time.equals("")){
-                    Toast.makeText(CreateRoomActivity.this, "Vui lòng nhập thời gian", Toast.LENGTH_SHORT).show();
-                } else {
+                }else {
                     JSONObject roomObject = new JSONObject();
                     try {
                         JSONArray playerList = new JSONArray();
@@ -151,6 +151,9 @@ public class CreateRoomActivity extends AppCompatActivity {
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(CreateRoomActivity.this, android.R.layout.simple_list_item_1, numOfPlayers);
         spinnerNumOfPlayers.setAdapter(adapter);
+        ArrayAdapter adapter1 = new ArrayAdapter(CreateRoomActivity.this, android.R.layout.simple_list_item_1, playTime);
+        spinnerTime.setAdapter(adapter1);
+        spinnerTime.setSelection(1);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.CreateRoomActivity">
+    tools:context=".activity.CreateRoomActivity"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,15 +49,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Room's name"
-                android:textSize="20sp"/>
+                android:textSize="30sp"
+                android:textColor="@color/black"/>
 
             <EditText
                 android:layout_marginEnd="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@drawable/edit_text_stroke"
                 android:hint="Name"
+                android:textSize="30sp"
                 android:id="@+id/editTextRoomName"/>
         </LinearLayout>
 
@@ -64,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:weightSum="5"
+            android:weightSum="6"
             android:gravity="center_vertical">
 
             <TextView
@@ -72,15 +74,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Number of players"
-                android:textSize="20sp"/>
+                android:textColor="@color/black"
+                android:textSize="25sp"/>
 
             <Spinner
                 android:id="@+id/spinnerNumberOfPlayers"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="2"
-                android:layout_width="wrap_content"
+                android:layout_weight="3"
+                android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:spinnerMode="dropdown"
+                android:textAlignment="textStart"
                 style="@style/SpinnerTheme" />
         </LinearLayout>
 
@@ -88,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:weightSum="5"
+            android:weightSum="6"
             android:gravity="center_vertical">
 
             <TextView
@@ -96,17 +100,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Time to answer (s)"
-                android:textSize="20sp"/>
+                android:textColor="@color/black"
+                android:textSize="25sp"/>
 
-           <EditText
-               android:layout_marginEnd="10dp"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_weight="2"
-               android:background="@drawable/edit_text_stroke"
-               android:hint="Timer"
-               android:inputType="number"
-               android:id="@+id/editTextTimer"/>
+            <Spinner
+                android:id="@+id/spinnerTimeToAnswer"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:spinnerMode="dropdown"
+                android:textAlignment="textStart"
+                style="@style/SpinnerTheme" />
         </LinearLayout>
 
 
@@ -122,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Password"
-                android:textSize="20sp"/>
+                android:textColor="@color/black"
+                android:textSize="25sp"/>
             <Switch
                 android:id="@+id/switchPasswordConnectedWord"
                 android:trackTint="#03A9F4"
@@ -148,12 +154,11 @@
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
         android:text="Create"
         android:id="@+id/buttonCreateRoom"/>
 
 
 
-</RelativeLayout>
+</LinearLayout>

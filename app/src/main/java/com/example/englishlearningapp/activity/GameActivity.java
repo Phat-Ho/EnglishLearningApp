@@ -87,6 +87,7 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.off("sendTimer", onSendTimer);
         globalVariable.mSocket.off("sendResult", onSendResult);
         globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
+        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("gameId", gameId);
@@ -143,6 +144,7 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
                             globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
+                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(historyIntent);
                         }
                     } catch (JSONException e) {
@@ -184,6 +186,7 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
                             globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
+                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
                             finish();
                         }
@@ -222,6 +225,7 @@ public class GameActivity extends AppCompatActivity {
                         btnExit.setVisibility(View.GONE);
                         btnContinue.setVisibility(View.GONE);
                         txtTimer.setVisibility(View.INVISIBLE);
+                        edtWord.setEnabled(false);
                         int len = array.length();
                         for (int i = 0; i < len; i++) {
                             String word = array.getJSONObject(i).getString("word");
@@ -260,6 +264,8 @@ public class GameActivity extends AppCompatActivity {
                 globalVariable.mSocket.off("sendResult");
                 globalVariable.mSocket.off("sendTimer");
                 txtNextPlayer.setText("Bạn đã bị loại");
+                edtWord.setVisibility(View.GONE);
+                imgBtnSend.setVisibility(View.GONE);
                 btnExit.setVisibility(View.VISIBLE);
                 btnContinue.setVisibility(View.VISIBLE);
             }else{
@@ -288,11 +294,11 @@ public class GameActivity extends AppCompatActivity {
                         }
 
                         if(playerOrderArray.getJSONObject(0).getInt("playerId") != loginManager.getUserId() || playerOrderArray.length() == 1){
-                            edtWord.setEnabled(false);
-                            imgBtnSend.setEnabled(false);
+                            edtWord.setVisibility(View.GONE);
+                            imgBtnSend.setVisibility(View.GONE);
                         }else {
-                            edtWord.setEnabled(true);
-                            imgBtnSend.setEnabled(true);
+                            edtWord.setVisibility(View.VISIBLE);
+                            imgBtnSend.setVisibility(View.VISIBLE);
                         }
 
                         int length = playerOrderArray.length();
@@ -312,7 +318,13 @@ public class GameActivity extends AppCompatActivity {
                         String currentWord = gameObj.getString("currentWord");
                         ArrayList<Word> words = databaseAccess.getWordExactly(currentWord);
                         String description = words.get(0).getDescription();
-                        txtWordDetail.setText(description);
+                        int len = description.length();
+                        final String substring = description.substring(0, Math.min(len, 29));
+                        if(len > 30){
+                            txtWordDetail.setText(substring + "...");
+                        }else{
+                            txtWordDetail.setText(substring);
+                        }
                         txtCurrentWord.setText(currentWord);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -343,11 +355,11 @@ public class GameActivity extends AppCompatActivity {
         playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
 
         if(playerList.get(0).getId() != loginManager.getUserId()){
-            edtWord.setEnabled(false);
-            imgBtnSend.setEnabled(false);
+            edtWord.setVisibility(View.GONE);
+            imgBtnSend.setVisibility(View.GONE);
         }else {
-            edtWord.setEnabled(true);
-            imgBtnSend.setEnabled(true);
+            edtWord.setVisibility(View.VISIBLE);
+            imgBtnSend.setVisibility(View.VISIBLE);
         }
         String currentWord = intent.getStringExtra("currentWord");
         txtCurrentWord.setText(currentWord);

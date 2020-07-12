@@ -43,13 +43,14 @@ public class RoomListActivity extends AppCompatActivity {
         SetUpToolbar();
         loginManager = new LoginManager(this);
         globalVariable.mSocket.emit("getRoom");
+        globalVariable.mSocket.on("roomList", onRetrieveRoomList);
+        globalVariable.mSocket.once("sendRoomInfo", onSendRoomInfo);
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart: ");
         super.onStart();
-        globalVariable.mSocket.on("roomList", onRetrieveRoomList);
-        globalVariable.mSocket.on("sendRoomInfo", onSendRoomInfo);
     }
 
     @Override
@@ -120,6 +121,7 @@ public class RoomListActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
                             finish();
                         }

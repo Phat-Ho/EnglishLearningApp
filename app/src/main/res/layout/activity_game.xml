@@ -40,26 +40,27 @@
         android:text="Số lượng người chơi: 10"
         android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/txt_game_timer"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textColor="@color/colorRed"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:text="10s"
         android:layout_gravity="center_horizontal"/>
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:orientation="vertical"
         android:layout_marginTop="5dp"
         android:background="@drawable/text_view_stroke_3"
         android:layout_marginHorizontal="30dp"
-        android:paddingVertical="15dp"
-        android:weightSum="5">
+        android:paddingVertical="5dp"
+        android:weightSum="6">
 
         <FrameLayout
             android:id="@+id/game_frame_layout"
@@ -136,7 +137,7 @@
             android:textColor="@color/black"
             android:textSize="30sp"
             android:paddingHorizontal="10dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:textAlignment="center"/>
 
         <LinearLayout
