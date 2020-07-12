@@ -62,17 +62,19 @@ public class FavoriteFragment extends Fragment {
                 String word = wordList.get(position).getWord();
                 int wordId = wordList.get(position).getId();
                 int remembered = wordList.get(position).getRemembered();
-                moveToMeaningActivity(html, word, wordId, remembered);
+                String youtubeLink = wordList.get(position).getYoutubeLink();
+                moveToMeaningActivity(html, word, wordId, remembered, youtubeLink);
             }
         });
     }
 
-    private void moveToMeaningActivity(String html, String word, int wordId, int remembered) {
+    private void moveToMeaningActivity(String html, String word, int wordId, int remembered, String youtubeLink) {
         Intent meaningIntent = new Intent(getActivity(), MeaningActivity.class);
         meaningIntent.putExtra("html", html);
         meaningIntent.putExtra("word", word);
         meaningIntent.putExtra("id", wordId);
         meaningIntent.putExtra("remembered", remembered);
+        meaningIntent.putExtra("youtubeLink", youtubeLink);
         startActivity(meaningIntent);
     }
 }

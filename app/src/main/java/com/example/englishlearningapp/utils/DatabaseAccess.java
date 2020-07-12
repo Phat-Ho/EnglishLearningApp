@@ -125,7 +125,7 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getHistoryWordsWithoutDuplicateSortByAZ(){
         ArrayList<Word> wordList = new ArrayList<>();
-        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, history.date, history.remembered " +
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink, history.date, history.remembered " +
                             " FROM history JOIN av on av.id = history.wordId GROUP BY history.wordId ORDER BY history.id";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
@@ -136,8 +136,8 @@ public class DatabaseAccess {
                 word.setHtml(cursor.getString(2));
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
-                word.setRemembered(cursor.getInt(6));
-
+                word.setRemembered(cursor.getInt(7));
+                word.setYoutubeLink(cursor.getString(5));
                 wordList.add(word);
             }while (cursor.moveToNext());
         }
@@ -449,7 +449,7 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getFavoriteWords(){
         ArrayList<Word> wordList = new ArrayList<>();
-        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce " +
+        String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink " +
                 "FROM favorite JOIN av ON favorite.wordId = av.id";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
@@ -460,7 +460,7 @@ public class DatabaseAccess {
                 word.setHtml(cursor.getString(2));
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
-
+                word.setYoutubeLink(cursor.getString(5));
                 wordList.add(word);
             }while (cursor.moveToNext());
         }

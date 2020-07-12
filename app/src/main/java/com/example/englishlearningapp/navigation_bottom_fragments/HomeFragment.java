@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -131,6 +133,9 @@ public class HomeFragment extends Fragment {
 
     private void SetAutoCompleteSearchBox() {
         final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1);
+
+
+
         txtMeaningSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -152,8 +157,18 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+
             }
         });
+
+        txtMeaningSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                txtMeaningSearch.showDropDown();
+                return false;
+            }
+        });
+
         txtMeaningSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
