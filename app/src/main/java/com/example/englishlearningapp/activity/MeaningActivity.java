@@ -55,6 +55,7 @@ import com.like.OnLikeListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 
@@ -183,6 +184,12 @@ public class MeaningActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("beanbean", "onStop: ");
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d("beanbean", "onNewIntent: ");
@@ -194,32 +201,21 @@ public class MeaningActivity extends AppCompatActivity {
             showPopup(wordId, word, description);
         }
         if(intent.hasExtra("word")){
-//            ytPlayer.release();
-
             String contentHtml = intent.getStringExtra("html");
             final String word = intent.getStringExtra("word");
             final String ytLink = intent.getStringExtra("youtubeLink");
+            if (ytPlayer != null){
+                ytPlayer.release();
+            }
             if (ytLink != null){
                 ytPlayer.setVisibility(View.VISIBLE);
                 ytPlayer.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-
-//                    @Override
-//                    public void onReady(YouTubePlayer youTubePlayer) {
-//                        youTubePlayer.loadVideo(ytLink, 0);
-//                    }
-
-
                     @Override
                     public void onReady(YouTubePlayer youTubePlayer) {
                         super.onReady(youTubePlayer);
-                        youTubePlayer.loadVideo(ytLink, 0);
+                        YouTubePlayerUtils.loadOrCueVideo(youTubePlayer, getLifecycle(), ytLink, 0);
                     }
 
-//                    @Override
-//                    public void onCurrentSecond(YouTubePlayer youTubePlayer, float second) {
-//                        youTubePlayer.loadVideo(ytLink, second);
-//
-//                    }
                 });
             } else {
                 ytPlayer.setVisibility(View.GONE);
