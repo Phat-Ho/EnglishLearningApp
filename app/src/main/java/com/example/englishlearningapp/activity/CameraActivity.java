@@ -119,11 +119,7 @@ public class CameraActivity extends AppCompatActivity {
                 String[] words = item.getValue().split(" ");
                 for (String word: words) {
                     String description = databaseAccess.getWords(word).get(0).getDescription();
-                    int start = 0;
-                    int end = description.indexOf(":" + 1);
-                    String toBeReplaced = description.substring(start, end);
-                    String meaning = description.replace(toBeReplaced,"");
-                    arrCaptureText.add(word + ": " + meaning);
+                    arrCaptureText.add(word + ": " + description);
                 }
             }
 
