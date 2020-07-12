@@ -78,7 +78,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/name"
-                    android:textColor="#F44336"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="20sp" />
 
                 <EditText
@@ -102,7 +102,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:text="Email"
-                    android:textColor="#F44336"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="20sp" />
 
                 <EditText
@@ -125,7 +125,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/phone_number"
-                    android:textColor="#F44336"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="20sp" />
 
                 <EditText
@@ -148,7 +148,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/date_of_birth"
-                    android:textColor="#F44336"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="20sp" />
 
                 <EditText
@@ -172,7 +172,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/language"
-                    android:textColor="#F44336"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="20sp" />
 
 
