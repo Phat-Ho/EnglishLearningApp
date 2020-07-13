@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Name"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:id="@+id/editTextRoomName"
                 android:textDirection="ltr"/>
         </LinearLayout>
