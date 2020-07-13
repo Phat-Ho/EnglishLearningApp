@@ -118,8 +118,9 @@ public class CameraActivity extends AppCompatActivity {
                 TextBlock item = items.valueAt(i);
                 String[] words = item.getValue().split(" ");
                 for (String word: words) {
-                    String description = databaseAccess.getWords(word).get(0).getDescription();
-                    arrCaptureText.add(word + ": " + description);
+//                    String description = databaseAccess.getWords(word).get(0).getDescription();
+                    arrCaptureText.add(word);
+//                    arrCaptureText.add(word + ": " + description);
                 }
             }
 
