@@ -87,7 +87,6 @@ public class SearchFragment extends Fragment {
 
     AutoCompleteTextView edtSearch;
     ListView lvTranslatedWords;
-    ArrayList<Word> words;
     ArrayList<Word> completeWordsData;
     DatabaseAccess databaseAccess;
     ArrayAdapter adapter;
@@ -117,7 +116,6 @@ public class SearchFragment extends Fragment {
                     if(completeWordsData.get(position).getId() == historyWords.get(i).getId()){
                         isSaved = true;
                         remembered = historyWords.get(i).getRemembered();
-                        Log.d(TAG, "Word is saved");
                         break;
                     }
                 }

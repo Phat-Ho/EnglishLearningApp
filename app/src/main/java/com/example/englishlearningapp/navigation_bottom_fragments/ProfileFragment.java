@@ -2,6 +2,7 @@ package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -16,8 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,15 +28,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MainHomeActivity;
@@ -113,7 +115,6 @@ public class ProfileFragment extends Fragment {
         }
         loginManager = new LoginManager(getActivity());
         databaseAccess = DatabaseAccess.getInstance(getActivity());
-        Log.d(TAG, "isLogin: " + loginManager.isLogin());
     }
 
 
@@ -180,7 +181,7 @@ public class ProfileFragment extends Fragment {
         final String name = edtProfileName.getText().toString();
         final String phoneNo = edtProfilePhoneNo.getText().toString();
         final String dob = edtProfileDOB.getText().toString();
-        String email = loginManager.getUserEmail();
+        final String email = loginManager.getUserEmail();
         String password = loginManager.getUserPassword();
 
         final JSONObject body = new JSONObject();
@@ -213,16 +214,31 @@ public class ProfileFragment extends Fragment {
                     loginManager.setUserPhoneNo(phoneNo);
                     loginManager.setUserDob(dob);
                     //Delay progress bar 2 seconds
-                    setProgressBarDelay(2000, "Lưu thành công");
+                    showAlert("Lưu thành công", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                 }else{
-                    setProgressBarDelay(2000, "Đã xảy ra lỗi");
+                    showAlert("Đã xảy ra lỗi", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setProgressBarDelay(2000, "Đã xảy ra lỗi");
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                showAlert("Đã xảy ra lỗi", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                if(error != null){
+                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                }
+
             }
         });
         requestQueue.add(registerRequest);
@@ -347,7 +363,7 @@ public class ProfileFragment extends Fragment {
         res.updateConfiguration(conf, dm);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("language", position);
-        editor.commit();
+        editor.apply();
     }
 
     private class SelectLanguage implements AdapterView.OnItemSelectedListener, View.OnTouchListener{
@@ -377,6 +393,19 @@ public class ProfileFragment extends Fragment {
         public void onNothingSelected(AdapterView<?> parent) {
 
         }
+    }
+
+    private void showAlert(String title, DialogInterface.OnClickListener listener){
+        setProfileProgressBarVisibility(false);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
+        builder.setTitle(title);
+        builder.setPositiveButton("OK", listener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
     @Override
