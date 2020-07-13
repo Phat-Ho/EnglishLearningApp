@@ -58,7 +58,7 @@
                         android:id="@+id/imageViewAvatar"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        app:srcCompat="@drawable/ic_avatar"/>
+                        app:srcCompat="@drawable/avatar"/>
 
                     <ImageButton
                         android:id="@+id/imageButton"
