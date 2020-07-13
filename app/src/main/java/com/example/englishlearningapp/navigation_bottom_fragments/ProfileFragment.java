@@ -332,7 +332,7 @@ public class ProfileFragment extends Fragment {
     private void handleSpinner(){
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, languages);
         spinnerLanguage.setAdapter(adapter);
-        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 1));
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0));
         SelectLanguage selectLanguage = new SelectLanguage();
         spinnerLanguage.setOnTouchListener(selectLanguage);
         spinnerLanguage.setOnItemSelectedListener(selectLanguage);
