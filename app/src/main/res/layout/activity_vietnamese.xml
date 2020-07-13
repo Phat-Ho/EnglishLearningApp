@@ -41,16 +41,17 @@
     <EditText
         android:background="@drawable/text_view_stroke"
         android:id="@+id/vn_edt_search"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/navigation_search"
-        android:drawableEnd="@drawable/ic_search"
-        android:paddingEnd="10dp"
-        android:singleLine="true"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:drawableRight="@drawable/ic_search"
+        android:hint="Search"
+        android:paddingHorizontal="15dp"
         android:imeOptions="actionDone"
+        android:inputType="text"
         android:nextFocusUp="@id/vn_edt_search"
-        android:nextFocusLeft="@id/vn_edt_search"/>
+        android:nextFocusLeft="@id/vn_edt_search"
+        android:layout_marginHorizontal="20dp"/>
     <ListView
         android:id="@+id/vn_lv_words"
         android:layout_width="match_parent"

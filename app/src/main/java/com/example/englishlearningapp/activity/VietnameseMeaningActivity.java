@@ -1,9 +1,11 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,6 +19,7 @@ public class VietnameseMeaningActivity extends AppCompatActivity {
     TextView vnMeaningTxt;
     Toolbar vnMeaningToolbar;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +40,12 @@ public class VietnameseMeaningActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void SetUpToolbar() {
         vnMeaningToolbar.setTitle("");
         setSupportActionBar(vnMeaningToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        vnMeaningToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         vnMeaningToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
