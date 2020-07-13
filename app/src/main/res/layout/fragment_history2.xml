@@ -10,7 +10,6 @@
         android:id="@+id/lv_fragment_history_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        android:divider="@color/transparent"/>
+        android:layout_marginBottom="60dp"/>
 
 </FrameLayout>

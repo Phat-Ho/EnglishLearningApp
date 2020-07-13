@@ -53,12 +53,6 @@ public class CreateRoomActivity extends AppCompatActivity {
         onClickButton();
         handleSpinner();
         handleSwitch();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         globalVariable.mSocket.once("sendRoomOwner", onSendRoom);
     }
 
@@ -133,6 +127,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                         roomInfoIntent.putExtra("playerName", loginManager.getUserName());
                         roomInfoIntent.putExtra("roomOwner", roomOwner);
                         roomInfoIntent.putExtra("roomName", roomName);
+                        globalVariable.mSocket.off("sendRoomOwner");
                         startActivity(roomInfoIntent);
                         finish();
                     } catch (JSONException e) {
