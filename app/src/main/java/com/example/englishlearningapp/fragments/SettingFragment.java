@@ -65,10 +65,11 @@ public class SettingFragment extends Fragment {
     ListView lvSetting;
     public SharedPreferences sharedPreferences;
     SettingListViewAdapter lvAdapter;
-    public ArrayList<AlarmType> alarmTypeList;
+    ArrayList<AlarmType> alarmTypeList = null;
     boolean isChecked = false;
     AlarmPropsManager alarmPropsManager;
     Dialog settingPopup;
+    ArrayList<Topic> topicList = null;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -105,7 +106,6 @@ public class SettingFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("switch", Context.MODE_PRIVATE);
         isChecked = sharedPreferences.getBoolean("checked", false);
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmTypeList = new ArrayList<>();
     }
 
     @Override
@@ -207,9 +207,12 @@ public class SettingFragment extends Fragment {
     }
 
     private void SetUpListView() {
-        ArrayList<Topic> topicList = null;
-        topicList = db.getTopics();
-        Log.d(TAG, "alarm Type: " + alarmPropsManager.getAlarmType());
+        if(topicList == null){
+            topicList = db.getTopics();
+        }
+        if(alarmTypeList == null){
+            alarmTypeList = new ArrayList<>();
+        }
         alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, getString(R.string.history) + " (" + db.getHistoryWordsCount() + ")", false));
         alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, getString(R.string.favorite) + " (" + db.getFavoriteWordsCount() + ")", false));
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
@@ -218,8 +221,9 @@ public class SettingFragment extends Fragment {
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
             alarmTypeList.get(1).setChecked(true);
         }
-        if(topicList!=null){
-            for(int i =0;i<topicList.size();i++){
+        if(alarmTypeList.size() < 3 && topicList != null){
+            int len = topicList.size();
+            for(int i =0;i<len;i++){
                 int wordCount = db.getWordCountByTopicId(topicList.get(i).getTopicId());
                 int topicId = topicList.get(i).getTopicId();
                 String topicName = topicList.get(i).getTopicName();
