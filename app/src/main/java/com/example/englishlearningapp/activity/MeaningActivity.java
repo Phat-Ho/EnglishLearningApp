@@ -305,15 +305,15 @@ public class MeaningActivity extends AppCompatActivity {
             Log.d("beanbean", "onStateChange: " + state.toString());
             if(state.toString().equals("PAUSED")){
                 Log.d(TAG, "onLink: " + link);
-//                Runnable runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
                         youTubePlayer.loadVideo(link, 0);
 
-//                    }
-//                };
-//                Handler handler = new Handler();
-//                handler.postDelayed(runnable, 1000);
+                    }
+                };
+                Handler handler = new Handler();
+                handler.postDelayed(runnable, 1000);
             }
         }
     }
