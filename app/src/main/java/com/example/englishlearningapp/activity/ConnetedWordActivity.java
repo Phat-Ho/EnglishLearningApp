@@ -45,7 +45,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
         imgResource = new ArrayList<>();
         imgResource.add(R.drawable.createroom);
         imgResource.add(R.drawable.roomlist);
-        imgResource.add(R.drawable.img_create_room);
+        imgResource.add(R.drawable.history);
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
