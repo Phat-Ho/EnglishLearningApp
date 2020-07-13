@@ -79,6 +79,14 @@ public class CreateRoomActivity extends AppCompatActivity {
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String tempString = edtRoomName.getText().toString();
+                int len = tempString.length();
+                final String substring = tempString.substring(0, Math.min(len, 20));
+                if(len > 20){
+                    edtRoomName.setText(substring + "...");
+                }else{
+                    edtRoomName.setText(substring);
+                }
                 String roomName = edtRoomName.getText().toString();
                 Integer numOfPlayers = Integer.parseInt(spinnerNumOfPlayers.getSelectedItem().toString());
                 String password = edtPasswordConnectedWord.getText().toString().trim();

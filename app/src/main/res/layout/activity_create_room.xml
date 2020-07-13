@@ -45,7 +45,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Room's name"
@@ -54,12 +54,13 @@
 
             <EditText
                 android:layout_marginEnd="10dp"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Name"
                 android:textSize="30sp"
-                android:id="@+id/editTextRoomName"/>
+                android:id="@+id/editTextRoomName"
+                android:textDirection="ltr"/>
         </LinearLayout>
 
         <LinearLayout

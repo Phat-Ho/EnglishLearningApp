@@ -466,7 +466,7 @@ public class DatabaseAccess {
     public ArrayList<Word> getFavoriteWords(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink " +
-                "FROM favorite JOIN av ON favorite.wordId = av.id";
+                "FROM favorite JOIN av ON favorite.wordId = av.id GROUP BY favorite.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
