@@ -62,6 +62,7 @@ public class CameraActivity extends AppCompatActivity {
         lvCaptureText = findViewById(R.id.list_view_capture_text);
         databaseAccess = DatabaseAccess.getInstance(this);
         arrCaptureText = new ArrayList<>();
+        loginManager = new LoginManager(this);
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrCaptureText);
         String filename = getIntent().getStringExtra("image");
         getBitmapIntent(filename, bmp);
@@ -69,7 +70,6 @@ public class CameraActivity extends AppCompatActivity {
         lvCaptureText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(CameraActivity.this, arrCaptureText.get(position), Toast.LENGTH_SHORT).show();
                 ArrayList<Word> wordList = databaseAccess.getWordExactly(arrCaptureText.get(position).trim().toLowerCase());
                 if(wordList.isEmpty()){
                     Toast.makeText(CameraActivity.this, "Không thể tra từ", Toast.LENGTH_SHORT).show();
