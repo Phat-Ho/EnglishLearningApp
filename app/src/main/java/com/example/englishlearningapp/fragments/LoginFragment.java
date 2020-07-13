@@ -1,10 +1,12 @@
 package com.example.englishlearningapp.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -15,6 +17,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -227,18 +231,21 @@ public class LoginFragment extends Fragment {
                             //Gán lại cho login manager
                             loginManager.createUserData(userId, name, email, password, number, dob);
 
-                            Toast.makeText(getActivity(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                             //Sync database after login
                             syncDatabaseRemoteToLocal();
 
                             //Update database with userId
                             updateDatabaseWithUserId(userId);
 
-                            //Chuyển qua màn hình MainHome
-                            navigateToHomeScreen();
+                            //Chuyển qua màn hình profile
+                            navigateToProfileScreen();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(getActivity(), "Login Fail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        showAlert("Đăng nhập thất bại", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
                         setLoginProgressBarVisibility(false);
                     }
 
@@ -258,17 +265,21 @@ public class LoginFragment extends Fragment {
     }
 
     private void updateDatabaseWithUserId(int idUser) {
-        Log.d(TAG, "updateDatabaseWithUserId: ");
         databaseAccess.updateHistoryIdUser(idUser);
     }
 
-    private void navigateToHomeScreen(){
+    private void navigateToProfileScreen(){
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 loginProgressBar.setVisibility(View.GONE);
-                ProfileFragment profileFragment = new ProfileFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                showAlert("Đăng nhập thành công",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                    }
+                });
             }
         };
 
@@ -279,7 +290,11 @@ public class LoginFragment extends Fragment {
     private void syncDatabaseRemoteToLocal(){
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         networkChangeReceiver = new NetworkChangeReceiver();
-        getActivity().registerReceiver(networkChangeReceiver, intentFilter);
+        if(getActivity() != null){
+            getActivity().registerReceiver(networkChangeReceiver, intentFilter);
+        }else{
+            requireContext().registerReceiver(networkChangeReceiver, intentFilter);
+        }
         isRegistered = true;
     }
 
@@ -295,11 +310,27 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    private void showAlert(String title, DialogInterface.OnClickListener listener){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
+        builder.setTitle(title);
+        builder.setPositiveButton("OK", listener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if(networkChangeReceiver != null && isRegistered){
-            getActivity().unregisterReceiver(networkChangeReceiver);
+            if(getActivity() != null){
+                getActivity().unregisterReceiver(networkChangeReceiver);
+            }else{
+                requireContext().unregisterReceiver(networkChangeReceiver);
+            }
             networkChangeReceiver = null;
             isRegistered = false;
         }

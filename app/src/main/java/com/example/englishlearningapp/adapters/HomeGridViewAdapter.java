@@ -2,6 +2,7 @@ package com.example.englishlearningapp.adapters;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,11 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,12 +89,28 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                             Intent connectedWordIntent = new Intent(context, ConnetedWordActivity.class);
                             context.startActivity(connectedWordIntent);
                         }else{
-                            Toast.makeText(context, "Đăng nhập để có thể vào game", Toast.LENGTH_SHORT).show();
+                            showAlert("Đăng nhập để có thể chơi game", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
                         }
                         break;
                 }
             }
         });
+    }
+
+    private void showAlert(String title, DialogInterface.OnClickListener listener){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setPositiveButton("OK", listener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
 

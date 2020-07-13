@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.englishlearningapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,8 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".activity.InGameHistoryActivity"></activity>
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity android:name=".activity.InGameHistoryActivity" />
         <activity android:name=".activity.TopicActivity" />
         <activity android:name=".activity.GameActivity"/>
         <activity android:name=".activity.RoomListActivity" />
@@ -59,7 +61,7 @@
         </activity>
         <activity android:name=".activity.GameHistoryActivity" />
         <activity android:name=".activity.ScheduleActivity" />
-        <activity android:name=".activity.MainHomeActivity" />
+        <activity android:name=".activity.MainHomeActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.MainActivity" />

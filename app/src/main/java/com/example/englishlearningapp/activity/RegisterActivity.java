@@ -159,11 +159,15 @@ public class RegisterActivity extends AppCompatActivity {
                         registerButton.setVisibility(View.VISIBLE);
                     }else{
                         RequestQueue stringRequestQueue = Volley.newRequestQueue(RegisterActivity.this);
-                        StringRequest registerRequest = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
+                        JsonObjectRequest registerRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL, parameter,new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(String response) {
-                                int userId = Integer.parseInt(response);
-                                Log.d(TAG, "onResponse: " + response);
+                            public void onResponse(JSONObject response) {
+                                int userId = 0;
+                                try {
+                                    userId = response.getInt("IdUser");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 if (userId > 0) {
                                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
                                     alertDialog.setTitle("Đăng kí thành công");
@@ -172,6 +176,12 @@ public class RegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             finish();
+                                        }
+                                    });
+                                    alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
                                         }
                                     });
                                     alertDialog.show();
@@ -186,17 +196,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 registerProgressBar.setVisibility(View.GONE);
                                 registerButton.setVisibility(View.VISIBLE);
                             }
-                        }){
-                            @Override
-                            public byte[] getBody() throws AuthFailureError {
-                                return parameter.toString().getBytes();
-                            }
-
-                            @Override
-                            public String getBodyContentType() {
-                                return "application/json";
-                            }
-                        };
+                        });
                         stringRequestQueue.add(registerRequest);
                     }
                 } catch (JSONException e) {
@@ -210,7 +210,21 @@ public class RegisterActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 registerProgressBar.setVisibility(View.GONE);
                 registerButton.setVisibility(View.VISIBLE);
-                Log.d(TAG, "onErrorResponse: check user error: " + error.getMessage());
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+                alertDialog.setMessage("Đã xảy ra lỗi");
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.show();
             }
         });
         checkUserRequestQueue.add(checkUserRequest);

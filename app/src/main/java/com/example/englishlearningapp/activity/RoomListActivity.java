@@ -1,13 +1,19 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -142,7 +148,11 @@ public class RoomListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(arrRoom.get(position).getPlayerCount() >= arrRoom.get(position).getNumOfPlayers()){
-                    Toast.makeText(RoomListActivity.this, "Room is full", Toast.LENGTH_SHORT).show();
+                    showAlert("Phòng đã đầy", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                 }else{
                     int roomId = arrRoom.get(position).getId();
                     String playerName = loginManager.getUserName();
@@ -160,6 +170,18 @@ public class RoomListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showAlert(String title, DialogInterface.OnClickListener listener){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setPositiveButton("OK", listener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
     private void SetUpToolbar() {

@@ -1,22 +1,23 @@
 package com.example.englishlearningapp.navigation_bottom_fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,8 +44,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -133,9 +132,6 @@ public class HomeFragment extends Fragment {
 
     private void SetAutoCompleteSearchBox() {
         final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1);
-
-
-
         txtMeaningSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -151,7 +147,11 @@ public class HomeFragment extends Fragment {
                 txtMeaningSearch.setThreshold(1);
                 searchBoxAdapter.notifyDataSetChanged();
                 if (wordList.isEmpty()){
-                    Toast.makeText(getActivity(), getResources().getText(R.string.no_result_found), Toast.LENGTH_SHORT).show();
+                    showAlert(getResources().getText(R.string.no_result_found).toString(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                 }
             }
 
@@ -161,11 +161,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        txtMeaningSearch.setOnTouchListener(new View.OnTouchListener() {
+        txtMeaningSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 txtMeaningSearch.showDropDown();
-                return false;
             }
         });
 
@@ -232,7 +231,6 @@ public class HomeFragment extends Fragment {
                     if(response.length() > 0){
                         try {
                             JSONObject dataArray = (JSONObject) response.get(0);
-                            Log.d(TAG, "onResponse: " + dataArray);
                             JSONArray array = (JSONArray) dataArray.get("data");
                             JSONObject data = (JSONObject) array.get(0);
                             int idServer = data.getInt("IdServer");
@@ -245,21 +243,29 @@ public class HomeFragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Error: ", error.getMessage());
+                    if(error != null){
+                        Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                    }
+
                 }
             });
             requestQueue.add(request);
         }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
             databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
-            Log.d(TAG, "saveHistory: no internet or no login, add to local");
         }
     }
 
 
-    public String getDatetime(){
-        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
-        Date date = new Date();
-        return dateFormat.format(date);
+    private void showAlert(String title, DialogInterface.OnClickListener listener){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
+        builder.setTitle(title);
+        builder.setPositiveButton("OK", listener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
     private void hideSoftKeyBoard() {
