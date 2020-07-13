@@ -775,7 +775,7 @@ public class DatabaseAccess {
                 topic.setTopicNameVie(cursor.getString(2));
                 topic.setActive(cursor.getInt(3));
                 topic.setIdServer(cursor.getInt(4));
-                topic.setTopicImage("https://imperia.edu.my/wp-content/uploads/2019/12/english.jpg");
+                topic.setTopicImage(cursor.getString(5));
                 topicList.add(topic);
             }while (cursor.moveToNext());
         }
