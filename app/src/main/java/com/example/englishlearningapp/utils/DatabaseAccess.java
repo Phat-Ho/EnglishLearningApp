@@ -193,7 +193,7 @@ public class DatabaseAccess {
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
                 word.setRemembered(cursor.getInt(6));
-
+                word.setDate(cursor.getLong(5));
                 wordList.add(word);
             }while (cursor.moveToNext());
         }
@@ -214,6 +214,7 @@ public class DatabaseAccess {
                 word.setHtml(cursor.getString(2));
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
+                word.setDate(cursor.getLong(5));
                 word.setRemembered(cursor.getInt(6));
 
                 wordList.add(word);
@@ -465,7 +466,7 @@ public class DatabaseAccess {
     public ArrayList<Word> getFavoriteWords(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, av.YoutubeLink " +
-                "FROM favorite JOIN av ON favorite.wordId = av.id";
+                "FROM favorite JOIN av ON favorite.wordId = av.id GROUP BY favorite.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
@@ -534,7 +535,7 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getAllRememberedWords(){
         ArrayList<Word> list = new ArrayList<>();
-        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId";
+        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId GROUP BY remembered.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do {

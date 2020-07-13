@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
+import com.example.englishlearningapp.adapters.FavoriteAdapter;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
@@ -26,7 +27,7 @@ public class FavoriteFragment extends Fragment {
 
     ListView lvFavorite;
     ArrayList<Word> wordList;
-    ArrayAdapter adapter;
+    FavoriteAdapter adapter;
     DatabaseAccess databaseAccess;
 
     public FavoriteFragment() {
@@ -47,7 +48,7 @@ public class FavoriteFragment extends Fragment {
     private void loadFavoriteData(){
         databaseAccess.open();
         wordList = databaseAccess.getFavoriteWords();
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, wordList);
+        adapter = new FavoriteAdapter(getActivity(), R.layout.row_lv_favorite, wordList);
         lvFavorite.setAdapter(adapter);
     }
 

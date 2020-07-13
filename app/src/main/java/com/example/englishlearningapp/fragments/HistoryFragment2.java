@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.MeaningActivity;
+import com.example.englishlearningapp.adapters.HistoryAdapter2;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.SharedPrefsManager;
@@ -34,7 +35,7 @@ public class HistoryFragment2 extends Fragment {
     ListView historyFrag2ListView;
     ArrayList<Word> wordList = new ArrayList<>();
     DatabaseAccess databaseAccess;
-    ArrayAdapter<Word> arrayAdapter;
+    HistoryAdapter2 adapter;
     SharedPrefsManager prefsManager;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -114,10 +115,9 @@ public class HistoryFragment2 extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int id = wordList.get(position).getId();
-                        databaseAccess.open();
                         if(databaseAccess.removeHistory(id)>0){
                             wordList.remove(position);
-                            arrayAdapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 }, new DialogInterface.OnClickListener() {
@@ -136,11 +136,11 @@ public class HistoryFragment2 extends Fragment {
             if(sortType == SharedPrefsManager.BY_ALPHABET){
                 wordList.clear();
                 wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByAZ());
-                arrayAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }else{
                 wordList.clear();
                 wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByTimeLatest());
-                arrayAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
         }
     }
@@ -173,7 +173,7 @@ public class HistoryFragment2 extends Fragment {
             wordList.clear();
             wordList.addAll(databaseAccess.getHistoryWordsWithDuplicateSortByTimeLatest());
         }
-        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, wordList);
-        historyFrag2ListView.setAdapter(arrayAdapter);
+        adapter = new HistoryAdapter2(getActivity(), R.layout.row_lv_history_2, wordList);
+        historyFrag2ListView.setAdapter(adapter);
     }
 }

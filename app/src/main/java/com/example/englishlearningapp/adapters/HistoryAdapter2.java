@@ -5,22 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
-import com.example.englishlearningapp.fragments.HistoryFragment;
 import com.example.englishlearningapp.models.Word;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
-public class HistoryAdapter extends BaseAdapter {
-
-    private HistoryFragment context;
+public class HistoryAdapter2 extends BaseAdapter {
+    private Context context;
     private int layout;
     private ArrayList<Word> historyWords;
 
-    public HistoryAdapter(HistoryFragment context, int layout, ArrayList<Word> historyWords) {
+    public HistoryAdapter2(Context context, int layout, ArrayList<Word> historyWords) {
         this.context = context;
         this.layout = layout;
         this.historyWords = historyWords;
@@ -41,32 +41,32 @@ public class HistoryAdapter extends BaseAdapter {
         return position;
     }
 
-    class ViewHolder{
-        TextView txtHistoryWord;
-        ImageButton imgBtnInfo;
+    private class ViewHolder{
+        TextView txtHistoryWord, txtDate;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater) context.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(layout, null);
             viewHolder = new ViewHolder();
-            viewHolder.txtHistoryWord = convertView.findViewById(R.id.textViewHistoryWord);
-            viewHolder.imgBtnInfo = convertView.findViewById(R.id.imageButtonInfo);
+            viewHolder.txtHistoryWord = convertView.findViewById(R.id.txt_word_row_history_2);
+            viewHolder.txtDate = convertView.findViewById(R.id.txt_date_row_history_2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final Word historyWord = historyWords.get(position);
-        viewHolder.txtHistoryWord.setText(historyWord.getWord());
-        viewHolder.imgBtnInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            context.showPopup(historyWord.getId(), historyWord.getWord(), historyWord.getDescription());
-            }
-        });
+        Word word = historyWords.get(position);
+        viewHolder.txtHistoryWord.setText(word.getWord());
+        viewHolder.txtDate.setText(getDatetime(word.getDate()));
         return convertView;
+    }
+
+    public String getDatetime(long dateTime){
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date(dateTime);
+        return dateFormat.format(date);
     }
 }

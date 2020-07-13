@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.adapters.FavoriteAdapter;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
@@ -44,6 +45,12 @@ public class RememberedFragment extends Fragment {
      * @return A new instance of fragment RemeberedFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    ListView lvRemembered;
+    ArrayList<Word> rememberedWords;
+    FavoriteAdapter adapter;
+    DatabaseAccess databaseAccess;
+
     public static RememberedFragment newInstance(String param1, String param2) {
         RememberedFragment fragment = new RememberedFragment();
         Bundle args = new Bundle();
@@ -61,11 +68,6 @@ public class RememberedFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
-    ListView lvRemembered;
-    ArrayList<Word> rememberedWords, historyWords;
-    ArrayAdapter adapter;
-    DatabaseAccess databaseAccess;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,7 +87,7 @@ public class RememberedFragment extends Fragment {
 
     private void loadRememberedData(){
         rememberedWords = databaseAccess.getAllRememberedWords();
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, rememberedWords);
+        adapter = new FavoriteAdapter(getActivity(), R.layout.row_lv_favorite, rememberedWords);
         lvRemembered.setAdapter(adapter);
     }
 }
