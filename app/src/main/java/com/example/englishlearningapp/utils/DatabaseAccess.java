@@ -535,7 +535,7 @@ public class DatabaseAccess {
 
     public ArrayList<Word> getAllRememberedWords(){
         ArrayList<Word> list = new ArrayList<>();
-        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId";
+        String query = "SELECT * FROM av JOIN remembered ON av.id = remembered.wordId GROUP BY remembered.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do {

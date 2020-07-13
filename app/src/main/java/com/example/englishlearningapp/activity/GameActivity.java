@@ -323,8 +323,8 @@ public class GameActivity extends AppCompatActivity {
                         ArrayList<Word> words = databaseAccess.getWordExactly(currentWord);
                         String description = words.get(0).getDescription();
                         int len = description.length();
-                        final String substring = description.substring(0, Math.min(len, 29));
-                        if(len > 30){
+                        final String substring = description.substring(0, Math.min(len, 40));
+                        if(len > 40){
                             txtWordDetail.setText(substring + "...");
                         }else{
                             txtWordDetail.setText(substring);

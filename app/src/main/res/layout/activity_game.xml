@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:text="Trường học"
             android:textColor="@color/black"
-            android:textSize="30sp"
+            android:textSize="18sp"
             android:paddingHorizontal="10dp"
             android:layout_weight="4"
             android:textAlignment="center"/>
