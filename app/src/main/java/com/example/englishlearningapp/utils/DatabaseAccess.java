@@ -193,7 +193,7 @@ public class DatabaseAccess {
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
                 word.setRemembered(cursor.getInt(6));
-
+                word.setDate(cursor.getLong(5));
                 wordList.add(word);
             }while (cursor.moveToNext());
         }
@@ -214,6 +214,7 @@ public class DatabaseAccess {
                 word.setHtml(cursor.getString(2));
                 word.setDescription(cursor.getString(3));
                 word.setPronounce(cursor.getString(4));
+                word.setDate(cursor.getLong(5));
                 word.setRemembered(cursor.getInt(6));
 
                 wordList.add(word);

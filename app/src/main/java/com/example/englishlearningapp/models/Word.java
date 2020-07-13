@@ -10,6 +10,7 @@ public class Word implements Parcelable {
     private String html;
     private int remembered;
     private String youtubeLink;
+    private long date;
 
 
     public static Creator<Word> getCREATOR() {
@@ -18,6 +19,7 @@ public class Word implements Parcelable {
 
     public Word() {
         this.id = 0;
+        this.date = 0;
     }
 
     public Word(int id, String word, String description, String pronounce, String html) {
@@ -112,6 +114,14 @@ public class Word implements Parcelable {
 
     public void setYoutubeLink(String youtubeLink) {
         this.youtubeLink = youtubeLink;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 
     @Override
