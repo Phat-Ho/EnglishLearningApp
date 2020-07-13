@@ -254,7 +254,7 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if(error != null){
-                        Toast.makeText(getActivity(), "Error: " + error.getMessage() == null ? "null pointer" : error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error: " + (error.getMessage() == null ? "null pointer" : error.getMessage()), Toast.LENGTH_SHORT).show();
                         setLoginProgressBarVisibility(false);
                     }
                 }
