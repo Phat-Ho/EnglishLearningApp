@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,10 +24,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.englishlearningapp.activity.ConnetedWordActivity;
-
-import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.ConnetedWordActivity;
+import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.TopicActivity;
 import com.example.englishlearningapp.activity.VietnameseActivity;
 import com.example.englishlearningapp.navigation_bottom_fragments.HomeFragment;
@@ -40,14 +39,14 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
 
 
     ArrayList subjectImages;
+    ArrayList<String> subjectNames;
     Context context;
-    HomeFragment homeFragment;
     LoginManager loginManager;
 
-    public HomeGridViewAdapter(Context context, ArrayList subjectImages, HomeFragment homeFragment) {
+    public HomeGridViewAdapter(Context context, ArrayList subjectImages, ArrayList<String> subjectNames) {
         this.context = context;
         this.subjectImages = subjectImages;
-        this.homeFragment = homeFragment;
+        this.subjectNames = subjectNames;
         this.loginManager = new LoginManager(context);
     }
 
@@ -63,7 +62,7 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.image.setImageResource((Integer) subjectImages.get(position));
-        final MainHomeActivity mainHomeActivity = (MainHomeActivity) context;
+        holder.txtName.setText(subjectNames.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -122,10 +121,12 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
     public class MyViewHolder extends RecyclerView.ViewHolder {
         // init the item view's
         ImageView image;
+        TextView txtName;
         public MyViewHolder(View itemView) {
             super(itemView);
             // get the reference of item view's
             image = itemView.findViewById(R.id.imageViewHomeItem);
+            txtName = itemView.findViewById(R.id.txt_home_name);
         }
     }
 

@@ -15,11 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -99,31 +100,39 @@ public class HomeFragment extends Fragment {
     DatabaseAccess databaseAccess;
     LoginManager loginManager;
     HomeGridViewAdapter adapter;
+    ImageButton imgBtnGame;
+    RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ArrayList subjectNames = new ArrayList<>(Arrays.asList(getResources().getString(R.string.subject_learning),
                 getResources().getString(R.string.vietnamese),
-                "Camera"));
-        ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.ic_topic3, R.drawable.ic_vi_eng3, R.drawable.ic_camera3, R.drawable.ic_connected_word2));
+                "Quét bằng camera"));
+        ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.img_topic, R.drawable.img_vie_eng, R.drawable.img_camera));
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
         databaseAccess = DatabaseAccess.getInstance(getContext());
         SetAutoCompleteSearchBox();
         loginManager = new LoginManager(getContext());
-        RecyclerView recyclerView = view.findViewById(R.id.recylerViewHome);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView = view.findViewById(R.id.recylerViewHome);
+        recyclerView.setNestedScrollingEnabled(false);
+        imgBtnGame = view.findViewById(R.id.img_btn_game);
+        layoutManager = new LinearLayoutManager(getActivity()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerView.setLayoutManager(layoutManager);
 
 
-        int spanCount = 2;
+        int spanCount = 1;
         int spacing = 0;
         boolean includeEdge = true;
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-
-
-        adapter = new HomeGridViewAdapter(getActivity(), subjectImages, this);
+        adapter = new HomeGridViewAdapter(getActivity(), subjectImages, subjectNames);
 
         recyclerView.setAdapter(adapter);
 
