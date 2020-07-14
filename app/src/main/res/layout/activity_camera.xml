@@ -28,7 +28,7 @@
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scanned_word"/>
+                android:text="@string/scan_with_camera"/>
 
         </RelativeLayout>
 
@@ -39,6 +39,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"/>
+    <TextView
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="@string/scanned_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"/>
     <ListView
         android:layout_weight="2"
         android:id="@+id/list_view_capture_text"

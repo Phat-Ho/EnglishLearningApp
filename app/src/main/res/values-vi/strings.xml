@@ -49,5 +49,6 @@
     <string name="invalid_email">Email không hợp lệ</string>
     <string name="invalid_password">Password phải nhiều hơn 8 kí tự, gôm cả chữ và số</string>
     <string name="save">Lưu</string>
+    <string name="scan_with_camera">Quét từ bằng Camera</string>
     <string name="scanned_word">Những từ quét được</string>
 </resources>

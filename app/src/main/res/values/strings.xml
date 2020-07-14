@@ -49,6 +49,7 @@
     <string name="invalid_email">Invalid Email</string>
     <string name="invalid_password">Password must be more than 8 characters including alphabet and number</string>
     <string name="save">Save</string>
+    <string name="scan_with_camera">Scan With Camera</string>
     <string name="scanned_word">Scanned Words</string>
 
     <!-- TODO: Remove or change this placeholder text -->
