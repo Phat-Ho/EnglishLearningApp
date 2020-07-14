@@ -214,6 +214,9 @@ public class SettingFragment extends Fragment {
             alarmTypeList = new ArrayList<>();
             alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_HISTORY, getString(R.string.history) + " (" + db.getHistoryWordsCount() + ")", false));
             alarmTypeList.add(new AlarmType(DatabaseContract.ALARM_FAVORITE, getString(R.string.favorite) + " (" + db.getFavoriteWordsCount() + ")", false));
+        }else{
+            alarmTypeList.get(0).setAlarmName(getString(R.string.history) + " (" + db.getHistoryWordsCount() + ")");
+            alarmTypeList.get(1).setAlarmName(getString(R.string.favorite) + " (" + db.getFavoriteWordsCount() + ")");
         }
         if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
             alarmTypeList.get(0).setChecked(true);
