@@ -2,6 +2,7 @@ package com.example.englishlearningapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,7 +44,7 @@ public class GameActivity extends AppCompatActivity {
     GlobalVariable globalVariable;
     ListView lvPlayerLeft;
     FrameLayout gameFrameLayout;
-    LinearLayout gameBtnWrapper;
+    LinearLayout gameBtnWrapper, gameLinearLayout;
     ArrayList<Player> playerList = new ArrayList<>();
     PlayerListGameAdapter playerAdapter;
     int gameId;
@@ -73,12 +74,6 @@ public class GameActivity extends AppCompatActivity {
     private void SetUpListView() {
         playerAdapter = new PlayerListGameAdapter(this, playerList);
         lvPlayerLeft.setAdapter(playerAdapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
     }
 
     @Override
@@ -146,7 +141,6 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
                             globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
-                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(historyIntent);
                         }
                     } catch (JSONException e) {
@@ -204,6 +198,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void call(final Object... args) {
             runOnUiThread(new Runnable() {
+                @SuppressLint("ResourceType")
                 @Override
                 public void run() {
                     Log.d(TAG, "send game end: " + args[0].toString());
@@ -218,6 +213,7 @@ public class GameActivity extends AppCompatActivity {
                         winner = obj.getString("winner");
                         array = obj.getJSONArray("historyWord");
 
+                        gameLinearLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         gameFrameLayout.setVisibility(View.VISIBLE);
                         txtResult.setVisibility(View.INVISIBLE);
                         txtNextPlayer.setText(winner + " là người chiến thắng");
@@ -439,6 +435,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void InitialView() {
+        gameLinearLayout = findViewById(R.id.game_linear_layout);
         gameBtnWrapper = findViewById(R.id.game_button_wrapper);
         txtPlayersOrder = findViewById(R.id.txtPlayersOrder);
         txtWordDetail = findViewById(R.id.txt_game_word_detail);

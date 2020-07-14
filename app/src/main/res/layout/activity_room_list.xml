@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.RoomListActivity"
+    android:background="@drawable/main_background_gradient"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,35 +32,43 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingHorizontal="10dp">
+        android:layout_marginVertical="7dp"
+        android:weightSum="8"
+        android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tên phòng"
-            android:layout_alignParentStart="true"
+            android:textAlignment="center"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:layout_weight="4"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chủ phòng"
-            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textAlignment="viewEnd"
+            android:textSize="20sp"
+            android:layout_weight="2"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Số người"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+            android:textSize="20sp"
+            android:layout_weight="2"
+            android:layout_marginEnd="5dp"
+            android:textAlignment="viewEnd"/>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -70,7 +78,6 @@
     <ListView
         android:id="@+id/listViewRoomList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="15dp"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

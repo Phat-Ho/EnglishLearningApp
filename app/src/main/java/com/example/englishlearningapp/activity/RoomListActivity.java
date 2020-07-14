@@ -54,12 +54,6 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        Log.d(TAG, "onStart: ");
-        super.onStart();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         globalVariable.mSocket.off("roomList", onRetrieveRoomList);
@@ -85,7 +79,8 @@ public class RoomListActivity extends AppCompatActivity {
                             String password = object.getString("password");
                             String time = object.getString("time");
                             JSONArray playerArr = object.getJSONArray("players");
-                            Room room = new Room(id, name, numOfPlayers, password, time, playerArr.length());
+                            String creator = object.getString("owner");
+                            Room room = new Room(id, name, numOfPlayers, password, time, playerArr.length(), creator);
                             temp.add(room);
                         }
                         Log.d(TAG, "temp room: " + temp.toString());
@@ -127,6 +122,7 @@ public class RoomListActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            globalVariable.mSocket.off("roomList", onRetrieveRoomList);
                             globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
                             finish();

@@ -63,7 +63,7 @@ public class RoomAdapter extends BaseAdapter {
         Room room = arrRoom.get(position);
 
         viewHolder.txtRoomName.setText(room.getName());
-        viewHolder.txtRoomOwner.setText(room.getName());
+        viewHolder.txtRoomOwner.setText(room.getCreator());
         viewHolder.txtRoomPlayerCount.setText(room.getPlayerCount() + "/" + room.getNumOfPlayers());
 
         return convertView;

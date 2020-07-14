@@ -1,46 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="56dp"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="@drawable/main_background_gradient"
+    android:paddingHorizontal="15dp">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/setting_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="#03A9F4"
-                android:layout_gravity="center_horizontal">
-            </androidx.appcompat.widget.Toolbar>
-            <TextView
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/navigation_home"/>
-
-        </RelativeLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <AutoCompleteTextView
         android:id="@+id/meaning_auto_complete_search_box_home"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/text_view_stroke"
         android:drawableRight="@drawable/ic_search"
@@ -51,13 +26,45 @@
         android:nextFocusLeft="@id/meaning_auto_complete_search_box_home"
         android:nextFocusUp="@id/meaning_auto_complete_search_box_home"/>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp"
+        android:layout_marginTop="30dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp">
+            <ImageButton
+                android:id="@+id/img_btn_game"
+                android:layout_height="150dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitXY"
+                android:background="@color/transparent"
+                android:src="@drawable/game3"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Word Connect Game"
+                android:layout_marginTop="5dp"
+                android:textSize="25dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
     <RelativeLayout
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-
             android:id="@+id/recylerViewHome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

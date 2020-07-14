@@ -53,13 +53,13 @@ public class CreateRoomActivity extends AppCompatActivity {
         onClickButton();
         handleSpinner();
         handleSwitch();
-
+        globalVariable.mSocket.once("sendRoomOwner", onSendRoom);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        globalVariable.mSocket.once("sendRoomOwner", onSendRoom);
+    protected void onStop() {
+        super.onStop();
+        globalVariable.mSocket.off("sendRoomOwner", onSendRoom);
     }
 
     private void initView(){
@@ -128,12 +128,15 @@ public class CreateRoomActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
+                        int playerNum = roomObj.getInt("numOfPlayers");
                         Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                         roomInfoIntent.putExtra("roomId", roomId);
                         roomInfoIntent.putExtra("playerName", loginManager.getUserName());
                         roomInfoIntent.putExtra("roomOwner", roomOwner);
                         roomInfoIntent.putExtra("roomName", roomName);
+                        roomInfoIntent.putExtra("playerNum", playerNum);
                         startActivity(roomInfoIntent);
+                        globalVariable.mSocket.off("sendRoomOwner");
                         finish();
                     } catch (JSONException e) {
                         e.printStackTrace();

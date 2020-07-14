@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.CreateRoomActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main_background_gradient">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,116 +38,139 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:weightSum="5"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Room's name"
-                android:textSize="30sp"
-                android:textColor="@color/black"/>
-
-            <EditText
-                android:layout_marginEnd="10dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:hint="Name"
-                android:textSize="20sp"
-                android:id="@+id/editTextRoomName"
-                android:textDirection="ltr"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:weightSum="6"
-            android:gravity="center_vertical">
+            app:cardCornerRadius="7dp"
+            android:layout_margin="20dp"
+            android:elevation="8dp"
+            app:cardElevation="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Number of players"
-                android:textColor="@color/black"
-                android:textSize="25sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/spinnerNumberOfPlayers"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="3"
-                android:layout_width="0dp"
-                android:layout_height="25dp"
-                android:spinnerMode="dropdown"
-                android:textAlignment="textStart"
-                style="@style/SpinnerTheme" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:weightSum="6"
-            android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Room's name"
+                        android:textStyle="bold"
+                        android:textSize="25sp"
+                        android:textColor="@color/black"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Time to answer (s)"
-                android:textColor="@color/black"
-                android:textSize="25sp"/>
+                    <EditText
+                        android:layout_marginEnd="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Name"
+                        android:textSize="25sp"
+                        android:id="@+id/editTextRoomName"
+                        android:textDirection="ltr"
+                        android:inputType="text"
+                        android:maxLines="1"/>
+                </LinearLayout>
 
-            <Spinner
-                android:id="@+id/spinnerTimeToAnswer"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="3"
-                android:layout_width="0dp"
-                android:layout_height="25dp"
-                android:spinnerMode="dropdown"
-                android:textAlignment="textStart"
-                style="@style/SpinnerTheme" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:weightSum="6"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Number of players"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="25sp"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerNumberOfPlayers"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:spinnerMode="dropdown"
+                        android:textAlignment="textStart"
+                        style="@style/SpinnerTheme" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:weightSum="6"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Time to answer (s)"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerTimeToAnswer"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:spinnerMode="dropdown"
+                        android:textAlignment="textStart"
+                        style="@style/SpinnerTheme" />
+                </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:weightSum="5"
-            android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:weightSum="5"
+                    android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Password"
-                android:textColor="@color/black"
-                android:textSize="25sp"/>
-            <Switch
-                android:id="@+id/switchPasswordConnectedWord"
-                android:trackTint="#03A9F4"
-                android:thumbTint="#03A9F4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="2" />
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Password"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"/>
+                    <Switch
+                        android:id="@+id/switchPasswordConnectedWord"
+                        android:trackTint="#03A9F4"
+                        android:thumbTint="#03A9F4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="2" />
+                </LinearLayout>
 
-        <EditText
-            android:id="@+id/editTextPasswordConnectedWord"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/edit_text_stroke"
-            android:hint="@string/password"/>
+                <EditText
+                    android:id="@+id/editTextPasswordConnectedWord"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edit_text_stroke"
+                    android:hint="@string/password"/>
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
@@ -158,7 +182,8 @@
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
         android:text="Create"
-        android:id="@+id/buttonCreateRoom"/>
+        android:id="@+id/buttonCreateRoom"
+        android:backgroundTint="@color/colorBlue"/>
 
 
 

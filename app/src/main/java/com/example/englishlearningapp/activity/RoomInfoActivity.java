@@ -33,7 +33,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     private static final String TAG = "RoomInfoActivity";
     Toolbar toolbarRoomInfo;
     ListView listViewRoomInfo;
-    TextView roomInfoTitleTxt, roomInfoOwnerTxt;
+    TextView roomInfoTitleTxt, roomInfoOwnerTxt, txtPlayerNum;
     MaterialButton btnStart;
     PlayerListRoomAdapter playerAdapter;
     ArrayList<Player> playerList = new ArrayList<>();
@@ -58,18 +58,12 @@ public class RoomInfoActivity extends AppCompatActivity {
         globalVariable.mSocket.on("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.once("sendGame", onSendGame);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+        globalVariable.mSocket.off("sendGame", onSendGame);
     }
 
     @Override
@@ -77,6 +71,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         super.onStop();
         Log.d(TAG, "onStop: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
+        globalVariable.mSocket.off("sendGame", onSendGame);
     }
 
     @Override
@@ -105,9 +100,10 @@ public class RoomInfoActivity extends AppCompatActivity {
         roomId = intent.getIntExtra("roomId", 0);
         String roomOwner = intent.getStringExtra("roomOwner");
         String roomName = intent.getStringExtra("roomName");
-
+        int playerNum = intent.getIntExtra("playerNum", 2);
         roomInfoTitleTxt.setText(roomName);
         roomInfoOwnerTxt.setText(roomOwner);
+        txtPlayerNum.setText(String.valueOf(playerNum));
         String playerName = intent.getStringExtra("playerName");
         int playerId = loginManager.getUserId();
 
@@ -169,6 +165,8 @@ public class RoomInfoActivity extends AppCompatActivity {
                             Log.d(TAG, "player List: " + playerList.toString());
                             playerAdapter.notifyDataSetChanged();
                         }
+                        String playerNum = roomObj.getString("numOfPlayers");
+                        roomInfoOwnerTxt.setText(playerNum);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -215,7 +213,6 @@ public class RoomInfoActivity extends AppCompatActivity {
                         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
                         globalVariable.mSocket.off("sendGame", onSendGame);
                         startActivity(gameIntent);
-
                         finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -226,6 +223,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     };
 
     private void initView(){
+        txtPlayerNum = findViewById(R.id.txt_room_info_number);
         btnStart = findViewById(R.id.buttonStartGame);
         toolbarRoomInfo = findViewById(R.id.toolbarRoomInfo);
         listViewRoomInfo = findViewById(R.id.listViewPlayer);

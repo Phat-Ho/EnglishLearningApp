@@ -68,6 +68,7 @@
             android:layout_height="match_parent"
             android:visibility="gone">
             <LinearLayout
+                android:id="@+id/game_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".fragments.GameResultFragment"
@@ -89,10 +90,10 @@
                     android:id="@+id/txt_next_player"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="30sp"
                     android:text="@string/hello_blank_fragment"
                     android:gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/black"/>
 
                 <RelativeLayout
@@ -141,23 +142,28 @@
             android:textAlignment="center"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_weight="1"
-            android:layout_gravity="center_horizontal">
+            android:weightSum="10"
+            android:layout_gravity="center_horizontal"
+            android:paddingHorizontal="15dp">
 
             <EditText
                 android:id="@+id/edt_game_word"
-                android:layout_width="120dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Nhập từ" />
+                android:hint="Nhập từ"
+                android:textSize="25sp"
+                android:layout_weight="8"/>
 
             <ImageButton
                 android:id="@+id/btn_game_send"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_weight="2"
                 android:src="@drawable/ic_send" />
         </LinearLayout>
 
@@ -203,7 +209,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:textColor="@color/black"
-        android:textSize="18sp"/>
+        android:textSize="25sp"/>
 
     <ListView
         android:id="@+id/lv_game_player_left"

@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HistoryFragment">
+    tools:context=".fragments.HistoryFragment"
+    android:background="@drawable/main_background_gradient">
 
     <!-- TODO: Update blank fragment layout -->
     <ListView
         android:id="@+id/lv_fragment_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        android:divider="@color/transparent"/>
+        android:layout_marginBottom="60dp"/>
 
 </FrameLayout>
