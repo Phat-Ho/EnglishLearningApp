@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.models.ConnectedWord;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -15,17 +19,17 @@ public class ConnectedWordAdapter extends BaseAdapter {
 
     private Context context;
     private int layout;
-    private List<Integer> arrImage;
+    private List<ConnectedWord> arrConnectedWords;
 
-    public ConnectedWordAdapter(Context context, int layout, List<Integer> arrImage) {
+    public ConnectedWordAdapter(Context context, int layout, List<ConnectedWord> arrConnectedWords) {
         this.context = context;
         this.layout = layout;
-        this.arrImage = arrImage;
+        this.arrConnectedWords = arrConnectedWords;
     }
 
     @Override
     public int getCount() {
-        return arrImage.size();
+        return arrConnectedWords.size();
     }
 
     @Override
@@ -40,6 +44,7 @@ public class ConnectedWordAdapter extends BaseAdapter {
 
     private class ViewHolder{
         ImageView imgConnectedWord;
+        TextView txtConnectedWord;
     }
 
     @Override
@@ -51,13 +56,15 @@ public class ConnectedWordAdapter extends BaseAdapter {
 
             viewHolder = new ViewHolder();
             viewHolder.imgConnectedWord = convertView.findViewById(R.id.imageViewConnectedWord);
+            viewHolder.txtConnectedWord = convertView.findViewById(R.id.textViewConnectedWord);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Integer img = arrImage.get(position);
-        viewHolder.imgConnectedWord.setImageResource(img);
+        ConnectedWord connectedWord = arrConnectedWords.get(position);
+        viewHolder.imgConnectedWord.setImageResource(connectedWord.getImage());
+        viewHolder.txtConnectedWord.setText(connectedWord.getName());
         return convertView;
     }
 }

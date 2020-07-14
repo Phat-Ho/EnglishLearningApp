@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.ConnectedWordAdapter;
+import com.example.englishlearningapp.models.ConnectedWord;
 import com.example.englishlearningapp.utils.GlobalVariable;
 
 
@@ -42,11 +43,15 @@ public class ConnetedWordActivity extends AppCompatActivity {
     private void initView(){
         lvConnectedWord = findViewById(R.id.listViewConnectedWord);
         connectedWordToolbar = findViewById(R.id.toolbarConnectedWord);
-        imgResource = new ArrayList<>();
-        imgResource.add(R.drawable.createroom);
-        imgResource.add(R.drawable.roomlist);
-        imgResource.add(R.drawable.history);
-        adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, imgResource);
+        ArrayList<ConnectedWord> arrConnectedWord = new ArrayList<>();
+        arrConnectedWord.add(new ConnectedWord(R.drawable.ic_join_room, "Create room"));
+        arrConnectedWord.add(new ConnectedWord(R.drawable.roomlist1, "Room list"));
+        arrConnectedWord.add(new ConnectedWord(R.drawable.history1, "History"));
+//        imgResource = new ArrayList<>();
+//        imgResource.add(R.drawable.createroom);
+//        imgResource.add(R.drawable.roomlist);
+//        imgResource.add(R.drawable.history);
+        adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, arrConnectedWord);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
