@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.RoomInfoActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main_background_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -33,89 +34,118 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
+        app:cardCornerRadius="5dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp"
+        android:layout_margin="15dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="Creator"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt_room_info_owner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Adam"
-            android:textSize="20sp"
-            android:layout_weight="1"
-            android:textColor="@color/black"/>
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:weightSum="5"
+                android:gravity="center_vertical">
 
-    <LinearLayout
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:text="Creator"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/txt_room_info_owner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Adam"
+                    android:textSize="20sp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:weightSum="5"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewNumOfPlayers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:textStyle="bold"
+                    android:text="Number of Players"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/txt_room_info_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textSize="20sp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="5"
-        android:gravity="center_vertical">
+        app:cardCornerRadius="5dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp"
+        android:layout_margin="15dp">
 
-        <TextView
-            android:id="@+id/textViewNumOfPlayers"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Number of Players"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5"
-            android:textSize="20sp"
-            android:layout_weight="2"
-            android:textColor="@color/black"/>
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Player list"
+                android:textSize="30sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:layout_marginBottom="10dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginHorizontal="10dp"/>
+            <ListView
+                android:id="@+id/listViewPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginHorizontal="10dp"/>
 
-    <TextView
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player list"
-        android:textSize="30sp"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="10dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginHorizontal="30dp"/>
-    <ListView
-        android:id="@+id/listViewPlayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="50dp"
-            android:layout_centerInParent="true"
-            android:text="Start"
-            android:id="@+id/buttonStartGame"/>
-    </RelativeLayout>
+        android:layout_gravity="center_horizontal"
+        android:text="Start"
+        android:id="@+id/buttonStartGame"
+        android:backgroundTint="@color/colorBlue"/>
 
 
 </LinearLayout>

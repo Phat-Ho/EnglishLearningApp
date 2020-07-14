@@ -77,12 +77,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: game activity");
@@ -147,7 +141,6 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
                             globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
-                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(historyIntent);
                         }
                     } catch (JSONException e) {

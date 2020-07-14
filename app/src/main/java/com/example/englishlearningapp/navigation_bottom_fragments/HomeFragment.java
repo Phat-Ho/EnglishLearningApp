@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
+import com.example.englishlearningapp.activity.ConnetedWordActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
 import com.example.englishlearningapp.models.Word;
@@ -137,6 +140,34 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        imgBtnGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loginManager.isLogin()){
+                    Intent connectedWordIntent = new Intent(getActivity(), ConnetedWordActivity.class);
+                    if(getActivity() != null) {
+                        getActivity().startActivity(connectedWordIntent);
+                    }else{
+                        showAlert("Đã xảy ra lỗi", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                    }
+                }else{
+                    showAlert("Đăng nhập để có thể chơi game", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void SetAutoCompleteSearchBox() {

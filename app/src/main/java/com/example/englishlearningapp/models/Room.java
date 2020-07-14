@@ -6,15 +6,25 @@ public class Room {
     private Integer numOfPlayers;
     private String password;
     private String timer;
+    private String creator;
     private int playerCount;
 
-    public Room(int id, String name, Integer numOfPlayers, String password, String timer, int playerCount) {
+    public Room(int id, String name, Integer numOfPlayers, String password, String timer, int playerCount, String creator) {
         this.id = id;
         this.name = name;
         this.numOfPlayers = numOfPlayers;
         this.password = password;
         this.timer = timer;
         this.playerCount = playerCount;
+        this.creator = creator;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public int getId() {

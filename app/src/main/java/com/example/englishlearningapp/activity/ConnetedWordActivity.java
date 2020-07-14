@@ -44,13 +44,9 @@ public class ConnetedWordActivity extends AppCompatActivity {
         lvConnectedWord = findViewById(R.id.listViewConnectedWord);
         connectedWordToolbar = findViewById(R.id.toolbarConnectedWord);
         ArrayList<ConnectedWord> arrConnectedWord = new ArrayList<>();
-        arrConnectedWord.add(new ConnectedWord(R.drawable.ic_join_room, "Create room"));
-        arrConnectedWord.add(new ConnectedWord(R.drawable.roomlist1, "Room list"));
-        arrConnectedWord.add(new ConnectedWord(R.drawable.history1, "History"));
-//        imgResource = new ArrayList<>();
-//        imgResource.add(R.drawable.createroom);
-//        imgResource.add(R.drawable.roomlist);
-//        imgResource.add(R.drawable.history);
+        arrConnectedWord.add(new ConnectedWord(R.drawable.createroom, "Create room"));
+        arrConnectedWord.add(new ConnectedWord(R.drawable.roomlist, "Room list"));
+        arrConnectedWord.add(new ConnectedWord(R.drawable.history, "History"));
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, arrConnectedWord);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {

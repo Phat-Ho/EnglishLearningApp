@@ -83,33 +83,9 @@ public class HomeGridViewAdapter extends RecyclerView.Adapter <HomeGridViewAdapt
                     case 2:
                         onLaunchCamera();
                         break;
-                    case 3:
-                        if(loginManager.isLogin()){
-                            Intent connectedWordIntent = new Intent(context, ConnetedWordActivity.class);
-                            context.startActivity(connectedWordIntent);
-                        }else{
-                            showAlert("Đăng nhập để có thể chơi game", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            });
-                        }
-                        break;
                 }
             }
         });
-    }
-
-    private void showAlert(String title, DialogInterface.OnClickListener listener){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setPositiveButton("OK", listener);
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
 
