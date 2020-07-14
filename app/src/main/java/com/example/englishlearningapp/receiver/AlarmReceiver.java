@@ -167,8 +167,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private int randomIndex(int arraySize){
+        int temp = 0;
         Random randomNumGenerator = new Random();
-        int temp = randomNumGenerator.nextInt(arraySize);
+        if(arraySize > 0) {
+            temp = randomNumGenerator.nextInt(arraySize);
+        }
         return temp;
     }
 }
