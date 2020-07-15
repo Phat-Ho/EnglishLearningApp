@@ -1,17 +1,15 @@
 package com.example.englishlearningapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.Question;
-import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
@@ -23,7 +21,7 @@ import java.util.Random;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = "WelcomeActivity";
-    TextView welcomeTxtQuestDetail, welcomeTxtTopic,
+    TextView welcomeTxtQuestDetail,
             welcomeTxtMeaning1, welcomeTxtMeaning2,
             welcomeTxtMeaning3, welcomeTxtMeaning4;
     MaterialButton welcomeBtn1, welcomeBtn2,
@@ -49,11 +47,9 @@ public class WelcomeActivity extends AppCompatActivity {
         if(questionList.size() > 0){
             int index = randomIndex(questionList.size());
             welcomeTxtQuestDetail.setText(questionList.get(index).getQuestionDetail());
-            Topic topic = databaseAccess.getTopicByQuestionId(questionList.get(index).getQuestionId());
-            welcomeTxtTopic.setText("(Topic " + topic.getTopicName() + ")");
             choiceList = databaseAccess.getChoicesByQuestionId(questionList.get(index).getQuestionId());
             if(choiceList.size() > 3){
-                Word word = new Word();
+                Word word = null;
                 word = databaseAccess.getWordsById(choiceList.get(0).getWordId());
                 welcomeBtn1.setText(word.getWord());
                 welcomeTxtMeaning1.setText(getMeaning(word.getDescription()));
@@ -70,11 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 welcomeBtn4.setText(word.getWord());
                 welcomeTxtMeaning4.setText(getMeaning(word.getDescription()));
             }
-        }else{
-            Log.d(TAG, "SetUpView: question empty");
         }
-
-
     }
 
     private void MappingView() {
@@ -88,7 +80,6 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeTxtMeaning3 = findViewById(R.id.welcome_txt_meaning_3);
         welcomeTxtMeaning4 = findViewById(R.id.welcome_txt_meaning_4);
         welcomeTxtQuestDetail = findViewById(R.id.welcome_txt_quest_detail);
-        welcomeTxtTopic = findViewById(R.id.welcome_txt_topic);
         loginManager = new LoginManager(WelcomeActivity.this);
     }
 
