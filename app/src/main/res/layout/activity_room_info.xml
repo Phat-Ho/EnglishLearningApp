@@ -57,7 +57,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="3"
                     android:text="Creator"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:text="Adam"
                     android:textSize="20sp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:id="@+id/textViewNumOfPlayers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="3"
                     android:textStyle="bold"
                     android:text="Number of Players"
                     android:textSize="20sp"
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:text="5"
                     android:textSize="20sp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:textColor="@color/black"/>
             </LinearLayout>
 

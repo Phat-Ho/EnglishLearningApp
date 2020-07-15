@@ -166,7 +166,7 @@ public class RoomInfoActivity extends AppCompatActivity {
                             playerAdapter.notifyDataSetChanged();
                         }
                         String playerNum = roomObj.getString("numOfPlayers");
-                        roomInfoOwnerTxt.setText(playerNum);
+                        txtPlayerNum.setText(playerNum);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.GameActivity"
-    android:background="@color/light_gray">
+    android:background="@drawable/main_background_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -51,123 +51,148 @@
         android:textSize="25sp"
         android:text="10s"
         android:layout_gravity="center_horizontal"/>
-    
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/text_view_stroke_3"
-        android:layout_marginHorizontal="30dp"
-        android:paddingVertical="5dp"
-        android:weightSum="6">
-
-        <FrameLayout
-            android:id="@+id/game_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-            <LinearLayout
-                android:id="@+id/game_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".fragments.GameResultFragment"
-                android:background="#99FFF5"
-                android:layout_margin="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:text="@string/hello_blank_fragment"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:id="@+id/txt_next_player"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:text="@string/hello_blank_fragment"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/black"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="15dp"
-                    android:layout_marginTop="10dp">
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_result_exit"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="Thoát"
-                        android:backgroundTint="@color/colorRed"
-                        android:visibility="gone"/>
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_result_continue"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:backgroundTint="@color/colorBlue"
-                        android:text="Tiếp tục"
-                        android:visibility="gone"/>
-                </RelativeLayout>
-            </LinearLayout>
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/txt_game_previous_word"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="School"
-            android:textColor="@color/colorRed"
-            android:textSize="25sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/txt_game_word_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trường học"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:paddingHorizontal="10dp"
-            android:layout_weight="4"
-            android:textAlignment="center"/>
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:weightSum="10"
-            android:layout_gravity="center_horizontal"
-            android:paddingHorizontal="15dp">
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:weightSum="6">
 
-            <EditText
-                android:id="@+id/edt_game_word"
-                android:layout_width="0dp"
+            <FrameLayout
+                android:id="@+id/game_frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/game_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".fragments.GameResultFragment"
+                    android:background="#99FFF5"
+                    android:layout_margin="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="30sp"
+                        android:text="@string/hello_blank_fragment"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/txt_next_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="30sp"
+                        android:text="@string/hello_blank_fragment"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="15dp"
+                        android:layout_marginTop="10dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_result_exit"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Thoát"
+                            android:backgroundTint="@color/colorRed"
+                            android:visibility="gone"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_result_continue"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:backgroundTint="@color/colorBlue"
+                            android:text="Tiếp tục"
+                            android:visibility="gone"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nhập từ"
-                android:textSize="25sp"
-                android:layout_weight="8"/>
+                android:orientation="horizontal"
+                android:weightSum="10">
 
-            <ImageButton
-                android:id="@+id/btn_game_send"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="2"
-                android:src="@drawable/ic_send" />
+                <TextView
+                    android:id="@+id/txt_game_previous_word"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="School"
+                    android:textColor="@color/colorRed"
+                    android:textSize="25sp"
+                    android:gravity="center"
+                    android:layout_weight="7"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_game_show_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="More..."
+                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_game_word_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trường học"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:paddingHorizontal="10dp"
+                android:layout_weight="4"
+                android:textAlignment="viewStart"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:weightSum="10"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="15dp">
+
+                <EditText
+                    android:id="@+id/edt_game_word"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Nhập từ"
+                    android:textSize="25sp"
+                    android:layout_weight="8"/>
+
+                <ImageButton
+                    android:id="@+id/btn_game_send"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_send"
+                    android:backgroundTint="@color/transparent"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    
+
 
     <LinearLayout
         android:id="@+id/game_button_wrapper"
@@ -201,21 +226,39 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txtPlayersOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thứ tự người chơi"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/black"
-        android:textSize="25sp"/>
-
-    <ListView
-        android:id="@+id/lv_game_player_left"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_player_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="5dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp"
+        android:layout_marginBottom="40dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txtPlayersOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thứ tự người chơi"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="25sp"/>
+
+            <ListView
+                android:id="@+id/lv_game_player_left"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="10dp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

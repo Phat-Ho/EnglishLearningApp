@@ -1,22 +1,35 @@
 package com.example.englishlearningapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.PlayerListGameAdapter;
 import com.example.englishlearningapp.models.HistoryGameWord;
@@ -25,14 +38,21 @@ import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
+import com.example.englishlearningapp.utils.Server;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.material.button.MaterialButton;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
@@ -40,10 +60,12 @@ public class GameActivity extends AppCompatActivity {
     EditText edtWord;
     ImageButton imgBtnSend;
     TextView txtResult, txtNextPlayer;
-    MaterialButton btnExit, btnContinue, btnGameExit, btnGameContinue, btnGameHistory;
+    MaterialButton btnExit, btnContinue, btnGameExit, btnGameContinue, btnGameHistory, btnShowMore;
     GlobalVariable globalVariable;
     ListView lvPlayerLeft;
     FrameLayout gameFrameLayout;
+    CardView cardPlayerOrder;
+    Dialog gamePopup;
     LinearLayout gameBtnWrapper, gameLinearLayout;
     ArrayList<Player> playerList = new ArrayList<>();
     PlayerListGameAdapter playerAdapter;
@@ -51,6 +73,11 @@ public class GameActivity extends AppCompatActivity {
     long gameDBId;
     LoginManager loginManager;
     DatabaseAccess databaseAccess;
+    TextView txtPopupWord, txtPopupWordMeaning;
+    ImageButton imgBtnPopUpPronoun;
+    ImageView imgPopupWord;
+    TextToSpeech textToSpeech;
+    YouTubePlayerView youTubePlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +86,7 @@ public class GameActivity extends AppCompatActivity {
         globalVariable = GlobalVariable.getInstance(this);
         loginManager = new LoginManager(this);
         databaseAccess = DatabaseAccess.getInstance(this);
+        gamePopup = new Dialog(this);
         InitialView();
         GetIntentData();
         SetUpListView();
@@ -93,6 +121,7 @@ public class GameActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         globalVariable.mSocket.emit("leaveGame", jsonObject);
+        textToSpeech.shutdown();
     }
 
     private Emitter.Listener onSendResult = new Emitter.Listener() {
@@ -219,8 +248,7 @@ public class GameActivity extends AppCompatActivity {
                         txtNextPlayer.setText(winner + " là người chiến thắng");
                         txtNextPlayer.setTextColor(getResources().getColor(R.color.colorRed));
                         gameBtnWrapper.setVisibility(View.VISIBLE);
-                        lvPlayerLeft.setVisibility(View.GONE);
-                        txtPlayersOrder.setVisibility(View.GONE);
+                        cardPlayerOrder.setVisibility(View.GONE);
                         btnExit.setVisibility(View.GONE);
                         btnContinue.setVisibility(View.GONE);
                         txtTimer.setVisibility(View.INVISIBLE);
@@ -432,9 +460,110 @@ public class GameActivity extends AppCompatActivity {
                 globalVariable.mSocket.emit("getHistoryWord", gameId);
             }
         });
+
+        btnShowMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp();
+            }
+        });
+        gamePopup.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Log.d(TAG, "onCancel popup");
+                youTubePlayerView.release();
+            }
+        });
+    }
+
+    private void showPopUp(){
+        gamePopup.setContentView(R.layout.popup_detail_game);
+        txtPopupWord = gamePopup.findViewById(R.id.txt_game_word);
+        txtPopupWordMeaning = gamePopup.findViewById(R.id.txt_game_word_meaning);
+        imgBtnPopUpPronoun = gamePopup.findViewById(R.id.img_btn_game_pronounce);
+        imgPopupWord = gamePopup.findViewById(R.id.img_game_word);
+        youTubePlayerView = gamePopup.findViewById(R.id.yt_player_game);
+
+        final String currentWord = txtCurrentWord.getText().toString();
+        ArrayList<Word> words = databaseAccess.getWordExactly(currentWord);
+        if(words.size() > 0){
+            ProcessingHTML(words.get(0).getHtml());
+            loadingImage(currentWord);
+            imgBtnPopUpPronoun.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textToSpeech.speak(currentWord, TextToSpeech.QUEUE_FLUSH, null, "");
+                }
+            });
+
+            final String youtubeLink = words.get(0).getYoutubeLink();
+            if(youtubeLink != null){
+                if (youTubePlayerView != null){
+                    youTubePlayerView.setVisibility(View.VISIBLE);
+                    youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                        @Override
+                        public void onReady(YouTubePlayer youTubePlayer) {
+                            super.onReady(youTubePlayer);
+                            youTubePlayer.loadVideo(youtubeLink, 0);
+                        }
+                    });
+                }
+            }else {
+                youTubePlayerView.setVisibility(View.GONE);
+            }
+        }
+        gamePopup.show();
+    }
+
+    private void ProcessingHTML(String contentHtml){
+        int start = contentHtml.indexOf("<h1>");
+        int end = contentHtml.indexOf("<h3>");
+        String replacement = "";
+        String toBeReplaced = contentHtml.substring(start, end);
+        String wordHtml = toBeReplaced;
+        String meaningHtml = contentHtml.replace(toBeReplaced, replacement);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            txtPopupWord.setText(Html.fromHtml(wordHtml, Html.FROM_HTML_MODE_LEGACY));
+            txtPopupWordMeaning.setText(Html.fromHtml(meaningHtml, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            txtPopupWord.setText(Html.fromHtml(wordHtml));
+            txtPopupWordMeaning.setText(Html.fromHtml(meaningHtml));
+        }
+    }
+
+    private void loadingImage(String query){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Server.UNSPLASH_SEARCH + query, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: " + response.toString());
+
+                        try {
+                            JSONArray resultArray = response.getJSONArray("results");
+                            if(resultArray.length() > 0){
+                                JSONObject urls = resultArray.getJSONObject(0).getJSONObject("urls");
+                                String regular_url = urls.getString("regular");
+                                Picasso.get().load(regular_url).into(imgPopupWord);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("AAA", error.toString());
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void InitialView() {
+        cardPlayerOrder = findViewById(R.id.card_player_order);
         gameLinearLayout = findViewById(R.id.game_linear_layout);
         gameBtnWrapper = findViewById(R.id.game_button_wrapper);
         txtPlayersOrder = findViewById(R.id.txtPlayersOrder);
@@ -453,6 +582,17 @@ public class GameActivity extends AppCompatActivity {
         btnGameContinue = findViewById(R.id.btn_game_continue);
         btnGameExit = findViewById(R.id.btn_game_exit);
         btnGameHistory = findViewById(R.id.btn_game_history);
+        btnShowMore = findViewById(R.id.btn_game_show_more);
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR){
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }else{
+                    Log.d(TAG, "onInit: Error");
+                }
+            }
+        });
     }
 
     private void hideSoftKeyBoard() {

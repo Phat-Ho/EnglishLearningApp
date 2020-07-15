@@ -334,7 +334,6 @@ public class MeaningActivity extends AppCompatActivity {
             txtWordHtml.setText(Html.fromHtml(wordHtml));
             txtContentHtml.setText(Html.fromHtml(meaningHtml));
         }
-
     }
 
     private void MappingView() {

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="450dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/yt_player_game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:autoPlay="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/txt_game_word"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Word"
+                android:textSize="22sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="4"/>
+
+            <ImageButton
+                android:id="@+id/img_btn_game_pronounce"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_volume"
+                android:backgroundTint="@color/transparent"
+                android:layout_weight="2"/>
+
+            <ImageView
+                android:id="@+id/img_game_word"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                android:layout_weight="4"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_game_word_meaning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</FrameLayout>

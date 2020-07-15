@@ -113,7 +113,7 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_setting, container, false);
-        settingPopup = new Dialog(getActivity());
+        settingPopup = new Dialog(getActivity() != null ? getActivity() : requireContext());
         spinnerStartHour = view.findViewById(R.id.spinner_start_hour);
         spinnerEndHour = view.findViewById(R.id.spinner_end_hour);
         spinnerNumberOfWords = view.findViewById(R.id.spinner_number_of_words);

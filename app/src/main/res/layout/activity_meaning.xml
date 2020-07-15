@@ -5,7 +5,7 @@
     android:id="@+id/meaningContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@drawable/main_background_gradient"
     android:orientation="vertical"
     tools:context=".activity.MeaningActivity"
     android:focusable="true"
@@ -69,70 +69,77 @@
         android:inputType="text"
         android:nextFocusUp="@id/meaning_auto_complete_search_box"
         android:nextFocusLeft="@id/meaning_auto_complete_search_box"/>
-    <ScrollView
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:cardCornerRadius="10dp"
+        android:elevation="5dp"
+        app:cardElevation="5dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/text_view_stroke_2"
-        android:padding="10dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="10dp">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/youtube_player_view"
-                app:autoPlay="false" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/youtube_player_view"
+                    app:autoPlay="false" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textWordHtml"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonPronounce"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_volume"
+                        app:layout_constraintStart_toEndOf="@+id/textWordHtml"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:backgroundTint="@color/transparent"/>
+
+                    <ImageView
+                        android:id="@+id/imageViewMeaning"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:scaleType="centerCrop"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <TextView
-                    android:id="@+id/textWordHtml"
+                    android:id="@+id/textViewContentHtml"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content"/>
 
-                <ImageButton
-                    android:id="@+id/imageButtonPronounce"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="15dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume"
-                    app:layout_constraintStart_toEndOf="@+id/textWordHtml"
-                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imageViewMeaning"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:scaleType="centerCrop"/>
+        </ScrollView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-            <TextView
-                android:id="@+id/textViewContentHtml"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
