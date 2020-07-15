@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
@@ -22,9 +23,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -39,6 +42,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.ConnetedWordActivity;
+import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
 import com.example.englishlearningapp.models.Word;
@@ -247,104 +251,103 @@ public class HomeFragment extends Fragment {
         startActivity(intent);
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void saveHistory(final int wordID, final int pUserID){
         final LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(3000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (ActivityCompat.checkSelfPermission(getActivity() != null ? getActivity() : requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+        } else {
+            LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    LocationServices.getFusedLocationProviderClient(getActivity() != null ? getActivity() : requireContext()).removeLocationUpdates(this);
+                    if (locationResult != null && locationResult.getLocations().size() > 0) {
+                        int latestLocationIndex = locationResult.getLocations().size() - 1;
+                        double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                        double longtitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                        getAddress(latitude, longtitude, wordID, pUserID);
+                    }
+                }
+            }, Looper.getMainLooper());
         }
-        LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                LocationServices.getFusedLocationProviderClient(getActivity() != null ? getActivity() : requireContext()).removeLocationUpdates(this);
-                if (locationResult != null && locationResult.getLocations().size() > 0){
-                    int latestLocationIndex = locationResult.getLocations().size() - 1;
-                    double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                    double longtitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                    Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(latitude, longtitude, 1);
-                        Address obj = addresses.get(0);
-                        final String location = obj.getAddressLine(0);
-                        Log.d(TAG, "onLocationResult: " + location);
-                        final long currentDateTime = System.currentTimeMillis();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-                        String dateString = simpleDateFormat.format(currentDateTime);
-                        //Nếu có internet và đã login thì add vô server vào local với sync status = success
-                        if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
-                            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0, location);
-                            String sendDataUrl = Server.SEND_DATA_URL;
-                            final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+    }
 
-                            //Initial request body
-                            JSONArray jsonArray = new JSONArray();
+    public void getAddress(double lat, double lng, int wordID, int pUserID) {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String location = obj.getAddressLine(0);
+            final long currentDateTime = System.currentTimeMillis();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            String dateString = simpleDateFormat.format(currentDateTime);
+            //Nếu có internet và đã login thì add vô server vào local với sync status = success
+            if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
+                final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0, location);
+                String sendDataUrl = Server.SEND_DATA_URL;
+                final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+                //Initial request body
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("table", "searchhistory");
+                    JSONArray jsonArray1 = new JSONArray();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("Id", insertId);
+                    jsonObject1.put("IdUser", pUserID);
+                    jsonObject1.put("IdWord", wordID);
+                    jsonObject1.put("Remembered", 0);
+                    jsonObject1.put("Synchronized", 0);
+                    jsonObject1.put("TimeSearch", dateString);
+                    jsonObject1.put("LinkWeb", "");
+                    jsonObject1.put("IsChange", 0);
+                    jsonObject1.put("IdServer", 0);
+                    jsonArray1.put(jsonObject1);
+                    jsonObject.put("data", jsonArray1);
+                    jsonArray.put(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if(response.length() > 0){
                             try {
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("table", "searchhistory");
-                                JSONArray jsonArray1 = new JSONArray();
-                                JSONObject jsonObject1 = new JSONObject();
-                                jsonObject1.put("Id", insertId);
-                                jsonObject1.put("IdUser", pUserID);
-                                jsonObject1.put("IdWord", wordID);
-                                jsonObject1.put("Remembered", 0);
-                                jsonObject1.put("Synchronized", 0);
-                                jsonObject1.put("TimeSearch", dateString);
-                                jsonObject1.put("LinkWeb", "");
-                                jsonObject1.put("IsChange", 0);
-                                jsonObject1.put("IdServer", 0);
-                                jsonArray1.put(jsonObject1);
-                                jsonObject.put("data", jsonArray1);
-                                jsonArray.put(jsonObject);
+                                JSONObject dataArray = (JSONObject) response.get(0);
+                                JSONArray array = (JSONArray) dataArray.get("data");
+                                JSONObject data = (JSONObject) array.get(0);
+                                int idServer = data.getInt("IdServer");
+                                databaseAccess.updateHistoryIdServer(insertId, idServer);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-                            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
-                                @Override
-                                public void onResponse(JSONArray response) {
-                                    if(response.length() > 0){
-                                        try {
-                                            JSONObject dataArray = (JSONObject) response.get(0);
-                                            JSONArray array = (JSONArray) dataArray.get("data");
-                                            JSONObject data = (JSONObject) array.get(0);
-                                            int idServer = data.getInt("IdServer");
-                                            databaseAccess.updateHistoryIdServer(insertId, idServer);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    if(error != null){
-                                        Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
-                                    }
-
-                                }
-                            });
-                            requestQueue.add(request);
-                        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-                            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0, location);
                         }
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
                     }
-                }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(error != null){
+                            Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                        }
+
+                    }
+                });
+                requestQueue.add(request);
+            }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+                databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0, location);
             }
-        }, Looper.getMainLooper());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 

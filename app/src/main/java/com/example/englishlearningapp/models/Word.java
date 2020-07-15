@@ -11,7 +11,15 @@ public class Word implements Parcelable {
     private int remembered;
     private String youtubeLink;
     private long date;
+    private String location;
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public static Creator<Word> getCREATOR() {
         return CREATOR;

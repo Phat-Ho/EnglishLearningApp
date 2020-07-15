@@ -35,6 +35,7 @@ import java.io.IOException;
 
 public class MainHomeActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_LOCATION = 1;
     BottomNavigationView bottomNavigation;
 
     final Fragment homeFragment = new HomeFragment();
@@ -221,6 +222,14 @@ public class MainHomeActivity extends AppCompatActivity {
 
             }
 
+        }
+
+        if (requestCode == REQUEST_CODE_LOCATION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
