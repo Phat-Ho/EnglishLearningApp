@@ -17,6 +17,7 @@ public class DatabaseContract {
     public static String ID_SERVER = "IdServer";
     public static String ID_USER = "IdUser";
     public static String DATE = "date";
+    public static String LOCATION = "location";
     public static int ALARM_HISTORY = 99;
     public static int ALARM_FAVORITE = 100;
 }

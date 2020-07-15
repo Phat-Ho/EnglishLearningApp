@@ -325,6 +325,21 @@ public class DatabaseAccess {
         value.put(DatabaseContract.IS_CHANGE, 0);
         value.put(DatabaseContract.ID_SERVER, idServer);
         value.put(DatabaseContract.ID_USER, userId);
+        value.put(DatabaseContract.LOCATION, "");
+        return database.insert("history", null, value);
+    }
+
+    public long addHistory(int pWordID, long pDate, int userId, int remembered, int idServer, String location){
+        ContentValues value = new ContentValues();
+        value.put(DatabaseContract.WORD_ID, pWordID);
+        value.put(DatabaseContract.DATE, pDate);
+        value.put(DatabaseContract.REMEMBERED, remembered);
+        value.put(DatabaseContract.SYNCHRONIZED, 0);
+        value.put(DatabaseContract.LINK_WEB, "");
+        value.put(DatabaseContract.IS_CHANGE, 0);
+        value.put(DatabaseContract.ID_SERVER, idServer);
+        value.put(DatabaseContract.ID_USER, userId);
+        value.put(DatabaseContract.LOCATION, location);
         return database.insert("history", null, value);
     }
 
