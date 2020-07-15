@@ -5,14 +5,24 @@ import java.io.Serializable;
 public class Player implements Serializable {
     private int id;
     private String name;
+    private boolean isPlay;
 
     public Player() {
         this.id = 0;
     }
 
-    public Player(int id, String name) {
+    public Player(int id, String name, boolean isPlay) {
         this.id = id;
         this.name = name;
+        this.isPlay = isPlay;
+    }
+
+    public boolean isPlay() {
+        return isPlay;
+    }
+
+    public void setPlay(boolean play) {
+        isPlay = play;
     }
 
     public int getId() {

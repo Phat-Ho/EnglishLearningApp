@@ -21,6 +21,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.RoomAdapter;
 import com.example.englishlearningapp.models.Player;
 import com.example.englishlearningapp.models.Room;
+import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.github.nkzawa.emitter.Emitter;
@@ -39,18 +40,24 @@ public class RoomListActivity extends AppCompatActivity {
     RoomAdapter adapter;
     LoginManager loginManager;
     GlobalVariable globalVariable;
+    DatabaseAccess databaseAccess;
+    boolean playerType;
+    int playerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
         globalVariable = GlobalVariable.getInstance(this);
+        databaseAccess = DatabaseAccess.getInstance(this);
         initView();
         SetUpToolbar();
         loginManager = new LoginManager(this);
+        playerId = loginManager.getUserId();
         globalVariable.mSocket.emit("getRoom");
         globalVariable.mSocket.on("roomList", onRetrieveRoomList);
         globalVariable.mSocket.once("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.once("sendViewGame", onSendViewGame);
     }
 
     @Override
@@ -58,7 +65,55 @@ public class RoomListActivity extends AppCompatActivity {
         super.onDestroy();
         globalVariable.mSocket.off("roomList", onRetrieveRoomList);
         globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.off("sendViewGame", onSendViewGame);
     }
+
+    private Emitter.Listener onSendViewGame = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.d(TAG, "args: " + args.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send game: " + args[0].toString());
+                    JSONObject gameObj = (JSONObject) args[0];
+                    try {
+                        String currentWord = gameObj.getString("currentWord");
+                        JSONArray playersOrder = gameObj.getJSONArray("playerOrder");
+                        ArrayList<Player> temp = new ArrayList<>();
+                        int length = playersOrder.length();
+                        if(length > 0) {
+                            for (int i = 0; i < length; i++) {
+                                int id = playersOrder.getJSONObject(i).getInt("playerId");
+                                String name = playersOrder.getJSONObject(i).getString("playerName");
+                                boolean isPlay = playersOrder.getJSONObject(i).getBoolean("isPlay");
+                                if(isPlay){
+                                    Player player = new Player(id, name, isPlay);
+                                    temp.add(player);
+                                }
+                            }
+                        }
+                        long date = gameObj.getLong("date");
+                        String roomName = gameObj.getString("roomName");
+                        long gameDBId = databaseAccess.addGame(date, roomName);
+                        long gameId = gameObj.getLong("id");
+                        Intent gameIntent = new Intent(RoomListActivity.this, GameActivity.class);
+                        gameIntent.putExtra("currentWord", currentWord);
+                        gameIntent.putExtra("gameId", gameId);
+                        gameIntent.putExtra("playerList", temp);
+                        gameIntent.putExtra("gameDBId", gameDBId);
+                        gameIntent.putExtra("isPlay", false);
+                        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+                        globalVariable.mSocket.off("sendViewGame", onSendViewGame);
+                        startActivity(gameIntent);
+                        finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onRetrieveRoomList = new Emitter.Listener() {
         @Override
@@ -80,7 +135,8 @@ public class RoomListActivity extends AppCompatActivity {
                             String time = object.getString("time");
                             JSONArray playerArr = object.getJSONArray("players");
                             String creator = object.getString("owner");
-                            Room room = new Room(id, name, numOfPlayers, password, time, playerArr.length(), creator);
+                            boolean isPlaying = object.getBoolean("isStart");
+                            Room room = new Room(id, name, numOfPlayers, password, time, playerArr.length(), creator, isPlaying);
                             temp.add(room);
                         }
                         Log.d(TAG, "temp room: " + temp.toString());
@@ -114,14 +170,21 @@ public class RoomListActivity extends AppCompatActivity {
                             for (int i = 0; i < length; i++) {
                                 int id = playerArray.getJSONObject(i).getInt("playerId");
                                 String name = playerArray.getJSONObject(i).getString("playerName");
-                                Player player = new Player(id, name);
-                                temp.add(player);
+                                boolean isPlay = playerArray.getJSONObject(i).getBoolean("isPlay");
+                                if(id == playerId){
+                                    playerType = isPlay;
+                                }
+                                if(isPlay){
+                                    Player player = new Player(id, name, true);
+                                    temp.add(player);
+                                }
                             }
                             Intent roomInfoIntent = new Intent(RoomListActivity.this, RoomInfoActivity.class);
                             roomInfoIntent.putExtra("roomId", roomId);
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            roomInfoIntent.putExtra("isPlay", playerType);
                             globalVariable.mSocket.off("roomList", onRetrieveRoomList);
                             globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
@@ -142,28 +205,73 @@ public class RoomListActivity extends AppCompatActivity {
         lvRoomList.setAdapter(adapter);
         lvRoomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(arrRoom.get(position).getPlayerCount() >= arrRoom.get(position).getNumOfPlayers()){
-                    showAlert("Phòng đã đầy", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-                }else{
-                    int roomId = arrRoom.get(position).getId();
-                    String playerName = loginManager.getUserName();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final int roomId = arrRoom.get(position).getId();
+                final String playerName = loginManager.getUserName();
+                if(arrRoom.get(position).isPlaying()){
                     JSONObject jsonObject = new JSONObject();
                     JSONObject playerObj = new JSONObject();
+                    JSONObject joinGameObj = new JSONObject();
                     try {
                         jsonObject.put("roomId", roomId);
                         playerObj.put("playerId", loginManager.getUserId());
                         playerObj.put("playerName", playerName);
-                        playerObj.put("isPlay", true);
+                        playerObj.put("isPlay", false);
                         jsonObject.put("player", playerObj);
+                        joinGameObj.put("gameId", roomId + 10000);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     globalVariable.mSocket.emit("joinRoom", jsonObject);
+                    globalVariable.mSocket.emit("getGameInfo", roomId);
+                    globalVariable.mSocket.emit("joinGame", joinGameObj);
+                }else{
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this);
+                    builder.setTitle("Chọn kiểu tham gia");
+                    builder.setPositiveButton("Vào chơi", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(arrRoom.get(position).getPlayerCount() >= arrRoom.get(position).getNumOfPlayers()){
+                                showAlert("Phòng đã đầy", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
+                            }else{
+                                JSONObject jsonObject = new JSONObject();
+                                JSONObject playerObj = new JSONObject();
+                                try {
+                                    jsonObject.put("roomId", roomId);
+                                    playerObj.put("playerId", loginManager.getUserId());
+                                    playerObj.put("playerName", playerName);
+                                    playerObj.put("isPlay", true);
+                                    jsonObject.put("player", playerObj);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                globalVariable.mSocket.emit("joinRoom", jsonObject);
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Vào xem", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            JSONObject jsonObject = new JSONObject();
+                            JSONObject playerObj = new JSONObject();
+                            try {
+                                jsonObject.put("roomId", roomId);
+                                playerObj.put("playerId", loginManager.getUserId());
+                                playerObj.put("playerName", playerName);
+                                playerObj.put("isPlay", false);
+                                jsonObject.put("player", playerObj);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            globalVariable.mSocket.emit("joinRoom", jsonObject);
+                        }
+                    });
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             }
         });

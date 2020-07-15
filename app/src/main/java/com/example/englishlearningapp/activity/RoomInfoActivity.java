@@ -40,7 +40,9 @@ public class RoomInfoActivity extends AppCompatActivity {
     GlobalVariable globalVariable;
     LoginManager loginManager;
     DatabaseAccess databaseAccess;
+    boolean playerType;
     int roomId;
+    int playerId;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -72,14 +74,6 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onStop: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("roomId", roomId);
-            jsonObj.put("playerId", loginManager.getUserId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //globalVariable.mSocket.emit("leaveRoom", jsonObj);
     }
 
     @Override
@@ -88,6 +82,14 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("roomId", roomId);
+            jsonObj.put("playerId", loginManager.getUserId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //globalVariable.mSocket.emit("leaveRoom", jsonObj);
     }
 
     private void SetUpListView() {
@@ -105,10 +107,14 @@ public class RoomInfoActivity extends AppCompatActivity {
         roomInfoOwnerTxt.setText(roomOwner);
         txtPlayerNum.setText(String.valueOf(playerNum));
         String playerName = intent.getStringExtra("playerName");
-        int playerId = loginManager.getUserId();
+        playerId = loginManager.getUserId();
+
+        if(intent.hasExtra("isPlay")){
+            playerType = intent.getBooleanExtra("isPlay", true);
+        }
 
         if(playerName != null){
-            Player player = new Player(playerId, playerName);
+            Player player = new Player(playerId, playerName, true);
             playerList.add(player);
         }
         ArrayList<Player> players = (ArrayList<Player>) intent.getSerializableExtra("playerList");
@@ -151,8 +157,14 @@ public class RoomInfoActivity extends AppCompatActivity {
                             {
                                 int id = playerArray.getJSONObject(i).getInt("playerId");
                                 String name = playerArray.getJSONObject(i).getString("playerName");
-                                Player player = new Player(id, name);
-                                temp.add(player);
+                                boolean isPlay = playerArray.getJSONObject(i).getBoolean("isPlay");
+                                if(id == playerId){
+                                    playerType = isPlay;
+                                }
+                                if(isPlay){
+                                    Player player = new Player(id, name, true);
+                                    temp.add(player);
+                                }
                             }
 
                             if(temp.get(0).getId() == loginManager.getUserId()){
@@ -198,8 +210,11 @@ public class RoomInfoActivity extends AppCompatActivity {
                             for (int i = 0; i < length; i++) {
                                 int id = playersOrder.getJSONObject(i).getInt("playerId");
                                 String name = playersOrder.getJSONObject(i).getString("playerName");
-                                Player player = new Player(id, name);
-                                temp.add(player);
+                                boolean isPlay = playersOrder.getJSONObject(i).getBoolean("isPlay");
+                                if(isPlay){
+                                    Player player = new Player(id, name, true);
+                                    temp.add(player);
+                                }
                             }
                         }
                         long date = gameObj.getLong("date");
@@ -210,6 +225,7 @@ public class RoomInfoActivity extends AppCompatActivity {
                         gameIntent.putExtra("gameId", gameId);
                         gameIntent.putExtra("playerList", temp);
                         gameIntent.putExtra("gameDBId", gameDBId);
+                        gameIntent.putExtra("isPlay", playerType);
                         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
                         globalVariable.mSocket.off("sendGame", onSendGame);
                         startActivity(gameIntent);

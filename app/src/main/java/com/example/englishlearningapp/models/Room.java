@@ -8,8 +8,9 @@ public class Room {
     private String timer;
     private String creator;
     private int playerCount;
+    private boolean isPlaying;
 
-    public Room(int id, String name, Integer numOfPlayers, String password, String timer, int playerCount, String creator) {
+    public Room(int id, String name, Integer numOfPlayers, String password, String timer, int playerCount, String creator, boolean isPlaying) {
         this.id = id;
         this.name = name;
         this.numOfPlayers = numOfPlayers;
@@ -17,6 +18,15 @@ public class Room {
         this.timer = timer;
         this.playerCount = playerCount;
         this.creator = creator;
+        this.isPlaying = isPlaying;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 
     public String getCreator() {
