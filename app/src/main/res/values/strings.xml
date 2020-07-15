@@ -51,7 +51,18 @@
     <string name="save">Save</string>
     <string name="scan_with_camera">Scan With Camera</string>
     <string name="scanned_word">Scanned Words</string>
-
+    <string name="create_room">Create room</string>
+    <string name="room_name">Room name</string>
+    <string name="num_of_players">Number of players</string>
+    <string name="time_answer">Time to answer (s)</string>
+    <string name="create">Create</string>
+    <string name="creator">Creator</string>
+    <string name="player_list">Player list</string>
+    <string name="room_list">Room list</string>
+    <string name="subject_list">Subject list</string>
+    <string name="word_connected">Word Connected Game</string>
+    <string name="look_up_camera">Look Up With Camera</string>
+    <string name="look_up">Look up</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

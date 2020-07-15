@@ -62,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="Room's name"
+                        android:text="@string/room_name"
                         android:textStyle="bold"
                         android:textSize="25sp"
                         android:textColor="@color/black"/>
@@ -71,7 +71,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Name"
+                        android:hint="@string/name"
                         android:textSize="25sp"
                         android:id="@+id/editTextRoomName"
                         android:textDirection="ltr"
@@ -90,7 +90,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="7"
-                        android:text="Number of players"
+                        android:text="@string/num_of_players"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25sp"/>
@@ -117,7 +117,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="7"
-                        android:text="Time to answer (s)"
+                        android:text="@string/time_answer"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="25sp"/>
@@ -145,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="Password"
+                        android:text="@string/password"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="25sp"/>
@@ -181,7 +181,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
-        android:text="Create"
+        android:text="@string/create"
         android:id="@+id/buttonCreateRoom"
         android:backgroundTint="@color/colorBlue"/>
 

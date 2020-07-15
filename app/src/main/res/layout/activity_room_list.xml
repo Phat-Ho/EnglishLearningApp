@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên phòng"
+            android:text="@string/room_name"
             android:textAlignment="center"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chủ phòng"
+            android:text="@string/creator"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textAlignment="viewEnd"
@@ -61,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Số người"
+            android:text="@string/num_of_players"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp"

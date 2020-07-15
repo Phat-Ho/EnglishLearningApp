@@ -131,7 +131,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         ArrayList subjectNames = new ArrayList<>(Arrays.asList(getResources().getString(R.string.subject_learning),
                 getResources().getString(R.string.vietnamese),
-                "Quét bằng camera"));
+                getResources().getString(R.string.look_up_camera)));
         ArrayList subjectImages = new ArrayList<>(Arrays.asList(R.drawable.img_topic, R.drawable.img_vie_eng, R.drawable.img_camera));
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
@@ -228,6 +228,7 @@ public class HomeFragment extends Fragment {
         });
 
         txtMeaningSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> word = databaseAccess.getWords(txtMeaningSearch.getText().toString());

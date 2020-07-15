@@ -58,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:text="Creator"
+                    android:text="@string/creator"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textStyle="bold"
-                    android:text="Number of Players"
+                    android:text="@string/num_of_players"
                     android:textSize="20sp"
                     android:textColor="@color/black"/>
 
@@ -143,7 +143,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Start"
+        android:text="@string/start"
         android:id="@+id/buttonStartGame"
         android:backgroundTint="@color/colorBlue"/>
 

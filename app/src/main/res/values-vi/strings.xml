@@ -51,4 +51,16 @@
     <string name="save">Lưu</string>
     <string name="scan_with_camera">Quét từ bằng Camera</string>
     <string name="scanned_word">Những từ quét được</string>
+    <string name="create_room">Tạo phòng</string>
+    <string name="room_name">Tên phòng</string>
+    <string name="num_of_players">Số người</string>
+    <string name="time_answer">Thời gian</string>
+    <string name="create">Tạo</string>
+    <string name="creator">Người tạo</string>
+    <string name="player_list">Danh sách người chơi</string>
+    <string name="room_list">Danh sách phòng</string>
+    <string name="subject_list">Danh sách chủ đề</string>
+    <string name="word_connected">Nối Chữ</string>
+    <string name="look_up_camera">Tra từ bằng Camera</string>
+    <string name="look_up">Tra từ</string>
 </resources>
