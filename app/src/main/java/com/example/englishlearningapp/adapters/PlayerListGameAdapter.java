@@ -54,13 +54,14 @@ public class PlayerListGameAdapter extends BaseAdapter {
 
         //Set data from array list to view holder
         Player player = (Player) getItem(position);
-        viewHolder.txtPlayerName.setText(player.getName());
-        if(loginManager.getUserId() == player.getId()){
-            viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.colorGreen));
-        }else{
-            viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.black));
+        if(player.isPlay()){
+            viewHolder.txtPlayerName.setText(player.getName());
+            if(loginManager.getUserId() == player.getId()){
+                viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.colorGreen));
+            }else{
+                viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.black));
+            }
         }
-
         return convertView;
     }
 

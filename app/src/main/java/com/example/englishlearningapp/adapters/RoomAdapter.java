@@ -42,7 +42,7 @@ public class RoomAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        TextView txtRoomName, txtRoomOwner, txtRoomPlayerCount;
+        TextView txtRoomName, txtRoomOwner, txtRoomPlayerCount, txtStatus;
     }
 
     @Override
@@ -55,6 +55,7 @@ public class RoomAdapter extends BaseAdapter {
             viewHolder.txtRoomName = convertView.findViewById(R.id.textViewRoomName);
             viewHolder.txtRoomOwner = convertView.findViewById(R.id.textViewRoomOwner);
             viewHolder.txtRoomPlayerCount = convertView.findViewById(R.id.textViewRoomPlayer);
+            viewHolder.txtStatus = convertView.findViewById(R.id.txt_room_status);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -65,7 +66,7 @@ public class RoomAdapter extends BaseAdapter {
         viewHolder.txtRoomName.setText(room.getName());
         viewHolder.txtRoomOwner.setText(room.getCreator());
         viewHolder.txtRoomPlayerCount.setText(room.getPlayerCount() + "/" + room.getNumOfPlayers());
-
+        viewHolder.txtStatus.setText(room.isPlaying() ? "Đang chơi" : "Đang chờ");
         return convertView;
     }
 }

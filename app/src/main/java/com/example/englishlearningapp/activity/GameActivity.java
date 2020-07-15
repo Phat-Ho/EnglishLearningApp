@@ -71,6 +71,7 @@ public class GameActivity extends AppCompatActivity {
     PlayerListGameAdapter playerAdapter;
     int gameId;
     long gameDBId;
+    boolean isPlay;
     LoginManager loginManager;
     DatabaseAccess databaseAccess;
     TextView txtPopupWord, txtPopupWordMeaning;
@@ -200,8 +201,11 @@ public class GameActivity extends AppCompatActivity {
                             for (int i = 0; i < length; i++) {
                                 int id = playerArray.getJSONObject(i).getInt("playerId");
                                 String name = playerArray.getJSONObject(i).getString("playerName");
-                                Player player = new Player(id, name);
-                                temp.add(player);
+                                boolean isPlay = playerArray.getJSONObject(i).getBoolean("isPlay");
+                                if(isPlay){
+                                    Player player = new Player(id, name, isPlay);
+                                    temp.add(player);
+                                }
                             }
                             Intent roomInfoIntent = new Intent(GameActivity.this, RoomInfoActivity.class);
                             roomInfoIntent.putExtra("roomId", roomId);
@@ -237,16 +241,19 @@ public class GameActivity extends AppCompatActivity {
                     hideSoftKeyBoard();
                     JSONObject obj = (JSONObject) args[0];
 
-                    String winner = null;
-                    JSONArray array = null;
+                    String winner;
+                    JSONArray array;
                     try {
                         winner = obj.getString("winner");
                         array = obj.getJSONArray("historyWord");
-
-                        gameLinearLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         gameFrameLayout.setVisibility(View.VISIBLE);
+                        if(isPlay){
+                            btnGameContinue.setVisibility(View.VISIBLE);
+                        }else{
+                            btnGameContinue.setVisibility(View.INVISIBLE);
+                        }
                         txtResult.setVisibility(View.INVISIBLE);
-                        txtNextPlayer.setText(winner + " là người chiến thắng");
+                        txtNextPlayer.setText(winner + " chiến thắng");
                         txtNextPlayer.setTextColor(getResources().getColor(R.color.colorRed));
                         gameBtnWrapper.setVisibility(View.VISIBLE);
                         cardPlayerOrder.setVisibility(View.GONE);
@@ -336,7 +343,8 @@ public class GameActivity extends AppCompatActivity {
                             for (int i = 0; i < length; i++) {
                                 int id = playerOrderArray.getJSONObject(i).getInt("playerId");
                                 String name = playerOrderArray.getJSONObject(i).getString("playerName");
-                                Player player = new Player(id, name);
+                                boolean isPlay = playerOrderArray.getJSONObject(i).getBoolean("isPlay");
+                                Player player = new Player(id, name, isPlay);
                                 temp.add(player);
                             }
                             playerList.clear();
@@ -381,6 +389,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         gameId = intent.getIntExtra("gameId", 0);
         gameDBId = intent.getLongExtra("gameDBId", 0);
+        isPlay = intent.getBooleanExtra("isPlay", false);
         playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
 
         if(playerList.get(0).getId() != loginManager.getUserId()){
