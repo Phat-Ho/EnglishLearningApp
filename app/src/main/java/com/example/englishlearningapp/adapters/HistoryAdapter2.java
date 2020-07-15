@@ -42,7 +42,7 @@ public class HistoryAdapter2 extends BaseAdapter {
     }
 
     private class ViewHolder{
-        TextView txtHistoryWord, txtDate;
+        TextView txtHistoryWord, txtDate, txtLocation;
     }
 
     @Override
@@ -54,6 +54,7 @@ public class HistoryAdapter2 extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.txtHistoryWord = convertView.findViewById(R.id.txt_word_row_history_2);
             viewHolder.txtDate = convertView.findViewById(R.id.txt_date_row_history_2);
+            viewHolder.txtLocation = convertView.findViewById(R.id.txt_location_row);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -61,6 +62,7 @@ public class HistoryAdapter2 extends BaseAdapter {
         Word word = historyWords.get(position);
         viewHolder.txtHistoryWord.setText(word.getWord());
         viewHolder.txtDate.setText(getDatetime(word.getDate()));
+        viewHolder.txtLocation.setText(word.getLocation());
         return convertView;
     }
 

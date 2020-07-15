@@ -34,6 +34,13 @@
         android:text="description"
         android:textSize="20sp"/>
     <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/popup_history_location"
+        android:text="Location"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

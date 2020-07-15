@@ -154,21 +154,23 @@ public class HistoryFragment extends Fragment {
         startActivityForResult(meaningIntent, HistoryFragment.MEANING_CODE);
     }
 
-    public void showPopup(int wordId, String word, String description){
+    public void showPopup(int wordId, String word, String description, String location){
         final DatabaseAccess databaseAccess1 = DatabaseAccess.getInstance(getActivity());
         ArrayList<MyDate> historyDateList = databaseAccess1.getHistoryDateByWordId(wordId);
         popupHistoryAdapter = new PopupHistoryAdapter(getActivity(), historyDateList);
         if(historyPopup.isShowing()){
             historyPopup.dismiss();
         }
-        TextView popUpClose, popUpWord, popUpDescription;
+        TextView popUpClose, popUpWord, popUpDescription, popUpLocation;
         ListView popUpListViewHistory;
         historyPopup.setContentView(R.layout.popup_history);
         popUpClose = historyPopup.findViewById(R.id.popup_history_txt_close);
         popUpWord = historyPopup.findViewById(R.id.popup_history_txt_word);
         popUpListViewHistory = historyPopup.findViewById(R.id.popup_history_lv_history);
+        popUpLocation = historyPopup.findViewById(R.id.popup_history_location);
         popUpListViewHistory.setAdapter(popupHistoryAdapter);
         popUpWord.setText(word);
+        popUpLocation.setText(location);
         popUpDescription = historyPopup.findViewById(R.id.popup_history_txt_description);
         popUpDescription.setText(description);
         popUpClose.setOnClickListener(new View.OnClickListener() {
