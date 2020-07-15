@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.FavoriteAdapter;
+import com.example.englishlearningapp.adapters.RememberedAdapter;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 
@@ -48,7 +49,7 @@ public class RememberedFragment extends Fragment {
 
     ListView lvRemembered;
     ArrayList<Word> rememberedWords;
-    FavoriteAdapter adapter;
+    RememberedAdapter adapter;
     DatabaseAccess databaseAccess;
 
     public static RememberedFragment newInstance(String param1, String param2) {
@@ -87,7 +88,7 @@ public class RememberedFragment extends Fragment {
 
     private void loadRememberedData(){
         rememberedWords = databaseAccess.getAllRememberedWords();
-        adapter = new FavoriteAdapter(getActivity(), R.layout.row_lv_favorite, rememberedWords);
+        adapter = new RememberedAdapter(getActivity(), R.layout.row_lv_remembered, rememberedWords);
         lvRemembered.setAdapter(adapter);
     }
 }
