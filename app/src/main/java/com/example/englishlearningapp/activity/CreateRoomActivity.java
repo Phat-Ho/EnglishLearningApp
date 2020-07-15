@@ -100,6 +100,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                         JSONObject playerObj = new JSONObject();
                         playerObj.put("playerId", loginManager.getUserId());
                         playerObj.put("playerName", username);
+                        playerObj.put("isPlay", true);
                         playerList.put(playerObj);
                         roomObject.put("owner", username);
                         roomObject.put("name", roomName);

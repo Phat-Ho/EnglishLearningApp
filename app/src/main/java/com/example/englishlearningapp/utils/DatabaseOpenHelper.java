@@ -15,8 +15,12 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        Log.d(TAG, "DatabaseOpenHelper: " + context.getDatabasePath(DATABASE_NAME).getPath());
+        long dbSize = context.getDatabasePath(DATABASE_NAME).length();
         Log.d(TAG, "Database Size: " + context.getDatabasePath(DATABASE_NAME).length());
+        if(dbSize < 30000){
+            context.deleteDatabase(DATABASE_NAME);
+            getReadableDatabase();
+        }
     }
 
     @Override

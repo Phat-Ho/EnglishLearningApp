@@ -158,6 +158,7 @@ public class RoomListActivity extends AppCompatActivity {
                         jsonObject.put("roomId", roomId);
                         playerObj.put("playerId", loginManager.getUserId());
                         playerObj.put("playerName", playerName);
+                        playerObj.put("isPlay", true);
                         jsonObject.put("player", playerObj);
                     } catch (JSONException e) {
                         e.printStackTrace();

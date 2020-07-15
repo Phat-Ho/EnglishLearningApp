@@ -72,6 +72,14 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onStop: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("roomId", roomId);
+            jsonObj.put("playerId", loginManager.getUserId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //globalVariable.mSocket.emit("leaveRoom", jsonObj);
     }
 
     @Override
@@ -80,14 +88,6 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("roomId", roomId);
-            jsonObj.put("playerId", loginManager.getUserId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        globalVariable.mSocket.emit("leaveRoom", jsonObj);
     }
 
     private void SetUpListView() {

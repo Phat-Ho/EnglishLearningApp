@@ -94,7 +94,7 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.on("sendGame", onSendGame);
         globalVariable.mSocket.on("sendTimer", onSendTimer);
         globalVariable.mSocket.on("sendResult", onSendResult);
-        globalVariable.mSocket.once("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.once("sendNewRoomInfo", onSendRoomInfo);
         globalVariable.mSocket.once("sendGameEnd", onSendGameEnd);
         globalVariable.mSocket.on("sendHistoryWord", onSendHistoryWord);
     }
@@ -112,7 +112,7 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.off("sendTimer", onSendTimer);
         globalVariable.mSocket.off("sendResult", onSendResult);
         globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
-        globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+        globalVariable.mSocket.off("sendNewRoomInfo", onSendRoomInfo);
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("gameId", gameId);
@@ -120,6 +120,7 @@ public class GameActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "emit leave game");
         globalVariable.mSocket.emit("leaveGame", jsonObject);
         textToSpeech.shutdown();
     }
@@ -211,7 +212,7 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
                             globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
-                            globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
+                            globalVariable.mSocket.off("sendNewRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
                             finish();
                         }
