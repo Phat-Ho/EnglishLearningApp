@@ -262,6 +262,66 @@ public class HomeFragment extends Fragment {
 
         if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+            final long currentDateTime = System.currentTimeMillis();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            String dateString = simpleDateFormat.format(currentDateTime);
+            //Nếu có internet và đã login thì add vô server vào local với sync status = success
+            if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
+                final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
+                String sendDataUrl = Server.SEND_DATA_URL;
+                final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+                //Initial request body
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("table", "searchhistory");
+                    JSONArray jsonArray1 = new JSONArray();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("Id", insertId);
+                    jsonObject1.put("IdUser", pUserID);
+                    jsonObject1.put("IdWord", wordID);
+                    jsonObject1.put("Remembered", 0);
+                    jsonObject1.put("Synchronized", 0);
+                    jsonObject1.put("TimeSearch", dateString);
+                    jsonObject1.put("LinkWeb", "");
+                    jsonObject1.put("IsChange", 0);
+                    jsonObject1.put("IdServer", 0);
+                    jsonArray1.put(jsonObject1);
+                    jsonObject.put("data", jsonArray1);
+                    jsonArray.put(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if(response.length() > 0){
+                            try {
+                                JSONObject dataArray = (JSONObject) response.get(0);
+                                JSONArray array = (JSONArray) dataArray.get("data");
+                                JSONObject data = (JSONObject) array.get(0);
+                                int idServer = data.getInt("IdServer");
+                                databaseAccess.updateHistoryIdServer(insertId, idServer);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(error != null){
+                            Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                        }
+
+                    }
+                });
+                requestQueue.add(request);
+            }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+                databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
+            }
         } else {
             LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
                 @Override
@@ -372,4 +432,18 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == HomeGridViewAdapter.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getActivity(), "Camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
+    }
 }
