@@ -226,7 +226,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }else if(str.indexOf(";", str.indexOf(")")) != -1){
                 meaning = str.substring(str.indexOf(")") + 2, str.indexOf(";", str.indexOf(")")));
             }else{
-                meaning = str.substring(str.lastIndexOf(")") + 2);
+                meaning = str.substring(str.lastIndexOf(")") + 1);
             }
         }else if(str.contains(":")){
             if(str.indexOf(",", str.indexOf(":")) != -1){
@@ -234,13 +234,13 @@ public class WelcomeActivity extends AppCompatActivity {
             }else if(str.indexOf(";", str.indexOf(":")) != -1){
                 meaning = str.substring(str.indexOf(":") + 2, str.indexOf(";", str.indexOf(":")));
             }else{
-                meaning = str.substring(str.lastIndexOf(":") + 2);
+                meaning = str.substring(str.lastIndexOf(":") + 1);
             }
         }else {
             if(str.indexOf(",", str.indexOf(",")) != -1){
                 meaning = str.substring(str.indexOf(",") + 2, str.indexOf(",", str.indexOf(",")));
             }else{
-                meaning = str.substring(str.lastIndexOf(",") + 2);
+                meaning = str.substring(str.lastIndexOf(",") + 1);
             }
         }
 
