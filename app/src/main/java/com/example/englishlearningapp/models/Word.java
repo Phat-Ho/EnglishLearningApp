@@ -30,6 +30,15 @@ public class Word implements Parcelable {
         this.html = html;
     }
 
+    public Word(int id, String word, String description, String pronounce, String html, String youtubeLink) {
+        this.id = id;
+        this.word = word;
+        this.description = description;
+        this.pronounce = pronounce;
+        this.html = html;
+        this.youtubeLink = youtubeLink;
+    }
+
     protected Word(Parcel in) {
         id = in.readInt();
         word = in.readString();

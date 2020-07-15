@@ -101,7 +101,8 @@ public class DatabaseAccess {
                     cursor.getString(1),
                     cursor.getString(cursor.getColumnIndex("description")),
                     cursor.getString(cursor.getColumnIndex("pronounce")),
-                    cursor.getString(cursor.getColumnIndex("html"))));
+                    cursor.getString(cursor.getColumnIndex("html")),
+                    cursor.getString(cursor.getColumnIndex("YoutubeLink"))));
             cursor.moveToNext();
         }
         cursor.close();
