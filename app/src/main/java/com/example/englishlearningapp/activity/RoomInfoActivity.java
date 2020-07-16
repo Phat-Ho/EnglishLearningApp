@@ -89,7 +89,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //globalVariable.mSocket.emit("leaveRoom", jsonObj);
+        globalVariable.mSocket.emit("leaveRoom", jsonObj);
     }
 
     private void SetUpListView() {

@@ -98,7 +98,7 @@ public class RoomListActivity extends AppCompatActivity {
                         long date = gameObj.getLong("date");
                         String roomName = gameObj.getString("roomName");
                         long gameDBId = databaseAccess.addGame(date, roomName);
-                        long gameId = gameObj.getLong("id");
+                        int gameId = gameObj.getInt("id");
                         Intent gameIntent = new Intent(RoomListActivity.this, GameActivity.class);
                         gameIntent.putExtra("currentWord", currentWord);
                         gameIntent.putExtra("gameId", gameId);
@@ -224,7 +224,6 @@ public class RoomListActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    globalVariable.mSocket.emit("joinRoom", jsonObject);
                     globalVariable.mSocket.emit("getGameInfo", roomId);
                     globalVariable.mSocket.emit("joinGame", joinGameObj);
                 }else{

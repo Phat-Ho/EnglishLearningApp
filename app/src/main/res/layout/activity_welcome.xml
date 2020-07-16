@@ -95,8 +95,7 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        app:cornerRadius="10dp"
-                        app:strokeWidth="2dp" />
+                        app:cornerRadius="10dp" />
 
                     <TextView
                         android:id="@+id/welcome_txt_meaning_1"
@@ -128,8 +127,7 @@
                         android:textStyle="bold"
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"
-                        app:cornerRadius="10dp"
-                        app:strokeWidth="2dp" />
+                        app:cornerRadius="10dp"/>
 
                     <TextView
                         android:id="@+id/welcome_txt_meaning_2"
@@ -170,7 +168,6 @@
                         android:text="What"
                         android:backgroundTint="@color/colorPrimary"
                         android:textStyle="bold"
-                        app:strokeWidth="2dp"
                         app:cornerRadius="10dp"/>
 
                     <TextView
@@ -202,8 +199,7 @@
                         android:backgroundTint="@color/colorPrimary"
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"
-                        app:cornerRadius="10dp"
-                        app:strokeWidth="2dp" />
+                        app:cornerRadius="10dp" />
 
                     <TextView
                         android:id="@+id/welcome_txt_meaning_4"

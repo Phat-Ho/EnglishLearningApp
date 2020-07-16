@@ -114,15 +114,17 @@ public class GameActivity extends AppCompatActivity {
         globalVariable.mSocket.off("sendResult", onSendResult);
         globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
         globalVariable.mSocket.off("sendNewRoomInfo", onSendRoomInfo);
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("gameId", gameId);
-            jsonObject.put("playerId", loginManager.getUserId());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(isPlay){
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("gameId", gameId);
+                jsonObject.put("playerId", loginManager.getUserId());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "emit leave game");
+            globalVariable.mSocket.emit("leaveGame", jsonObject);
         }
-        Log.d(TAG, "emit leave game");
-        globalVariable.mSocket.emit("leaveGame", jsonObject);
         textToSpeech.shutdown();
     }
 
@@ -188,7 +190,7 @@ public class GameActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "send room info: " + args[0].toString());
+                    Log.d(TAG, "send new room info: " + args[0].toString());
                     JSONObject roomObj = (JSONObject) args[0];
                     try {
                         JSONArray playerArray = roomObj.getJSONArray("players");
@@ -247,11 +249,7 @@ public class GameActivity extends AppCompatActivity {
                         winner = obj.getString("winner");
                         array = obj.getJSONArray("historyWord");
                         gameFrameLayout.setVisibility(View.VISIBLE);
-                        if(isPlay){
-                            btnGameContinue.setVisibility(View.VISIBLE);
-                        }else{
-                            btnGameContinue.setVisibility(View.INVISIBLE);
-                        }
+                        btnGameContinue.setVisibility(View.VISIBLE);
                         txtResult.setVisibility(View.INVISIBLE);
                         txtNextPlayer.setText(winner + " chiến thắng");
                         txtNextPlayer.setTextColor(getResources().getColor(R.color.colorRed));
@@ -457,6 +455,7 @@ public class GameActivity extends AppCompatActivity {
                     obj.put("gameId", gameId);
                     obj.put("playerId", loginManager.getUserId());
                     obj.put("playerName", loginManager.getUserName());
+                    obj.put("isPlay", isPlay);
                     globalVariable.mSocket.emit("continueGame", obj);
                 } catch (JSONException e) {
                     e.printStackTrace();
