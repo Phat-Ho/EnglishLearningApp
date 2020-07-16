@@ -31,6 +31,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +46,7 @@ import com.example.englishlearningapp.activity.ConnetedWordActivity;
 import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
+import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
@@ -54,6 +56,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -422,6 +425,13 @@ public class HomeFragment extends Fragment {
         LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
         positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
         positiveButton.setLayoutParams(positiveButtonLL);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
+                dialog.dismiss();
+            }
+        });
     }
 
     private void hideSoftKeyBoard() {
