@@ -44,10 +44,10 @@ public class InGameHistoryActivity extends AppCompatActivity {
     private void SetUpToolbar() {
         historyGameToolbar.setTitle("");
         setSupportActionBar(historyGameToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             historyGameToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         historyGameToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

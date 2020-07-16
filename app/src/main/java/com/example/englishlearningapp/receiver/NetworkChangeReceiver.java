@@ -248,12 +248,13 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     String timeSearch = dataObject.getString("TimeSearch");
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                                     Date date = simpleDateFormat.parse(timeSearch);
+                                    String location = dataObject.getString("location");
                                     if(isChange == 0){
-                                        databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer);
+                                        databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer, location);
                                     }
                                     if(isChange == 1){
                                         if(databaseAccess.getHistoryWordByIdServer(idServer).getId() == 0){
-                                            databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer);
+                                            databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer, location);
                                         }
                                         databaseAccess.setHistoryRememberByWordId(wordId);
                                     }
