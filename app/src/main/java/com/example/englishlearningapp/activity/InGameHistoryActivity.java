@@ -1,5 +1,7 @@
 package com.example.englishlearningapp.activity;
 
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -40,9 +42,11 @@ public class InGameHistoryActivity extends AppCompatActivity {
     }
 
     private void SetUpToolbar() {
-        setSupportActionBar(historyGameToolbar);
         historyGameToolbar.setTitle("");
         setSupportActionBar(historyGameToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            historyGameToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         historyGameToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

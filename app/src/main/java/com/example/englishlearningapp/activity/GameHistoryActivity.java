@@ -1,6 +1,8 @@
 package com.example.englishlearningapp.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +57,9 @@ public class GameHistoryActivity extends AppCompatActivity {
         historyToolbar.setTitle("");
         setSupportActionBar(historyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            historyToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
+        }
         historyToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
