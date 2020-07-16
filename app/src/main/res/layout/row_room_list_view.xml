@@ -52,8 +52,7 @@
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_marginTop="5dp"
-                            android:layout_weight="5"
-                            android:gravity="top"/>
+                            android:layout_weight="5" />
 
                         <TextView
                             android:gravity="top"
