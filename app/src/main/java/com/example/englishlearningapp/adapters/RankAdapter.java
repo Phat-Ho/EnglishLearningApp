@@ -53,7 +53,7 @@ public class RankAdapter extends BaseAdapter {
         //Set data from array list to view holder
         Rank rank = (Rank) getItem(position);
         viewHolder.txtGameDate.setText(rank.getPlayerName());
-        viewHolder.txtRoomName.setText(rank.getPoint());
+        viewHolder.txtRoomName.setText(String.valueOf(rank.getPoint()));
         return convertView;
     }
 

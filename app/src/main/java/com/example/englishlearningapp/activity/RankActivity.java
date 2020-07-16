@@ -55,7 +55,7 @@ public class RankActivity extends AppCompatActivity {
                     Log.d(TAG, "on get rank: " + args[0]);
                     JSONArray rankArr = (JSONArray) args[0];
                     int len = rankArr.length();
-                    if(len > 1){
+                    if(len > 0){
                         ArrayList<Rank> temp = new ArrayList<>();
                         for (int i = 0; i < len; i++) {
                             try {
@@ -66,7 +66,6 @@ public class RankActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        Log.d(TAG, "temp rank: " + temp.toString());
                         rankList.clear();
                         rankList.addAll(temp);
                         adapter.notifyDataSetChanged();
