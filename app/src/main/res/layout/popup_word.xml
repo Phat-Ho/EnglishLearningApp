@@ -62,7 +62,7 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="Đã nhớ"
-            android:textColor="@color/black"
+            android:textColor="@color/colorWhite"
             app:strokeColor="@color/black"
             android:layout_marginEnd="20dp"
             style="@style/Widget.MaterialComponents.Button"/>
@@ -72,10 +72,11 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="Chưa nhớ"
-            android:textColor="@color/black"
+            android:backgroundTint="@color/colorRed"
+            android:textColor="@color/colorWhite"
             app:strokeColor="@color/black"
             android:layout_marginStart="20dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            style="@style/Widget.MaterialComponents.Button"/>
     </LinearLayout>
 
 
