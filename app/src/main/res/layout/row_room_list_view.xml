@@ -41,7 +41,8 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_home"
                             android:layout_marginHorizontal="5dp"
-                            android:layout_marginTop="5dp" />
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center"/>
 
                         <TextView
                             android:layout_width="0dp"
@@ -51,9 +52,11 @@
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_marginTop="5dp"
-                            android:layout_weight="5"/>
+                            android:layout_weight="5"
+                            android:gravity="top"/>
 
                         <TextView
+                            android:gravity="top"
                             android:id="@+id/textViewRoomName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
