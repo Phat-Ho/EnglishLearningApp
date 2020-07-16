@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -293,6 +295,9 @@ public class RoomListActivity extends AppCompatActivity {
         toolbarRoomList.setTitle("");
         setSupportActionBar(toolbarRoomList);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            toolbarRoomList.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
+        }
         toolbarRoomList.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

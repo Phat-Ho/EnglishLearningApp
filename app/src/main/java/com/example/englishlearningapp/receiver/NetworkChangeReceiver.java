@@ -146,6 +146,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
         bodyJson.put(favoriteTable);
+
+        //Get topic cursor from database
+        Cursor topicCursor = databaseAccess.readFavorite();
         Log.d(TAG, "request body array: " + bodyJson);
         //End initial body json
 

@@ -447,6 +447,12 @@ public class DatabaseAccess {
         return cursor;
     }
 
+    public Cursor readTopic(){
+        String query = "";
+        Cursor cursor = database.rawQuery(query, null);
+        return cursor;
+    }
+
     public int removeHistory(int id){
         return database.delete("history", "wordId = " + id, null);
     }
@@ -670,7 +676,6 @@ public class DatabaseAccess {
         }
         cursor.close();
         return list;
-
     }
 
     public ArrayList<Word> getWordAlarmByTopicId(int topicId) {

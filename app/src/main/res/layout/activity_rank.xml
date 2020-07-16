@@ -3,43 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.RoomListActivity"
-    android:background="@drawable/main_background_gradient"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.RankActivity"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarRoomList"
+                android:id="@+id/rank_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="#03A9F4">
-            </androidx.appcompat.widget.Toolbar>
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                app:title=""/>
             <TextView
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Room List"/>
-
+                android:text="Xếp hạng"/>
         </RelativeLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/black"/>
-
     <ListView
-        android:id="@+id/listViewRoomList"
+        android:id="@+id/rank_lv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:padding="5dp"/>
 
 </LinearLayout>

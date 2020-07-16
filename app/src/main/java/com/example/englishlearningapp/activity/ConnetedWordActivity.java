@@ -24,7 +24,6 @@ public class ConnetedWordActivity extends AppCompatActivity {
 
     ListView lvConnectedWord;
     ConnectedWordAdapter adapter;
-    ArrayList<Integer> imgResource;
     Toolbar connectedWordToolbar;
     GlobalVariable globalVariable;
 
@@ -47,6 +46,7 @@ public class ConnetedWordActivity extends AppCompatActivity {
         arrConnectedWord.add(new ConnectedWord(R.drawable.createroom, "Create room"));
         arrConnectedWord.add(new ConnectedWord(R.drawable.roomlist1, "Room list"));
         arrConnectedWord.add(new ConnectedWord(R.drawable.history1, "History"));
+        arrConnectedWord.add(new ConnectedWord(R.drawable.history1, "Top players"));
         adapter = new ConnectedWordAdapter(this, R.layout.row_connected_word, arrConnectedWord);
         lvConnectedWord.setAdapter(adapter);
         lvConnectedWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,6 +62,9 @@ public class ConnetedWordActivity extends AppCompatActivity {
                     case 2:
                         Intent gameHistoryIntent = new Intent(ConnetedWordActivity.this, GameHistoryActivity.class);
                         startActivity(gameHistoryIntent); break;
+                    case 3:
+                        Intent rankActivity = new Intent(ConnetedWordActivity.this, RankActivity.class);
+                        startActivity(rankActivity); break;
                 }
             }
         });
