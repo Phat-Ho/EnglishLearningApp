@@ -104,7 +104,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(choiceList.get(0).isRight() == 1){
                     welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorGreen));
-                    showMeaning(1);
+                    showAllMeaning();
                     disableButton();
                 }else{
                     welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorRed));
@@ -119,7 +119,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(choiceList.get(1).isRight() == 1){
                     welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorGreen));
-                    showMeaning(2);
+                    showAllMeaning();
                     disableButton();
                 }else{
                     welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorRed));
@@ -134,7 +134,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(choiceList.get(2).isRight() == 1){
                     welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorGreen));
-                    showMeaning(3);
+                    showAllMeaning();
                     disableButton();
                 }else{
                     welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorRed));
@@ -149,7 +149,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(choiceList.get(3).isRight() == 1){
                     welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorGreen));
-                    showMeaning(4);
+                    showAllMeaning();
                     disableButton();
                 }else{
                     welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorRed));
@@ -160,42 +160,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
-    private void showMeaning(int index){
-        switch (index){
-            case 1:
-            {
-                welcomeTxtMeaning1.setVisibility(View.INVISIBLE);
-                welcomeTxtMeaning2.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning3.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning4.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 2:
-            {
-                welcomeTxtMeaning2.setVisibility(View.INVISIBLE);
-                welcomeTxtMeaning1.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning3.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning4.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 3:
-            {
-                welcomeTxtMeaning3.setVisibility(View.INVISIBLE);
-                welcomeTxtMeaning2.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning1.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning4.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 4:
-            {
-                welcomeTxtMeaning4.setVisibility(View.INVISIBLE);
-                welcomeTxtMeaning2.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning3.setVisibility(View.VISIBLE);
-                welcomeTxtMeaning1.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
-    }
 
     private void showAllMeaning(){
         welcomeTxtMeaning1.setVisibility(View.VISIBLE);

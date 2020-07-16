@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +54,9 @@ public class TopicActivity extends AppCompatActivity {
         topicToolbar.setTitle("");
         setSupportActionBar(topicToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            topicToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
+        }
         topicToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

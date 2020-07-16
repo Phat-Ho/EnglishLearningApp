@@ -1,9 +1,12 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,11 +65,13 @@ public class TopicDetailActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void SetUpToolbar() {
         setSupportActionBar(topicDetailToolbar);
         topicDetailToolbar.setTitle("");
         setSupportActionBar(topicDetailToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        topicDetailToolbar.getNavigationIcon().setColorFilter(getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
         topicDetailToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
