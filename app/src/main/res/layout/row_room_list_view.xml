@@ -26,41 +26,100 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_home"
-                    android:layout_marginHorizontal="5dp"/>
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="5dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/textViewRoomName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Room name: "
-                        android:textColor="@color/black"
-                        android:textSize="22sp"
-                        android:layout_marginTop="5dp"/>
 
-                    <TextView
-                        android:id="@+id/textViewRoomOwner"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Phat Ho"
-                        android:textColor="@color/black"
-                        android:textSize="22sp" />
+                        android:orientation="horizontal"
+                        android:weightSum="10">
 
-                    <TextView
-                        android:id="@+id/textViewRoomPlayer"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Room name: "
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="5"/>
+
+                        <TextView
+                            android:id="@+id/textViewRoomName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Tai"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:layout_weight="5"
+                            android:layout_marginTop="5dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Player num"
-                        android:textColor="@color/black"
-                        android:textSize="22sp" />
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Creator:"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:layout_weight="5"/>
+
+                        <TextView
+                            android:id="@+id/textViewRoomOwner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Phat Ho"
+                            android:textStyle="bold"
+                            android:layout_weight="5"
+                            android:textColor="@color/black"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Player num:"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:layout_weight="5"/>
+
+                        <TextView
+                            android:id="@+id/textViewRoomPlayer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="5"
+                            android:textStyle="bold"
+                            android:layout_weight="5"
+                            android:textColor="@color/black"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

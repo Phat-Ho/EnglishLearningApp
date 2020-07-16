@@ -63,9 +63,9 @@ public class RoomAdapter extends BaseAdapter {
 
         Room room = arrRoom.get(position);
 
-        viewHolder.txtRoomName.setText("Tên phòng: " + room.getName());
-        viewHolder.txtRoomOwner.setText("Người tạo: " + room.getCreator());
-        viewHolder.txtRoomPlayerCount.setText("Số người chơi: " + room.getPlayerCount() + "/" + room.getNumOfPlayers());
+        viewHolder.txtRoomName.setText(room.getName());
+        viewHolder.txtRoomOwner.setText(room.getCreator());
+        viewHolder.txtRoomPlayerCount.setText(room.getPlayerCount() + "/" + room.getNumOfPlayers());
         viewHolder.txtStatus.setText(room.isPlaying() ? "Đang chơi" : "Đang chờ");
         return convertView;
     }
