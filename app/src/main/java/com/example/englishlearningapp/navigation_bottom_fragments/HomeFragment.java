@@ -370,6 +370,7 @@ public class HomeFragment extends Fragment {
                     jsonObject1.put("LinkWeb", "");
                     jsonObject1.put("IsChange", 0);
                     jsonObject1.put("IdServer", 0);
+                    jsonObject1.put("location", location);
                     jsonArray1.put(jsonObject1);
                     jsonObject.put("data", jsonArray1);
                     jsonArray.put(jsonObject);

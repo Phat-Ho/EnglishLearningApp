@@ -52,8 +52,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 databaseAccess.open();
 
                 SyncDatabase(databaseAccess, context, userID);
-
-
             }
         }else{
             Log.d(TAG, "onReceive: no login");
