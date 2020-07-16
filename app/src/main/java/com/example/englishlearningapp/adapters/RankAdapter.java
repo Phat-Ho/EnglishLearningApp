@@ -42,9 +42,9 @@ public class RankAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if(convertView == null){
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.row_game_history, null);
-            viewHolder.txtGameDate = convertView.findViewById(R.id.txt_game_date);
-            viewHolder.txtRoomName = convertView.findViewById(R.id.txt_room_name);
+            convertView = LayoutInflater.from(context).inflate(R.layout.row_rank, null);
+            viewHolder.txtGameDate = convertView.findViewById(R.id.txt_player_name);
+            viewHolder.txtRoomName = convertView.findViewById(R.id.txt_point);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
