@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.englishlearningapp.models.Choice;
 import com.example.englishlearningapp.models.Game;
@@ -458,10 +459,14 @@ public class DatabaseAccess {
     }
 
     public long getHistoryWordsCount(){
-        String query = "SELECT * FROM history GROUP BY wordId";
+        String query = "SELECT COUNT(DISTINCT history.wordId) as wordNum FROM history";
         Cursor cursor = database.rawQuery(query, null);
-        return cursor.getCount();
-//        return DatabaseUtils.queryNumEntries(database, DatabaseContract.HISTORY_TABLE);
+        int count = 0;
+        if(cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
     }
 
     public String getDatetime(){
@@ -644,8 +649,14 @@ public class DatabaseAccess {
     }
 
     public int getWordCountByTopicId(int topicId){
-        Cursor cursor = database.rawQuery("SELECT * FROM av WHERE idTopic LIKE '%," + topicId + ",%'" + "LIMIT 100", null);
-        return cursor.getCount();
+        Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM av WHERE idTopic LIKE '%," + topicId + ",%'" + "LIMIT 100", null);
+        int count = 0;
+        if(cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+
     }
 
     public long setTopicRemember(int wordId, int topicId){
