@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,9 +33,10 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "Register Activity";
     TextInputEditText registerEmail;
     TextInputEditText registerPassword;
+    TextInputEditText txtRegisterName;
     MaterialButton registerButton, btnLoginWithAccount;
     ProgressBar registerProgressBar;
-    TextInputLayout registerTextInputPassword, registerTextInputEmail;
+    TextInputLayout registerTextInputPassword, registerTextInputEmail, txtRegisterNameLayout;
     String REGISTER_URL = Server.REGISTER_URL;
     String CHECK_USER_URL = Server.CHECK_USER_URL;
 
@@ -90,11 +92,18 @@ public class RegisterActivity extends AppCompatActivity {
         registerTextInputPassword = findViewById(R.id.register_text_input);
         registerTextInputEmail = findViewById(R.id.register_text_layout_email);
         btnLoginWithAccount = findViewById(R.id.buttonLoginWithAccount);
+        txtRegisterNameLayout = findViewById(R.id.register_text_layout_name);
+        txtRegisterName = findViewById(R.id.txt_register_name);
     }
 
     private void Register() {
         final String email = registerEmail.getText().toString().trim();
         final String password = registerPassword.getText().toString().trim();
+        final String fullname = txtRegisterName.getText().toString().trim();
+
+        if(txtRegisterName.getText().toString().isEmpty()){
+            txtRegisterNameLayout.setError(getResources().getString(R.string.please_enter_fullname));
+        }
 
         //Kiểm chứng email và password
         if (email.isEmpty()){
@@ -108,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     registerProgressBar.setVisibility(View.VISIBLE);
                     registerButton.setVisibility(View.GONE);
-                    registerUser(email, password);
+                    registerUser(email, password, fullname);
                 }
             }
         }
@@ -135,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
         return pat.matcher(password).matches();
     }
 
-    private void registerUser(String email, String password){
+    private void registerUser(String email, String password, String fullname){
         String url = CHECK_USER_URL + "email="+email;
         Log.d(TAG, "registerUser: " + url);
         final JSONObject parameter = new JSONObject();
@@ -143,6 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
             parameter.put("Id", 0);
             parameter.put("Email", email);
             parameter.put("Password", password);
+            parameter.put("Name", fullname);
         } catch (JSONException error){
             Log.d(TAG, "Register Json error: " + error.getMessage());
         }
@@ -190,7 +200,9 @@ public class RegisterActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                                if(error != null){
+                                    Toast.makeText(RegisterActivity.this, "Error occur: " + (error.getMessage() != null ? error.getMessage() : "null pointer"), Toast.LENGTH_SHORT).show();
+                                }
                                 registerProgressBar.setVisibility(View.GONE);
                                 registerButton.setVisibility(View.VISIBLE);
                             }

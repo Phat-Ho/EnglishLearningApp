@@ -207,7 +207,7 @@ public class LoginFragment extends Fragment {
             JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d("Json Response", response.toString());
+                    Log.d("login Response", response.toString());
                     try {
                         if(response.has("authenticated"))
                         {
@@ -226,7 +226,11 @@ public class LoginFragment extends Fragment {
                             String email = response.getString("Email");
                             String name = response.getString("Name");
                             String number = response.getString("NumberPhone");
-                            String dob = response.getString("Birthday");
+                            String temp = response.getString("Birthday");
+                            String dob = "";
+                            if(!temp.equals("null")){
+                                dob = temp;
+                            }
 
                             //Gán lại cho login manager
                             loginManager.createUserData(userId, name, email, password, number, dob);

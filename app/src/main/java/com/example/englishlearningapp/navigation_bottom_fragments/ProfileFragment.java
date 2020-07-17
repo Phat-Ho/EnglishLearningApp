@@ -191,17 +191,24 @@ public class ProfileFragment extends Fragment {
             body.put("Email", email);
             body.put("Password", password);
             body.put("NumberPhone", phoneNo);
-            body.put("Birthday", dob);
+            if(!dob.isEmpty()){
+                body.put("Birthday", dob);
+            }else{
+                body.put("Birthday", null);
+            }
+
         } catch (JSONException error){
             Log.d(TAG, "Register Json error: " + error.getMessage());
         }
 
+        Log.d(TAG, "UpdateUserData: " + body.toString());
+
         setProfileProgressBarVisibility(true);
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity() != null ? getActivity() : requireActivity());
         JsonObjectRequest registerRequest = new JsonObjectRequest(Request.Method.POST,REGISTER_URL, body,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "onResponse: "+ response);
+                Log.d(TAG, "Update onResponse: "+ response);
                 int userId = 0;
                 try {
                     userId = response.getInt("IdUser");
@@ -250,7 +257,7 @@ public class ProfileFragment extends Fragment {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog datePickerDialog;
-        datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Dialog_MinWidth, dateSetListener, year, month, day);
+        datePickerDialog = new DatePickerDialog(getActivity() != null ? getActivity() : requireContext(), android.R.style.Theme_Holo_Dialog_MinWidth, dateSetListener, year, month, day);
         datePickerDialog.show();
         datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setBackground(null);
         datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setBackground(null);
@@ -278,7 +285,7 @@ public class ProfileFragment extends Fragment {
         isLogin = loginManager.isLogin();
         String userName;
         String userEmail;
-        String dob;
+        String dob = null;
         String userPhoneNo;
 
         if(isLogin){
@@ -286,7 +293,10 @@ public class ProfileFragment extends Fragment {
             userName = loginManager.getUserName();
             userEmail = loginManager.getUserEmail();
             userPhoneNo = loginManager.getUserPhoneNo();
-            dob = formatDate(loginManager.getUserDob());
+            String temp = loginManager.getUserDob();
+            if(!temp.isEmpty() && !temp.equals("null")){
+                dob = formatDate(temp);
+            }
             txtProfileEmail.setText(userEmail);
             edtProfileName.setText(userName);
             edtProfilePhoneNo.setText(userPhoneNo);
@@ -321,7 +331,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void setProgressBarDelay(int milliSecond, final String message){
+/*    private void setProgressBarDelay(int milliSecond, final String message){
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -331,7 +341,7 @@ public class ProfileFragment extends Fragment {
         };
         Handler handler = new Handler();
         handler.postDelayed(runnable, milliSecond);
-    }
+    }*/
 
     private void MappingView(View view) {
         txtProfileEmail = view.findViewById(R.id.profile_edt_email);

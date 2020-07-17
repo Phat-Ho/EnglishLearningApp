@@ -43,6 +43,7 @@
     <string name="history_time">Thời gian</string>
     <string name="please_enter_email">Vui lòng nhập Email</string>
     <string name="please_enter_password">Vui lòng nhập Password</string>
+    <string name="please_enter_fullname">Vui lòng nhập tên của bạn</string>
     <string name="reset_password">Lấy lại mật khẩu</string>
     <string name="language">Ngôn ngữ</string>
     <string name="account">Tài khoản</string>
@@ -63,4 +64,6 @@
     <string name="word_connected">Nối Chữ</string>
     <string name="look_up_camera">Tra từ bằng Camera</string>
     <string name="look_up">Tra từ</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fullname">Tên người dùng</string>
 </resources>
