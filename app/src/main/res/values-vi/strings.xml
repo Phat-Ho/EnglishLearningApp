@@ -66,4 +66,6 @@
     <string name="look_up">Tra từ</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fullname">Tên người dùng</string>
+    <string name="play_time" >Thời gian</string>
+    <string name="rank" >Xếp hạng tháng 7</string>
 </resources>

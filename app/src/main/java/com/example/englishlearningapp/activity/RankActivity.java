@@ -1,5 +1,6 @@
 package com.example.englishlearningapp.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -24,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class RankActivity extends AppCompatActivity {
     private static final String TAG = "RankActivity";
@@ -50,6 +52,7 @@ public class RankActivity extends AppCompatActivity {
         @Override
         public void call(final Object... args) {
             runOnUiThread(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void run() {
                     Log.d(TAG, "on get rank: " + args[0]);
@@ -66,6 +69,12 @@ public class RankActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
+                        temp.sort(new Comparator<Rank>() {
+                            @Override
+                            public int compare(Rank o1, Rank o2) {
+                                return o2.getPoint() - o1.getPoint();
+                            }
+                        });
                         rankList.clear();
                         rankList.addAll(temp);
                         adapter.notifyDataSetChanged();

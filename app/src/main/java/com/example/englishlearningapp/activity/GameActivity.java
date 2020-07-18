@@ -197,6 +197,7 @@ public class GameActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
+                        int time = roomObj.getInt("time");
                         int length = playerArray.length();
                         if(length > 0){
                             ArrayList<Player> temp = new ArrayList<>();
@@ -214,6 +215,7 @@ public class GameActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            roomInfoIntent.putExtra("time", time);
                             globalVariable.mSocket.off("sendGame", onSendGame);
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
@@ -248,6 +250,7 @@ public class GameActivity extends AppCompatActivity {
                     try {
                         winner = obj.getString("winner");
                         array = obj.getJSONArray("historyWord");
+                        gameLinearLayout.setBackground(getDrawable(R.drawable.winner));
                         gameFrameLayout.setVisibility(View.VISIBLE);
                         btnGameContinue.setVisibility(View.VISIBLE);
                         txtResult.setVisibility(View.INVISIBLE);
@@ -279,6 +282,8 @@ public class GameActivity extends AppCompatActivity {
             txtResult.setTextColor(getResources().getColor(R.color.colorGreen));
             txtResult.setText("Đúng");
             txtNextPlayer.setText("Tiếp theo: " + pNextPlayer);
+            btnExit.setVisibility(View.GONE);
+            btnContinue.setVisibility(View.GONE);
         }
         if(pIsCorrect.equals("false") || pIsCorrect.equals("timeOut") || pIsCorrect.equals("wordExisted")){
             txtResult.setTextColor(getResources().getColor(R.color.colorRed));
@@ -387,7 +392,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         gameId = intent.getIntExtra("gameId", 0);
         gameDBId = intent.getLongExtra("gameDBId", 0);
-        isPlay = intent.getBooleanExtra("isPlay", false);
+        isPlay = intent.getBooleanExtra("isPlay", true);
         playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
 
         if(playerList.get(0).getId() != loginManager.getUserId()){

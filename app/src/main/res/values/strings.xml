@@ -67,4 +67,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fullname">Full name</string>
+    <string name="play_time" >Play time</string>
+    <string name="rank" >July\'s Rank</string>
 </resources>

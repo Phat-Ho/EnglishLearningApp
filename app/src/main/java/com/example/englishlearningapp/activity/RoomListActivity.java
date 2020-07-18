@@ -166,6 +166,7 @@ public class RoomListActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
+                        int time = roomObj.getInt("time");
                         int length = playerArray.length();
                         if(length > 0){
                             ArrayList<Player> temp = new ArrayList<>();
@@ -187,6 +188,7 @@ public class RoomListActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
                             roomInfoIntent.putExtra("isPlay", playerType);
+                            roomInfoIntent.putExtra("time", time);
                             globalVariable.mSocket.off("roomList", onRetrieveRoomList);
                             globalVariable.mSocket.off("sendRoomInfo", onSendRoomInfo);
                             startActivity(roomInfoIntent);
