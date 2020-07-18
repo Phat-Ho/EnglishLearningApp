@@ -69,4 +69,6 @@
     <string name="fullname">Full name</string>
     <string name="play_time" >Play time</string>
     <string name="rank" >July\'s Rank</string>
+    <string name="room_status_playing">Playing</string>
+    <string name="room_status_waiting">Waiting</string>
 </resources>

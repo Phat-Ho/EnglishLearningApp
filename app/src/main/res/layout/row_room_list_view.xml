@@ -144,7 +144,7 @@
                 android:id="@+id/txt_room_status"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="Đang chơi"
+                android:text="@string/room_status_waiting"
                 android:textColor="@color/design_default_color_secondary"
                 android:textSize="22sp"
                 android:gravity="center_horizontal"

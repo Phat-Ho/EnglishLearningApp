@@ -68,4 +68,6 @@
     <string name="fullname">Tên người dùng</string>
     <string name="play_time" >Thời gian</string>
     <string name="rank" >Xếp hạng tháng 7</string>
+    <string name="room_status_playing">Đang chơi</string>
+    <string name="room_status_waiting">Đang chờ</string>
 </resources>
