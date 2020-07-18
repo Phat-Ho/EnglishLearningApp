@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.TopicActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main_background_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

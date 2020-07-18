@@ -28,6 +28,7 @@ public class TopicDetailActivity extends AppCompatActivity {
     ArrayAdapter adapter;
     ArrayList<Word> wordList;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
