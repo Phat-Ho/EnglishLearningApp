@@ -633,14 +633,18 @@ public class DatabaseAccess {
 
     public ArrayList<Topic> getTopics(){
         ArrayList<Topic> list = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM topic", null);
+        String query = "SELECT topic.id, topic.topicName, topic.translated, topic.active ,count(*) as wordCount " +
+                            " FROM topic, av WHERE av.idTopic like ('%,' || topic.id || ',%') GROUP BY topic.id";
+        String query2 = "SELECT * FROM topic";
+        Cursor cursor = database.rawQuery(query2, null);
         if(cursor.moveToFirst()){
             do{
                 Topic topic = new Topic();
                 topic.setTopicId(cursor.getInt(0));
-                topic.setTopicName(cursor.getString(1));
-                topic.setActive(cursor.getInt(2));
-
+                topic.setTopicName(cursor.getString(cursor.getColumnIndex("topicName")));
+                topic.setTopicNameVie(cursor.getString(cursor.getColumnIndex("translated")));
+                topic.setActive(cursor.getInt(cursor.getColumnIndex("active")));
+                topic.setWordCount(cursor.getInt(cursor.getColumnIndex("wordCount")));
                 list.add(topic);
             }while (cursor.moveToNext());
         }
@@ -648,7 +652,7 @@ public class DatabaseAccess {
         return list;
     }
 
-    public int getWordCountByTopicId(int topicId){
+   /* public int getWordCountByTopicId(int topicId){
         Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM av WHERE idTopic LIKE '%," + topicId + ",%'" + "LIMIT 100", null);
         int count = 0;
         if(cursor.moveToFirst()){
@@ -656,8 +660,7 @@ public class DatabaseAccess {
         }
         cursor.close();
         return count;
-
-    }
+    }*/
 
     public long setTopicRemember(int wordId, int topicId){
         ContentValues values = new ContentValues();

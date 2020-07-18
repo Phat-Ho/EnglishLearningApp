@@ -51,18 +51,30 @@ public class WelcomeActivity extends AppCompatActivity {
             if(choiceList.size() > 3){
                 Word word = null;
                 word = databaseAccess.getWordsById(choiceList.get(0).getWordId());
+                if(word.getWord().length() > 6){
+                    welcomeBtn1.setTextSize(12);
+                }
                 welcomeBtn1.setText(word.getWord());
                 welcomeTxtMeaning1.setText(getMeaning(word.getDescription()));
 
                 word = databaseAccess.getWordsById(choiceList.get(1).getWordId());
+                if(word.getWord().length() > 6){
+                    welcomeBtn2.setTextSize(12);
+                }
                 welcomeBtn2.setText(word.getWord());
                 welcomeTxtMeaning2.setText(getMeaning(word.getDescription()));
 
                 word = databaseAccess.getWordsById(choiceList.get(2).getWordId());
+                if(word.getWord().length() > 6){
+                    welcomeBtn3.setTextSize(12);
+                }
                 welcomeBtn3.setText(databaseAccess.getWordsById(choiceList.get(2).getWordId()).getWord());
                 welcomeTxtMeaning3.setText(getMeaning(word.getDescription()));
 
                 word = databaseAccess.getWordsById(choiceList.get(3).getWordId());
+                if(word.getWord().length() > 6){
+                    welcomeBtn4.setTextSize(12);
+                }
                 welcomeBtn4.setText(word.getWord());
                 welcomeTxtMeaning4.setText(getMeaning(word.getDescription()));
             }

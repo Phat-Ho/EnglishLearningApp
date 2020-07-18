@@ -30,7 +30,7 @@ import android.widget.TextView;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.SettingListViewAdapter;
 import com.example.englishlearningapp.adapters.SettingListViewPopupAdapter;
-import com.example.englishlearningapp.models.AlarmType;;
+import com.example.englishlearningapp.models.AlarmType;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.receiver.AlarmReceiver;
@@ -227,7 +227,7 @@ public class SettingFragment extends Fragment {
         if(alarmTypeList.size() < 3 && topicList != null){
             int len = topicList.size();
             for(int i =0;i<len;i++){
-                int wordCount = db.getWordCountByTopicId(topicList.get(i).getTopicId());
+                int wordCount = topicList.get(i).getWordCount();
                 int topicId = topicList.get(i).getTopicId();
                 String topicName = topicList.get(i).getTopicName();
                 if(alarmPropsManager.getAlarmType() == topicId){

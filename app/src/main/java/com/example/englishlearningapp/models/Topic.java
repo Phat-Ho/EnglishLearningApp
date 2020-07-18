@@ -5,11 +5,13 @@ public class Topic {
     private String topicName;
     private String topicNameVie;
     private String topicImage;
+    private int wordCount;
     private int active;
     private int IdServer;
 
     public Topic() {
         this.topicId = 0;
+        this.wordCount = 0;
     }
 
     public Topic(int topicId, String topicName, String topicNameVie, int active, int idServer) {
@@ -18,6 +20,24 @@ public class Topic {
         this.topicNameVie = topicNameVie;
         this.active = active;
         IdServer = idServer;
+    }
+
+    public Topic(int topicId, String topicName, String topicNameVie, String topicImage, int wordCount, int active, int idServer) {
+        this.topicId = topicId;
+        this.topicName = topicName;
+        this.topicNameVie = topicNameVie;
+        this.topicImage = topicImage;
+        this.wordCount = wordCount;
+        this.active = active;
+        IdServer = idServer;
+    }
+
+    public int getWordCount() {
+        return wordCount;
+    }
+
+    public void setWordCount(int wordCount) {
+        this.wordCount = wordCount;
     }
 
     public int getTopicId() {
