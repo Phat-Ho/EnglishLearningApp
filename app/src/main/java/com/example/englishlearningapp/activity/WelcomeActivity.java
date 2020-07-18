@@ -120,6 +120,15 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    for (int i = 0; i < choiceList.size(); i++) {
+                        if(choiceList.get(i).isRight() == 1){
+                            switch (i){
+                                case 1: welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 2: welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 3: welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                            }
+                        }
+                    }
                     showAllMeaning();
                     disableButton();
                 }
@@ -135,6 +144,15 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    for (int i = 0; i < choiceList.size(); i++) {
+                        if(choiceList.get(i).isRight() == 1){
+                            switch (i){
+                                case 0: welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 2: welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 3: welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                            }
+                        }
+                    }
                     showAllMeaning();
                     disableButton();
                 }
@@ -150,6 +168,15 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    for (int i = 0; i < choiceList.size(); i++) {
+                        if(choiceList.get(i).isRight() == 1){
+                            switch (i){
+                                case 0: welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 1: welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 3: welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                            }
+                        }
+                    }
                     showAllMeaning();
                     disableButton();
                 }
@@ -165,6 +192,15 @@ public class WelcomeActivity extends AppCompatActivity {
                     disableButton();
                 }else{
                     welcomeBtn4.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    for (int i = 0; i < choiceList.size(); i++) {
+                        if(choiceList.get(i).isRight() == 1){
+                            switch (i){
+                                case 0: welcomeBtn1.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 1: welcomeBtn2.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                                case 2: welcomeBtn3.setBackgroundColor(getResources().getColor(R.color.colorGreen)); break;
+                            }
+                        }
+                    }
                     showAllMeaning();
                     disableButton();
                 }
