@@ -35,7 +35,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     EditText edtPasswordConnectedWord, edtRoomName;
     Switch swtPasswordConnectedWord;
     Button btnCreateRoom;
-    String[] numOfPlayers = {"2", "3", "4", "5", "6", "7"};
+    String[] numOfPlayers = {"5", "10", "30", "50", "100", "500", "1000"};
     String[] playTime = {"5", "10", "15", "20", "25", "30", "45", "60"};
     LoginManager loginManager;
     GlobalVariable globalVariable;

@@ -48,6 +48,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Room name: "
+                            android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_marginTop="10dp"
@@ -62,7 +63,6 @@
                             android:text="Tai"
                             android:textColor="@color/black"
                             android:textSize="22sp"
-                            android:textStyle="bold"
                             android:layout_weight="5"
                             android:layout_marginTop="5dp"/>
 
@@ -85,6 +85,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Creator:"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_weight="5"/>
@@ -95,7 +96,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Phat Ho"
-                            android:textStyle="bold"
                             android:layout_weight="5"
                             android:textColor="@color/black"
                             android:textSize="22sp" />
@@ -119,6 +119,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Player num:"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_weight="5"/>
@@ -129,7 +130,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="5"
-                            android:textStyle="bold"
                             android:layout_weight="5"
                             android:textColor="@color/black"
                             android:textSize="22sp" />
