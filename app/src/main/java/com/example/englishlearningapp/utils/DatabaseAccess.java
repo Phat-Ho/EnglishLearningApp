@@ -515,7 +515,7 @@ public class DatabaseAccess {
     public ArrayList<Word> getFavoriteWordsToAlarm(){
         ArrayList<Word> wordList = new ArrayList<>();
         String query = "SELECT av.id, av.word, av.html, av.description, av.pronounce, favorite.remembered " +
-                "FROM favorite JOIN av ON favorite.id = av.id WHERE favorite.remembered = 0";
+                "FROM favorite JOIN av ON favorite.wordId = av.id WHERE favorite.remembered = 0 GROUP BY favorite.wordId";
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
