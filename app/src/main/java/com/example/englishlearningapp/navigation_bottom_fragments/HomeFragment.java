@@ -419,14 +419,23 @@ public class HomeFragment extends Fragment {
     private void showAlert(String title, DialogInterface.OnClickListener listener){
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
         builder.setTitle(title);
-        builder.setPositiveButton("OK", listener);
+        builder.setPositiveButton("Huỷ", listener);
+        builder.setNegativeButton("Ok", listener);
         final AlertDialog dialog = builder.create();
         dialog.show();
         final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        positiveButton.setLayoutParams(positiveButtonLL);
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        layoutParams.weight = 10;
+        positiveButton.setLayoutParams(layoutParams);
+        negativeButton.setLayoutParams(layoutParams);
         positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
