@@ -32,7 +32,7 @@
             android:textColor="@color/black"
             android:textSize="23sp"
             android:layout_weight="7"
-            android:textAlignment="viewStart"/>
+            android:textAlignment="center"/>
 
     </LinearLayout>
 </LinearLayout>

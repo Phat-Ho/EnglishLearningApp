@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment {
         txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
         databaseAccess = DatabaseAccess.getInstance(getContext());
         SetAutoCompleteSearchBox();
-        loginManager = new LoginManager(getContext());
+        loginManager = new LoginManager(getContext() != null ? getContext() : requireContext());
         recyclerView = view.findViewById(R.id.recylerViewHome);
         recyclerView.setNestedScrollingEnabled(false);
         imgBtnGame = view.findViewById(R.id.img_btn_game);
@@ -178,6 +178,7 @@ public class HomeFragment extends Fragment {
                         showAlert("Đã xảy ra lỗi", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         });
                     }
@@ -185,6 +186,8 @@ public class HomeFragment extends Fragment {
                     showAlert("Đăng nhập để có thể chơi game", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
+                            dialog.dismiss();
                         }
                     });
                 }
@@ -193,7 +196,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void SetAutoCompleteSearchBox() {
-        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1);
+        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext() != null ? getContext() : requireContext(), android.R.layout.simple_list_item_1);
         txtMeaningSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -209,11 +212,7 @@ public class HomeFragment extends Fragment {
                 txtMeaningSearch.setThreshold(1);
                 searchBoxAdapter.notifyDataSetChanged();
                 if (wordList.isEmpty()){
-                    showAlert(getResources().getText(R.string.no_result_found).toString(), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
+                    Toast.makeText(getActivity(), getResources().getString(R.string.no_result_found), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -419,8 +418,8 @@ public class HomeFragment extends Fragment {
     private void showAlert(String title, DialogInterface.OnClickListener listener){
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
         builder.setTitle(title);
-        builder.setPositiveButton("Huỷ", listener);
-        builder.setNegativeButton("Ok", listener);
+        builder.setNegativeButton("Huỷ", listener);
+        builder.setPositiveButton("Ok", listener);
         final AlertDialog dialog = builder.create();
         dialog.show();
         final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -429,16 +428,9 @@ public class HomeFragment extends Fragment {
         layoutParams.weight = 10;
         positiveButton.setLayoutParams(layoutParams);
         negativeButton.setLayoutParams(layoutParams);
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
                 dialog.dismiss();
             }
         });
