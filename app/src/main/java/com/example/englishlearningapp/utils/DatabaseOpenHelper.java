@@ -14,6 +14,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
 
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        setForcedUpgrade();
         this.context = context;
         long dbSize = context.getDatabasePath(DATABASE_NAME).length();
         Log.d(TAG, "Database Size: " + context.getDatabasePath(DATABASE_NAME).length());

@@ -77,4 +77,6 @@
     <string name="date">Thời gian</string>
     <string name="room_name_history">Tên phòng:</string>
     <string name="date_history">Thời gian:</string>
+    <string name="history_game">Lịch sử game</string>
+    <string name="top_player">Xếp hạng</string>
 </resources>

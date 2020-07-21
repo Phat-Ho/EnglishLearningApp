@@ -29,9 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,10 +41,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.ConnetedWordActivity;
-import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
-import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
@@ -265,7 +261,7 @@ public class HomeFragment extends Fragment {
         if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
@@ -348,7 +344,7 @@ public class HomeFragment extends Fragment {
             Address obj = addresses.get(0);
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
