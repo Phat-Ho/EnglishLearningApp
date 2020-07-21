@@ -7,8 +7,8 @@ import android.net.NetworkInfo;
 
 public class Server
 {
-    public static String backend_host = "http://192.168.1.14:5001/";
-	public static String SOCKET_HOST = "http://192.168.1.14:5002/";
+    public static String backend_host = "http://192.168.1.12:5001/";
+	public static String SOCKET_HOST = "http://192.168.1.12:5002/";
 
     public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
     public static String LOGIN_URL = backend_host + "api/hash/login?";

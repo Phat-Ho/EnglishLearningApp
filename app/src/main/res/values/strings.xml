@@ -75,4 +75,7 @@
     <string name="more">More...</string>
     <string name="game_history">Game history</string>
     <string name="VI_EN_title">VIE - ENG</string>
+    <string name="date">Date</string>
+    <string name="room_name_history">Room name:</string>
+    <string name="date_history">Date:</string>
 </resources>

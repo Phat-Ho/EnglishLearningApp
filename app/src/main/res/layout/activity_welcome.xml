@@ -87,7 +87,7 @@
                         android:text="Hello"
                         android:backgroundTint="@color/colorPrimary"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         app:cornerRadius="10dp" />
 
@@ -120,7 +120,7 @@
                         android:text="Nice"
                         android:textStyle="bold"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         app:cornerRadius="10dp"/>
 
                     <TextView
@@ -155,7 +155,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/welcome_btn_3"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textColor="@color/colorWhite"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
@@ -192,7 +192,7 @@
                         android:textStyle="bold"
                         android:backgroundTint="@color/colorPrimary"
                         android:textColor="@color/colorWhite"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         app:cornerRadius="10dp" />
 
                     <TextView
