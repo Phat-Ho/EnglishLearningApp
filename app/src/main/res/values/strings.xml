@@ -72,4 +72,7 @@
     <string name="room_status_playing">Playing</string>
     <string name="room_status_waiting">Waiting</string>
     <string name="order_player">Player order</string>
+    <string name="more">More...</string>
+    <string name="game_history">Game history</string>
+    <string name="VI_EN_title">VIE - ENG</string>
 </resources>

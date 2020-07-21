@@ -71,4 +71,7 @@
     <string name="room_status_playing">Đang chơi</string>
     <string name="room_status_waiting">Đang chờ</string>
     <string name="order_player">Thứ tự người chơi</string>
+    <string name="more">Chi tiết</string>
+    <string name="game_history">Lịch sử game</string>
+    <string name="VI_EN_title">Việt - Anh</string>
 </resources>

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.GameHistoryActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main_background_gradient">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -28,7 +29,7 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lịch sử game"/>
+            android:text="@string/game_history"/>
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

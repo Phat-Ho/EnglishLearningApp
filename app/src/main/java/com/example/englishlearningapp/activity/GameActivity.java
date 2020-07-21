@@ -56,7 +56,7 @@ import java.util.Locale;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
-    TextView txtPlayerNumber, txtTimer, txtCurrentWord, txtWordDetail, txtPlayersOrder;
+    TextView txtTimer, txtCurrentWord, txtWordDetail, txtPlayersOrder;
     EditText edtWord;
     ImageButton imgBtnSend;
     TextView txtResult, txtNextPlayer;
@@ -359,8 +359,8 @@ public class GameActivity extends AppCompatActivity {
                         ArrayList<Word> words = databaseAccess.getWordExactly(currentWord);
                         String description = words.get(0).getDescription();
                         int len = description.length();
-                        final String substring = description.substring(0, Math.min(len, 40));
-                        if(len > 40){
+                        final String substring = description.substring(0, Math.min(len, 60));
+                        if(len > 60){
                             txtWordDetail.setText(substring + "...");
                         }else{
                             txtWordDetail.setText(substring);
@@ -582,7 +582,6 @@ public class GameActivity extends AppCompatActivity {
         gameBtnWrapper = findViewById(R.id.game_button_wrapper);
         txtPlayersOrder = findViewById(R.id.txtPlayersOrder);
         txtWordDetail = findViewById(R.id.txt_game_word_detail);
-        txtPlayerNumber = findViewById(R.id.txt_game_player_number);
         txtTimer = findViewById(R.id.txt_game_timer);
         txtCurrentWord = findViewById(R.id.txt_game_previous_word);
         edtWord = findViewById(R.id.edt_game_word);
