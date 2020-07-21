@@ -55,6 +55,7 @@
     <string name="create_room">Tạo phòng</string>
     <string name="room_name">Tên phòng</string>
     <string name="num_of_players">Số người</string>
+    <string name="num_of_players2">Sồ người</string>
     <string name="time_answer">Thời gian</string>
     <string name="create">Tạo</string>
     <string name="creator">Người tạo</string>

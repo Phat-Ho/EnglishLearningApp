@@ -41,21 +41,19 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_home"
                             android:layout_marginHorizontal="5dp"
-                            android:layout_marginTop="7dp"
                             android:layout_gravity="center"/>
 
                         <TextView
+                            android:layout_gravity="center"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Room name: "
+                            android:text="@string/room_name"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"
-                            android:layout_marginTop="10dp"
                             android:layout_weight="5" />
 
                         <TextView
-                            android:gravity="top"
                             android:id="@+id/textViewRoomName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -63,8 +61,7 @@
                             android:text="Tai"
                             android:textColor="@color/black"
                             android:textSize="22sp"
-                            android:layout_weight="5"
-                            android:layout_marginTop="5dp"/>
+                            android:layout_weight="5"/>
 
                     </LinearLayout>
 
@@ -84,7 +81,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Creator:"
+                            android:text="@string/creator"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"
@@ -118,7 +115,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Player num:"
+                            android:text="@string/num_of_players2"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:textSize="22sp"

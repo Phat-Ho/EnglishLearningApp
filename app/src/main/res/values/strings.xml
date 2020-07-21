@@ -55,6 +55,7 @@
     <string name="create_room">Create room</string>
     <string name="room_name">Room name</string>
     <string name="num_of_players">Number of players</string>
+    <string name="num_of_players2">No. players</string>
     <string name="time_answer">Time to answer (s)</string>
     <string name="create">Create</string>
     <string name="creator">Creator</string>
