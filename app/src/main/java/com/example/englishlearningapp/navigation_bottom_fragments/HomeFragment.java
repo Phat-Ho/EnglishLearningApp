@@ -48,6 +48,7 @@ import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;

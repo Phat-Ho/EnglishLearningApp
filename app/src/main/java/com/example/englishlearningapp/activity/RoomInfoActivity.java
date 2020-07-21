@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -95,6 +96,12 @@ public class RoomInfoActivity extends AppCompatActivity {
     private void SetUpListView() {
         playerAdapter = new PlayerListRoomAdapter(this, playerList);
         listViewRoomInfo.setAdapter(playerAdapter);
+        listViewRoomInfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Player player = playerList.get(position);
+            }
+        });
     }
 
     private void GetIntentData() {

@@ -49,6 +49,7 @@ public class PlayerListRoomAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.row_list_view_player, null);
             viewHolder.txtPlayerName = convertView.findViewById(R.id.txt_player_name_lv_room);
+            viewHolder.imgBtnKick = convertView.findViewById(R.id.img_btn_kick_lv_room);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -70,5 +71,6 @@ public class PlayerListRoomAdapter extends BaseAdapter {
 
     private class ViewHolder{
         private TextView txtPlayerName;
+        private ImageButton imgBtnKick;
     }
 }
