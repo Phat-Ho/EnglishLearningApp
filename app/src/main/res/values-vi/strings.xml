@@ -70,4 +70,5 @@
     <string name="rank" >Xếp hạng tháng 7</string>
     <string name="room_status_playing">Đang chơi</string>
     <string name="room_status_waiting">Đang chờ</string>
+    <string name="order_player">Thứ tự người chơi</string>
 </resources>

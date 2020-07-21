@@ -241,7 +241,7 @@
                 android:id="@+id/txtPlayersOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thứ tự người chơi"
+                android:text="@string/order_player"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"

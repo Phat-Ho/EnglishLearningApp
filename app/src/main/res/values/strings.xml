@@ -71,4 +71,5 @@
     <string name="rank" >July\'s Rank</string>
     <string name="room_status_playing">Playing</string>
     <string name="room_status_waiting">Waiting</string>
+    <string name="order_player">Player order</string>
 </resources>
