@@ -431,6 +431,23 @@ public class DatabaseAccess {
         return favoriteWord;
     }
 
+    public HistoryWord getTopicRememberWordByIdServer(int idServer){
+        HistoryWord topicRememberWord = new HistoryWord();
+        String query = "SELECT * from topicRemember WHERE IdServer = " + idServer;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            topicRememberWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            topicRememberWord.setRemembered(cursor.getInt(cursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+            topicRememberWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            topicRememberWord.setIsChange(cursor.getInt(cursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+            topicRememberWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }else{
+            topicRememberWord.setId(0);
+        }
+        cursor.close();
+        return topicRememberWord;
+    }
+
     public Cursor readHistory(){
         String[] column = {DatabaseContract.ID, DatabaseContract.WORD_ID, DatabaseContract.DATE,
                             DatabaseContract.ID_SERVER, DatabaseContract.ID_USER, DatabaseContract.REMEMBERED,
@@ -448,9 +465,10 @@ public class DatabaseAccess {
         return cursor;
     }
 
-    public Cursor readTopic(){
-        String query = "";
-        Cursor cursor = database.rawQuery(query, null);
+    public Cursor readTopicRemember(){
+        String[] column = {DatabaseContract.ID, DatabaseContract.WORD_ID, DatabaseContract.TOPIC_ID, DatabaseContract.REMEMBERED,
+                            DatabaseContract.ID_SERVER, DatabaseContract.IS_CHANGE};
+        Cursor cursor = database.query(DatabaseContract.TOPIC_REMEMBER_TABLE, column, null, null, null, null, null);
         return cursor;
     }
 
@@ -490,6 +508,13 @@ public class DatabaseAccess {
         values.put(DatabaseContract.ID_SERVER, idServer);
         String selection = "id = " + id;
         database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
+    }
+
+    public void updateTopicRememberIdServer(long id, int idServer){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ID_SERVER, idServer);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.TOPIC_REMEMBER_TABLE, values, selection, null);
     }
 
     public ArrayList<Word> getFavoriteWords(){
@@ -666,6 +691,17 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.WORD_ID, wordId);
         values.put(DatabaseContract.TOPIC_ID, topicId);
+        values.put(DatabaseContract.ID_SERVER, 0);
+        values.put(DatabaseContract.IS_CHANGE, 0);
+        return database.insert(DatabaseContract.TOPIC_REMEMBER_TABLE, null, values);
+    }
+
+    public long setTopicRemember(int wordId, int topicId, int idServer){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WORD_ID, wordId);
+        values.put(DatabaseContract.TOPIC_ID, topicId);
+        values.put(DatabaseContract.ID_SERVER, idServer);
+        values.put(DatabaseContract.IS_CHANGE, 0);
         return database.insert(DatabaseContract.TOPIC_REMEMBER_TABLE, null, values);
     }
 
