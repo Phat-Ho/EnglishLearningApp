@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class TopicDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_detail);
+        GlobalVariable.changeStatusBarColor(TopicDetailActivity.this);
         databaseAccess = DatabaseAccess.getInstance(this);
         SetUpView();
         SetUpToolbar();

@@ -810,9 +810,9 @@ public class DatabaseAccess {
                 topic.setTopicId(cursor.getInt(0));
                 topic.setTopicName(cursor.getString(1));
                 topic.setTopicNameVie(cursor.getString(2));
-                topic.setActive(cursor.getInt(3));
-                topic.setIdServer(cursor.getInt(4));
-                topic.setTopicImage(cursor.getString(5));
+                topic.setActive(cursor.getInt(4));
+                topic.setIdServer(cursor.getInt(5));
+                topic.setTopicImage(cursor.getString(6));
                 topicList.add(topic);
             }while (cursor.moveToNext());
         }

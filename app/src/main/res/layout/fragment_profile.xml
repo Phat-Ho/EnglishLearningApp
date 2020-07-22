@@ -90,9 +90,7 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/edit_text_stroke"
                     android:ems="10"
-                    android:gravity="center"
-                    android:inputType="textPersonName"
-                    android:text="" />
+                    android:inputType="textPersonName"/>
 
 
                 <TextView
@@ -213,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_weight="1"
-                        android:text="Save" />
+                        android:text="@string/save" />
 
                 </LinearLayout>
 

@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageButton
-        android:background="?android:selectableItemBackground"
-        android:id="@+id/img_btn_kick_lv_room"
+    <ImageView
+        android:id="@+id/img_avatar"
         android:src="@drawable/avatar3"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -24,7 +23,19 @@
         android:text="Player name"
         android:textColor="@color/black"
         android:layout_marginStart="20dp"
-        android:layout_toRightOf="@id/img_btn_kick_lv_room"
+        android:layout_toRightOf="@id/img_avatar"
         android:layout_centerVertical="true"/>
+
+    <ImageButton
+        android:background="?android:selectableItemBackground"
+        android:id="@+id/img_btn_kick_lv_room"
+        android:src="@drawable/ic_cross"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="8dp"
+        android:layout_marginEnd="20dp"/>
 
 </RelativeLayout>

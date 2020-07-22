@@ -88,7 +88,7 @@ public class CameraActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Word> wordList = databaseAccess.getWordExactly(arrCaptureText.get(position).trim().toLowerCase());
                 if(wordList.isEmpty()){
-                    Toast.makeText(CameraActivity.this, "Không thể tra từ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraActivity.this, getResources().getString(R.string.no_result_found), Toast.LENGTH_SHORT).show();
                 }else {
                     String html = wordList.get(0).getHtml();
                     String word = wordList.get(0).getWord();
@@ -154,7 +154,7 @@ public class CameraActivity extends AppCompatActivity {
         if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(this) && pUserID > 0){
@@ -237,7 +237,7 @@ public class CameraActivity extends AppCompatActivity {
             Address obj = addresses.get(0);
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(this) && pUserID > 0){

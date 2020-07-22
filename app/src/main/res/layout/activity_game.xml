@@ -33,17 +33,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <TextView
-        android:id="@+id/txt_game_player_number"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textColor="@color/black"
-        android:text="Số lượng người chơi: 10"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:textSize="22sp"
-        android:visibility="gone"/>
-
-    <TextView
         android:id="@+id/txt_game_timer"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -75,8 +64,6 @@
                     android:id="@+id/game_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context=".fragments.GameResultFragment"
-                    android:layout_margin="15dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -144,7 +131,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:text="More..."
+                    android:text="@string/more"
                     style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
             </LinearLayout>
@@ -243,7 +230,7 @@
                 android:id="@+id/txtPlayersOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thứ tự người chơi"
+                android:text="@string/order_player"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"

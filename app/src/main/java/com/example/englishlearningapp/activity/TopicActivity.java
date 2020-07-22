@@ -15,6 +15,7 @@ import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.adapters.SubjectAdapter;
 import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.utils.DatabaseAccess;
+import com.example.englishlearningapp.utils.GlobalVariable;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class TopicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic);
+        GlobalVariable.changeStatusBarColor(TopicActivity.this);
         databaseAccess = DatabaseAccess.getInstance(this);
         InitialView();
         SetUpToolBar();

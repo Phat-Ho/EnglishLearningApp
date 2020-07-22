@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +34,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     private static final String TAG = "RoomInfoActivity";
     Toolbar toolbarRoomInfo;
     ListView listViewRoomInfo;
-    TextView roomInfoTitleTxt, roomInfoOwnerTxt, txtPlayerNum;
+    TextView roomInfoTitleTxt, roomInfoOwnerTxt, txtPlayerNum, txtPlayTime;
     MaterialButton btnStart;
     PlayerListRoomAdapter playerAdapter;
     ArrayList<Player> playerList = new ArrayList<>();
@@ -95,6 +96,12 @@ public class RoomInfoActivity extends AppCompatActivity {
     private void SetUpListView() {
         playerAdapter = new PlayerListRoomAdapter(this, playerList);
         listViewRoomInfo.setAdapter(playerAdapter);
+        listViewRoomInfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Player player = playerList.get(position);
+            }
+        });
     }
 
     private void GetIntentData() {
@@ -102,10 +109,12 @@ public class RoomInfoActivity extends AppCompatActivity {
         roomId = intent.getIntExtra("roomId", 0);
         String roomOwner = intent.getStringExtra("roomOwner");
         String roomName = intent.getStringExtra("roomName");
+        int time = intent.getIntExtra("time", 10);
         int playerNum = intent.getIntExtra("playerNum", 2);
         roomInfoTitleTxt.setText(roomName);
         roomInfoOwnerTxt.setText(roomOwner);
         txtPlayerNum.setText(String.valueOf(playerNum));
+        txtPlayTime.setText(String.valueOf(time));
         String playerName = intent.getStringExtra("playerName");
         playerId = loginManager.getUserId();
 
@@ -239,6 +248,7 @@ public class RoomInfoActivity extends AppCompatActivity {
     };
 
     private void initView(){
+        txtPlayTime = findViewById(R.id.txt_room_info_time);
         txtPlayerNum = findViewById(R.id.txt_room_info_number);
         btnStart = findViewById(R.id.buttonStartGame);
         toolbarRoomInfo = findViewById(R.id.toolbarRoomInfo);

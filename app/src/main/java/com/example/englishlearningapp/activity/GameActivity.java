@@ -41,7 +41,6 @@ import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.material.button.MaterialButton;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -56,7 +55,7 @@ import java.util.Locale;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
-    TextView txtPlayerNumber, txtTimer, txtCurrentWord, txtWordDetail, txtPlayersOrder;
+    TextView txtTimer, txtCurrentWord, txtWordDetail, txtPlayersOrder;
     EditText edtWord;
     ImageButton imgBtnSend;
     TextView txtResult, txtNextPlayer;
@@ -197,6 +196,7 @@ public class GameActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
+                        int time = roomObj.getInt("time");
                         int length = playerArray.length();
                         if(length > 0){
                             ArrayList<Player> temp = new ArrayList<>();
@@ -214,6 +214,7 @@ public class GameActivity extends AppCompatActivity {
                             roomInfoIntent.putExtra("playerList", temp);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
+                            roomInfoIntent.putExtra("time", time);
                             globalVariable.mSocket.off("sendGame", onSendGame);
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
@@ -248,6 +249,7 @@ public class GameActivity extends AppCompatActivity {
                     try {
                         winner = obj.getString("winner");
                         array = obj.getJSONArray("historyWord");
+                        gameLinearLayout.setBackground(getDrawable(R.drawable.winner));
                         gameFrameLayout.setVisibility(View.VISIBLE);
                         btnGameContinue.setVisibility(View.VISIBLE);
                         txtResult.setVisibility(View.INVISIBLE);
@@ -279,6 +281,8 @@ public class GameActivity extends AppCompatActivity {
             txtResult.setTextColor(getResources().getColor(R.color.colorGreen));
             txtResult.setText("Đúng");
             txtNextPlayer.setText("Tiếp theo: " + pNextPlayer);
+            btnExit.setVisibility(View.GONE);
+            btnContinue.setVisibility(View.GONE);
         }
         if(pIsCorrect.equals("false") || pIsCorrect.equals("timeOut") || pIsCorrect.equals("wordExisted")){
             txtResult.setTextColor(getResources().getColor(R.color.colorRed));
@@ -354,8 +358,8 @@ public class GameActivity extends AppCompatActivity {
                         ArrayList<Word> words = databaseAccess.getWordExactly(currentWord);
                         String description = words.get(0).getDescription();
                         int len = description.length();
-                        final String substring = description.substring(0, Math.min(len, 40));
-                        if(len > 40){
+                        final String substring = description.substring(0, Math.min(len, 60));
+                        if(len > 60){
                             txtWordDetail.setText(substring + "...");
                         }else{
                             txtWordDetail.setText(substring);
@@ -387,7 +391,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         gameId = intent.getIntExtra("gameId", 0);
         gameDBId = intent.getLongExtra("gameDBId", 0);
-        isPlay = intent.getBooleanExtra("isPlay", false);
+        isPlay = intent.getBooleanExtra("isPlay", true);
         playerList = (ArrayList<Player>) intent.getSerializableExtra("playerList");
 
         if(playerList.get(0).getId() != loginManager.getUserId()){
@@ -577,7 +581,6 @@ public class GameActivity extends AppCompatActivity {
         gameBtnWrapper = findViewById(R.id.game_button_wrapper);
         txtPlayersOrder = findViewById(R.id.txtPlayersOrder);
         txtWordDetail = findViewById(R.id.txt_game_word_detail);
-        txtPlayerNumber = findViewById(R.id.txt_game_player_number);
         txtTimer = findViewById(R.id.txt_game_timer);
         txtCurrentWord = findViewById(R.id.txt_game_previous_word);
         edtWord = findViewById(R.id.edt_game_word);

@@ -64,7 +64,7 @@ public class GameHistoryAdapter extends BaseAdapter {
     }
 
     public String getDatetime(long dateTime){
-        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         Date date = new Date(dateTime);
         return dateFormat.format(date);
     }

@@ -35,7 +35,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     EditText edtPasswordConnectedWord, edtRoomName;
     Switch swtPasswordConnectedWord;
     Button btnCreateRoom;
-    String[] numOfPlayers = {"2", "3", "4", "5", "6", "7"};
+    String[] numOfPlayers = {"5", "10", "30", "50", "100", "500", "1000"};
     String[] playTime = {"5", "10", "15", "20", "25", "30", "45", "60"};
     LoginManager loginManager;
     GlobalVariable globalVariable;
@@ -130,12 +130,14 @@ public class CreateRoomActivity extends AppCompatActivity {
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
                         int playerNum = roomObj.getInt("numOfPlayers");
+                        int time = roomObj.getInt("time");
                         Intent roomInfoIntent = new Intent(CreateRoomActivity.this, RoomInfoActivity.class);
                         roomInfoIntent.putExtra("roomId", roomId);
                         roomInfoIntent.putExtra("playerName", loginManager.getUserName());
                         roomInfoIntent.putExtra("roomOwner", roomOwner);
                         roomInfoIntent.putExtra("roomName", roomName);
                         roomInfoIntent.putExtra("playerNum", playerNum);
+                        roomInfoIntent.putExtra("time", time);
                         startActivity(roomInfoIntent);
                         globalVariable.mSocket.off("sendRoomOwner");
                         finish();

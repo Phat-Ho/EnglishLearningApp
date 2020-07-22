@@ -55,6 +55,7 @@
     <string name="create_room">Create room</string>
     <string name="room_name">Room name</string>
     <string name="num_of_players">Number of players</string>
+    <string name="num_of_players2">No. players</string>
     <string name="time_answer">Time to answer (s)</string>
     <string name="create">Create</string>
     <string name="creator">Creator</string>
@@ -67,4 +68,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fullname">Full name</string>
+    <string name="play_time" >Play time</string>
+    <string name="rank" >July\'s Rank</string>
+    <string name="room_status_playing">Playing</string>
+    <string name="room_status_waiting">Waiting</string>
+    <string name="order_player">Player order</string>
+    <string name="more">More...</string>
+    <string name="game_history">Game history</string>
+    <string name="VI_EN_title">VIE - ENG</string>
+    <string name="date">Date</string>
+    <string name="room_name_history">Room name:</string>
+    <string name="date_history">Date:</string>
+    <string name="history_game">Game history</string>
+    <string name="top_player">Top player</string>
 </resources>

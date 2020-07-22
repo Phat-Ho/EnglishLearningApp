@@ -55,6 +55,7 @@
     <string name="create_room">Tạo phòng</string>
     <string name="room_name">Tên phòng</string>
     <string name="num_of_players">Số người</string>
+    <string name="num_of_players2">Sồ người</string>
     <string name="time_answer">Thời gian</string>
     <string name="create">Tạo</string>
     <string name="creator">Người tạo</string>
@@ -66,4 +67,17 @@
     <string name="look_up">Tra từ</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fullname">Tên người dùng</string>
+    <string name="play_time" >Thời gian</string>
+    <string name="rank" >Xếp hạng tháng 7</string>
+    <string name="room_status_playing">Đang chơi</string>
+    <string name="room_status_waiting">Đang chờ</string>
+    <string name="order_player">Thứ tự người chơi</string>
+    <string name="more">Chi tiết</string>
+    <string name="game_history">Lịch sử game</string>
+    <string name="VI_EN_title">Việt - Anh</string>
+    <string name="date">Thời gian</string>
+    <string name="room_name_history">Tên phòng:</string>
+    <string name="date_history">Thời gian:</string>
+    <string name="history_game">Lịch sử game</string>
+    <string name="top_player">Xếp hạng</string>
 </resources>

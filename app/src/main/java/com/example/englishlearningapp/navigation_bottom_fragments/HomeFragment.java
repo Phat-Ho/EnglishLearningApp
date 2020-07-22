@@ -29,9 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,15 +41,14 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.activity.ConnetedWordActivity;
-import com.example.englishlearningapp.activity.MainHomeActivity;
 import com.example.englishlearningapp.activity.MeaningActivity;
 import com.example.englishlearningapp.adapters.HomeGridViewAdapter;
-import com.example.englishlearningapp.fragments.LoginFragment;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -140,7 +137,7 @@ public class HomeFragment extends Fragment {
         txtMeaningSearch = view.findViewById(R.id.meaning_auto_complete_search_box_home);
         databaseAccess = DatabaseAccess.getInstance(getContext());
         SetAutoCompleteSearchBox();
-        loginManager = new LoginManager(getContext());
+        loginManager = new LoginManager(getContext() != null ? getContext() : requireContext());
         recyclerView = view.findViewById(R.id.recylerViewHome);
         recyclerView.setNestedScrollingEnabled(false);
         imgBtnGame = view.findViewById(R.id.img_btn_game);
@@ -178,6 +175,7 @@ public class HomeFragment extends Fragment {
                         showAlert("Đã xảy ra lỗi", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         });
                     }
@@ -185,6 +183,8 @@ public class HomeFragment extends Fragment {
                     showAlert("Đăng nhập để có thể chơi game", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
+                            dialog.dismiss();
                         }
                     });
                 }
@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void SetAutoCompleteSearchBox() {
-        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1);
+        final ArrayAdapter searchBoxAdapter = new ArrayAdapter(getContext() != null ? getContext() : requireContext(), android.R.layout.simple_list_item_1);
         txtMeaningSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -209,11 +209,7 @@ public class HomeFragment extends Fragment {
                 txtMeaningSearch.setThreshold(1);
                 searchBoxAdapter.notifyDataSetChanged();
                 if (wordList.isEmpty()){
-                    showAlert(getResources().getText(R.string.no_result_found).toString(), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
+                    Toast.makeText(getActivity(), getResources().getString(R.string.no_result_found), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -266,7 +262,7 @@ public class HomeFragment extends Fragment {
         if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
@@ -349,7 +345,7 @@ public class HomeFragment extends Fragment {
             Address obj = addresses.get(0);
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
@@ -419,17 +415,19 @@ public class HomeFragment extends Fragment {
     private void showAlert(String title, DialogInterface.OnClickListener listener){
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() != null ? getActivity() : requireContext());
         builder.setTitle(title);
-        builder.setPositiveButton("OK", listener);
+        builder.setNegativeButton("Huỷ", listener);
+        builder.setPositiveButton("Ok", listener);
         final AlertDialog dialog = builder.create();
         dialog.show();
         final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        positiveButton.setLayoutParams(positiveButtonLL);
-        positiveButton.setOnClickListener(new View.OnClickListener() {
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        layoutParams.weight = 10;
+        positiveButton.setLayoutParams(layoutParams);
+        negativeButton.setLayoutParams(layoutParams);
+        negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BottomNavigationView)getActivity().findViewById(R.id.navigation_bottom)).setSelectedItemId(R.id.navigation_profile);
                 dialog.dismiss();
             }
         });
