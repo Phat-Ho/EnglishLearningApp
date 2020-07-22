@@ -561,26 +561,28 @@ public class MeaningActivity extends AppCompatActivity {
         boolean isLocationEnabled = isLocationEnabled(this);
         if (!isLocationEnabled){
             saveHistoryWithoutLocation(wordID, pUserID);
+        } else {
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+                saveHistoryWithoutLocation(wordID, pUserID);
+            } else {
+                LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(MeaningActivity.this).removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            double longtitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            getAddress(latitude, longtitude, wordID, pUserID);
+                        }
+                    }
+                }, Looper.getMainLooper());
+            }
         }
 
-        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-            saveHistoryWithoutLocation(wordID, pUserID);
-        } else {
-            LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                    LocationServices.getFusedLocationProviderClient(MeaningActivity.this).removeLocationUpdates(this);
-                    if (locationResult != null && locationResult.getLocations().size() > 0) {
-                        int latestLocationIndex = locationResult.getLocations().size() - 1;
-                        double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                        double longtitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                        getAddress(latitude, longtitude, wordID, pUserID);
-                    }
-                }
-            }, Looper.getMainLooper());
-        }
+
     }
 
     public void getAddress(double lat, double lng, int wordID, int pUserID) {
