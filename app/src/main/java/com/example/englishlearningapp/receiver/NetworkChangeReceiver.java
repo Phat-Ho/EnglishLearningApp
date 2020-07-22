@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
+import java.util.Locale;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
@@ -75,7 +75,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if(idServer == 0 || isChange == 1) { //Sync if the history word is not saved to server
                     final long dateTimeInMillis = cursor.getLong(cursor.getColumnIndex(DatabaseContract.DATE));
                     Log.d(TAG, "datetime: " + dateTimeInMillis);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
                     String dateString = simpleDateFormat.format(dateTimeInMillis);
                     JSONObject dataObject = new JSONObject();
                     try {
@@ -100,7 +100,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         JSONObject tableHistory = new JSONObject();
         try {
-            tableHistory.put("table", "searchhistory");
+            tableHistory.put("table", "SearchHistory");
             tableHistory.put("data", dataHistoryArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -138,7 +138,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         JSONObject favoriteTable = new JSONObject();
         try {
-            favoriteTable.put("table", "wordlike");
+            favoriteTable.put("table", "WordLike");
             favoriteTable.put("data", dataFavoriteArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -167,7 +167,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             JSONObject tableObject = (JSONObject) response.get(i);
                             String tableName = tableObject.getString("table");
                             JSONArray array = (JSONArray) tableObject.get("data");
-                            if(tableName.equals("searchhistory")){
+                            if(tableName.equals("SearchHistory")){
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
@@ -176,7 +176,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     databaseAccess.updateHistoryIdServer(historyId, idServer);
                                 }
                             }
-                            if(tableName.equals("wordlike")){
+                            if(tableName.equals("WordLike")){
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
@@ -210,10 +210,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         JSONObject getHistoryJSON = new JSONObject();
         JSONObject getFavoriteJSON = new JSONObject();
         try {
-            getHistoryJSON.put("table", "searchhistory");
+            getHistoryJSON.put("table", "SearchHistory");
             getHistoryJSON.put("listIds", listIdServerHistoryArray);
             getDataBodyArray.put(getHistoryJSON);
-            getFavoriteJSON.put("table", "wordlike");
+            getFavoriteJSON.put("table", "WordLike");
             getFavoriteJSON.put("listIds", listIdServerFavoriteArray);
             getDataBodyArray.put(getFavoriteJSON);
             Log.d(TAG, "getDataBody: " + getDataBodyArray);
@@ -234,7 +234,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         String tableName = tableObject.getString("table");
                         JSONArray dataArray = (JSONArray) tableObject.get("data");
                         int length = dataArray.length();
-                        if(tableName.equals("searchhistory")){
+                        if(tableName.equals("SearchHistory")){
                             if(length == 0){
                                 //Do nothing
                             }else{
@@ -268,7 +268,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             }
                         }
 
-                        if(tableName.equals("wordlike")){
+                        if(tableName.equals("WordLike")){
                             if(length == 0){
                                 //Do nothing
                             }else{

@@ -50,7 +50,6 @@ import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.GridSpacingItemDecoration;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -290,7 +289,7 @@ public class HomeFragment extends Fragment {
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("table", "searchhistory");
+                jsonObject.put("table", "SearchHistory");
                 JSONArray jsonArray1 = new JSONArray();
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("Id", insertId);
@@ -394,7 +393,7 @@ public class HomeFragment extends Fragment {
                 JSONArray jsonArray = new JSONArray();
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("table", "searchhistory");
+                    jsonObject.put("table", "SearchHistory");
                     JSONArray jsonArray1 = new JSONArray();
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("Id", insertId);

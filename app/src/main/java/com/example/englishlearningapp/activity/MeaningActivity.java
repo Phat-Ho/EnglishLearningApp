@@ -1,11 +1,5 @@
 package com.example.englishlearningapp.activity;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,11 +24,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,6 +53,10 @@ import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
 import com.example.englishlearningapp.utils.Server;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.button.MaterialButton;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -61,12 +65,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import android.location.Address;
-import android.location.Geocoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -412,7 +410,7 @@ public class MeaningActivity extends AppCompatActivity {
                         JSONArray jsonArray = new JSONArray();
                         try {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("table", "wordlike");
+                            jsonObject.put("table", "WordLike");
                             JSONArray jsonArray1 = new JSONArray();
                             JSONObject jsonObject1 = new JSONObject();
                             jsonObject1.put("Id", insertId);
@@ -501,7 +499,7 @@ public class MeaningActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("table", "searchhistory");
+                jsonObject.put("table", "SearchHistory");
                 JSONArray jsonArray1 = new JSONArray();
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("Id", insertId);
@@ -604,7 +602,7 @@ public class MeaningActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray();
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("table", "searchhistory");
+                    jsonObject.put("table", "SearchHistory");
                     JSONArray jsonArray1 = new JSONArray();
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("Id", insertId);
@@ -710,6 +708,9 @@ public class MeaningActivity extends AppCompatActivity {
                     }
                 }else{
                     databaseAccess1.setTopicRemember(wordId, alarmPropsManager.getAlarmType());
+                    if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
+
+                    }
                     if(!isRememberSaved(wordId)){
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
                     }
@@ -731,13 +732,13 @@ public class MeaningActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         HistoryWord history = databaseAccess.getHistoryByWordId(wordId);
         final long searchTime = history.getSearchTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
         String dateString = simpleDateFormat.format(searchTime);
         //Initial request body
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("table", "searchhistory");
+            jsonObject.put("table", "SearchHistory");
             JSONArray jsonArray1 = new JSONArray();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("Id", history.getId());
@@ -789,7 +790,7 @@ public class MeaningActivity extends AppCompatActivity {
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("table", "searchhistory");
+            jsonObject.put("table", "SearchHistory");
             JSONArray jsonArray1 = new JSONArray();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("Id", favorite.getId());
