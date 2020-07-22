@@ -46,6 +46,7 @@ import com.example.englishlearningapp.adapters.PopupHistoryAdapter;
 import com.example.englishlearningapp.adapters.PopupRemindedAdapter;
 import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
+import com.example.englishlearningapp.models.TopicWord;
 import com.example.englishlearningapp.models.Word;
 import com.example.englishlearningapp.utils.AlarmPropsManager;
 import com.example.englishlearningapp.utils.DatabaseAccess;
@@ -690,7 +691,8 @@ public class MeaningActivity extends AppCompatActivity {
         popUpBtnRemember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_HISTORY){
+                int alarmId = alarmPropsManager.getAlarmType();
+                if(alarmId == DatabaseContract.ALARM_HISTORY){
                     databaseAccess1.setHistoryRememberByWordId(wordId);
                     if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
                         syncRememberedHistory(wordId);
@@ -698,7 +700,7 @@ public class MeaningActivity extends AppCompatActivity {
                     if(!isRememberSaved(wordId)){
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
                     }
-                }else if(alarmPropsManager.getAlarmType() == DatabaseContract.ALARM_FAVORITE){
+                }else if(alarmId == DatabaseContract.ALARM_FAVORITE){
                     databaseAccess1.setFavoriteRememberByWordId(wordId);
                     if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
                         syncFavoriteHistory(wordId);
@@ -707,9 +709,9 @@ public class MeaningActivity extends AppCompatActivity {
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
                     }
                 }else{
-                    databaseAccess1.setTopicRemember(wordId, alarmPropsManager.getAlarmType());
+                    databaseAccess1.setTopicRemember(wordId, alarmId);
                     if(Server.haveNetworkConnection(MeaningActivity.this) && loginManager.isLogin()){
-
+                        syncTopicRemember(wordId, alarmId);
                     }
                     if(!isRememberSaved(wordId)){
                         databaseAccess1.addRememberedWord(wordId, getCurrentTimeInMillis());
@@ -818,6 +820,56 @@ public class MeaningActivity extends AppCompatActivity {
                         JSONObject data = (JSONObject) array.get(0);
                         int id = data.getInt("Id");
                         databaseAccess.updateFavoriteIsChange(id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error: ", error.getMessage() != null ? error.getMessage() : "null pointer");
+            }
+        });
+        requestQueue.add(request);
+    }
+
+    public void syncTopicRemember(int wordId, int topicId){
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        TopicWord topicWord = databaseAccess.getTopicRememberByWordIdAndTopicId(wordId, topicId);
+        //Initial request body
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("table", "TopicRemember");
+            JSONArray jsonArray1 = new JSONArray();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("Id", topicWord.getId());
+            jsonObject1.put("IdUser", loginManager.getUserId());
+            jsonObject1.put("IdTopic", topicWord.getTopicId());
+            jsonObject1.put("IdWord", topicWord.getWordId());
+            jsonObject1.put("Remembered", 1);
+            jsonObject1.put("IsChange", 1);
+            jsonObject1.put("IdServer", topicWord.getIdServer());
+            jsonArray1.put(jsonObject1);
+            jsonObject.put("data", jsonArray1);
+            jsonArray.put(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String sendDataUrl = Server.SEND_DATA_URL;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                if(response.length() > 0){
+                    try {
+                        JSONObject dataArray = (JSONObject) response.get(0);
+                        Log.d(TAG, "onResponse: " + dataArray);
+                        JSONArray array = (JSONArray) dataArray.get("data");
+                        JSONObject data = (JSONObject) array.get(0);
+                        int id = data.getInt("Id");
+                        databaseAccess.updateTopicRememberIsChange(id);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

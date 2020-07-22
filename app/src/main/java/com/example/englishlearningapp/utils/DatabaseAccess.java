@@ -15,6 +15,7 @@ import com.example.englishlearningapp.models.HistoryWord;
 import com.example.englishlearningapp.models.MyDate;
 import com.example.englishlearningapp.models.Question;
 import com.example.englishlearningapp.models.Topic;
+import com.example.englishlearningapp.models.TopicWord;
 import com.example.englishlearningapp.models.Word;
 
 import java.text.SimpleDateFormat;
@@ -318,6 +319,20 @@ public class DatabaseAccess {
         return favoriteWord;
     }
 
+    public TopicWord getTopicRememberByWordIdAndTopicId(int wordId, int topicId){
+        TopicWord topicWord = new TopicWord();
+        String query = "SELECT * from topicRemember WHERE wordId = " + wordId + " AND topicId = " + topicId;
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            topicWord.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID)));
+            topicWord.setTopicId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.TOPIC_ID)));
+            topicWord.setWordId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.WORD_ID)));
+            topicWord.setIdServer(cursor.getInt(cursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+        }
+        cursor.close();
+        return topicWord;
+    }
+
     public long addHistory(int pWordID, long pDate, int userId, int remembered, int idServer){
         ContentValues value = new ContentValues();
         value.put(DatabaseContract.WORD_ID, pWordID);
@@ -385,6 +400,13 @@ public class DatabaseAccess {
         values.put(DatabaseContract.IS_CHANGE, 0);
         String selection = "id = " + id;
         database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
+    }
+
+    public void updateTopicRememberIsChange(int id){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.IS_CHANGE, 0);
+        String selection = "id = " + id;
+        database.update(DatabaseContract.TOPIC_REMEMBER_TABLE, values, selection, null);
     }
 
     public void setHistoryRememberByWordId(int wordId){
