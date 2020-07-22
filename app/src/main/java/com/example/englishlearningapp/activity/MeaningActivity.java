@@ -412,7 +412,7 @@ public class MeaningActivity extends AppCompatActivity {
                         JSONArray jsonArray = new JSONArray();
                         try {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("table", "wordlike");
+                            jsonObject.put("table", "WordLike");
                             JSONArray jsonArray1 = new JSONArray();
                             JSONObject jsonObject1 = new JSONObject();
                             jsonObject1.put("Id", insertId);
@@ -501,7 +501,7 @@ public class MeaningActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("table", "searchhistory");
+                jsonObject.put("table", "SearchHistory");
                 JSONArray jsonArray1 = new JSONArray();
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("Id", insertId);
@@ -604,7 +604,7 @@ public class MeaningActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray();
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("table", "searchhistory");
+                    jsonObject.put("table", "SearchHistory");
                     JSONArray jsonArray1 = new JSONArray();
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("Id", insertId);
@@ -737,7 +737,7 @@ public class MeaningActivity extends AppCompatActivity {
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("table", "searchhistory");
+            jsonObject.put("table", "SearchHistory");
             JSONArray jsonArray1 = new JSONArray();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("Id", history.getId());
@@ -789,7 +789,7 @@ public class MeaningActivity extends AppCompatActivity {
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("table", "searchhistory");
+            jsonObject.put("table", "SearchHistory");
             JSONArray jsonArray1 = new JSONArray();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("Id", favorite.getId());

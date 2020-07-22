@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
@@ -100,7 +101,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         JSONObject tableHistory = new JSONObject();
         try {
-            tableHistory.put("table", "searchhistory");
+            tableHistory.put("table", "SearchHistory");
             tableHistory.put("data", dataHistoryArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -138,15 +139,49 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         JSONObject favoriteTable = new JSONObject();
         try {
-            favoriteTable.put("table", "wordlike");
+            favoriteTable.put("table", "WordLike");
             favoriteTable.put("data", dataFavoriteArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         bodyJson.put(favoriteTable);
 
-        //Get topic cursor from database
-        Cursor topicCursor = databaseAccess.readFavorite();
+        //Get topic remember cursor from database
+        Cursor topicCursor = databaseAccess.readTopicRemember();
+        JSONArray dataTopicArray = new JSONArray();
+        JSONArray listIdServerTopicArray = new JSONArray();
+        if(topicCursor.moveToFirst()){
+            do{
+                int idServer = topicCursor.getInt(topicCursor.getColumnIndex("IdServer"));
+                int isChange = topicCursor.getInt(topicCursor.getColumnIndex("IsChange"));
+                if(idServer == 0 || isChange == 1) { //Sync if the topic word is not saved to server or had been change
+                    JSONObject dataObject = new JSONObject();
+
+                    try {
+                        dataObject.put("Id", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.ID)));
+                        dataObject.put("IdUser", loginManager.getUserId());
+                        dataObject.put("IdWord", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.WORD_ID)));
+                        dataObject.put("Remembered", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+                        dataObject.put("IsChange", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
+                        dataObject.put("IdServer", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.ID_SERVER)));
+                        dataTopicArray.put(dataObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    listIdServerTopicArray.put(idServer);
+                }
+            }while (cursor.moveToNext());
+        }
+
+        JSONObject topicTable = new JSONObject();
+        try {
+            favoriteTable.put("table", "TopicRemember");
+            favoriteTable.put("data", dataTopicArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bodyJson.put(topicTable);
         Log.d(TAG, "request body array: " + bodyJson);
         //End initial body json
 
@@ -167,7 +202,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             JSONObject tableObject = (JSONObject) response.get(i);
                             String tableName = tableObject.getString("table");
                             JSONArray array = (JSONArray) tableObject.get("data");
-                            if(tableName.equals("searchhistory")){
+                            if(tableName.equals("SearchHistory")){
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
@@ -176,7 +211,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     databaseAccess.updateHistoryIdServer(historyId, idServer);
                                 }
                             }
-                            if(tableName.equals("wordlike")){
+                            if(tableName.equals("WordLike")){
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
@@ -185,7 +220,15 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     databaseAccess.updateHistoryIdServer(favoriteId, idServer);
                                 }
                             }
-
+                            if(tableName.equals("TopicRemember")){
+                                int length = array.length();
+                                for(int j = 0; j< length; j++){
+                                    JSONObject data = (JSONObject)array.get(j);
+                                    int idServer = data.getInt("IdServer");
+                                    int topicRememberId = data.getInt("Id");
+                                    databaseAccess.updateTopicRememberIdServer(topicRememberId, idServer);
+                                }
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -209,13 +252,17 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         JSONArray getDataBodyArray = new JSONArray();
         JSONObject getHistoryJSON = new JSONObject();
         JSONObject getFavoriteJSON = new JSONObject();
+        JSONObject getTopicRemember = new JSONObject();
         try {
-            getHistoryJSON.put("table", "searchhistory");
+            getHistoryJSON.put("table", "SearchHistory");
             getHistoryJSON.put("listIds", listIdServerHistoryArray);
             getDataBodyArray.put(getHistoryJSON);
-            getFavoriteJSON.put("table", "wordlike");
+            getFavoriteJSON.put("table", "WordLike");
             getFavoriteJSON.put("listIds", listIdServerFavoriteArray);
             getDataBodyArray.put(getFavoriteJSON);
+            getTopicRemember.put("table", "TopicRemember");
+            getTopicRemember.put("listIds", listIdServerTopicArray);
+            getDataBodyArray.put(getTopicRemember);
             Log.d(TAG, "getDataBody: " + getDataBodyArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -234,7 +281,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         String tableName = tableObject.getString("table");
                         JSONArray dataArray = (JSONArray) tableObject.get("data");
                         int length = dataArray.length();
-                        if(tableName.equals("searchhistory")){
+                        if(tableName.equals("SearchHistory")){
                             if(length == 0){
                                 //Do nothing
                             }else{
@@ -246,7 +293,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int isRemembered = dataObject.getInt("Remembered");
                                     int idServer = dataObject.getInt("Id");
                                     String timeSearch = dataObject.getString("TimeSearch");
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
                                     Date date = simpleDateFormat.parse(timeSearch);
                                     String location = dataObject.getString("location");
                                     if(isChange == 0){
@@ -268,7 +315,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             }
                         }
 
-                        if(tableName.equals("wordlike")){
+                        if(tableName.equals("WordLike")){
                             if(length == 0){
                                 //Do nothing
                             }else{
@@ -291,6 +338,28 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                             databaseAccess.setFavoriteRememberByWordId(wordId);
                                         }
                                     }
+
+                                    if(isRemembered == 1){
+                                        if(databaseAccess.getRememberedWordByWordId(wordId).getId() == 0){
+                                            databaseAccess.addRememberedWord(wordId, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(tableName.equals("TopicRemember")){
+                            if(length == 0){
+                                //Do nothing
+                            }else{
+                                for(int j = 0;j < length;j++){
+                                    JSONObject dataObject = (JSONObject) dataArray.get(j);
+                                    int isChange = dataObject.getInt("IsChange");
+                                    int wordId = dataObject.getInt("IdWord");
+                                    int topicId = dataObject.getInt("IdTopic");
+                                    int isRemembered = dataObject.getInt("Remembered");
+                                    int idServer = dataObject.getInt("Id");
+                                    databaseAccess.setTopicRemember(wordId, topicId, idServer);
 
                                     if(isRemembered == 1){
                                         if(databaseAccess.getRememberedWordByWordId(wordId).getId() == 0){
