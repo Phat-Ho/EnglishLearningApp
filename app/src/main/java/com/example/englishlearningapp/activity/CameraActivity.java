@@ -1,6 +1,7 @@
 package com.example.englishlearningapp.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -143,6 +146,91 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    public boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+    }
+
+    public void saveHistoryWithoutLocation(final int wordID, final int pUserID){
+        final long currentDateTime = System.currentTimeMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+        String dateString = simpleDateFormat.format(currentDateTime);
+        //Nếu có internet và đã login thì add vô server vào local với sync status = success
+        if(Server.haveNetworkConnection(this) && pUserID > 0){
+            final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
+            String sendDataUrl = Server.SEND_DATA_URL;
+            final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+            //Initial request body
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("table", "searchhistory");
+                JSONArray jsonArray1 = new JSONArray();
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Id", insertId);
+                jsonObject1.put("IdUser", pUserID);
+                jsonObject1.put("IdWord", wordID);
+                jsonObject1.put("Remembered", 0);
+                jsonObject1.put("Synchronized", 0);
+                jsonObject1.put("TimeSearch", dateString);
+                jsonObject1.put("LinkWeb", "");
+                jsonObject1.put("IsChange", 0);
+                jsonObject1.put("IdServer", 0);
+                jsonArray1.put(jsonObject1);
+                jsonObject.put("data", jsonArray1);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    if(response.length() > 0){
+                        try {
+                            JSONObject dataArray = (JSONObject) response.get(0);
+                            JSONArray array = (JSONArray) dataArray.get("data");
+                            JSONObject data = (JSONObject) array.get(0);
+                            int idServer = data.getInt("IdServer");
+                            databaseAccess.updateHistoryIdServer(insertId, idServer);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if(error != null){
+                        Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                    }
+
+                }
+            });
+            requestQueue.add(request);
+        }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
+            databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
+        }
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void saveHistory(final int wordID, final int pUserID){
@@ -151,68 +239,14 @@ public class CameraActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(3000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+        boolean isLocationEnabled = isLocationEnabled(this);
+        if (!isLocationEnabled){
+            saveHistoryWithoutLocation(wordID, pUserID);
+        }
+
         if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-            final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
-            String dateString = simpleDateFormat.format(currentDateTime);
-            //Nếu có internet và đã login thì add vô server vào local với sync status = success
-            if(Server.haveNetworkConnection(this) && pUserID > 0){
-                final long insertId = databaseAccess.addHistory(wordID, currentDateTime, pUserID, 0,0);
-                String sendDataUrl = Server.SEND_DATA_URL;
-                final RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-                //Initial request body
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("table", "searchhistory");
-                    JSONArray jsonArray1 = new JSONArray();
-                    JSONObject jsonObject1 = new JSONObject();
-                    jsonObject1.put("Id", insertId);
-                    jsonObject1.put("IdUser", pUserID);
-                    jsonObject1.put("IdWord", wordID);
-                    jsonObject1.put("Remembered", 0);
-                    jsonObject1.put("Synchronized", 0);
-                    jsonObject1.put("TimeSearch", dateString);
-                    jsonObject1.put("LinkWeb", "");
-                    jsonObject1.put("IsChange", 0);
-                    jsonObject1.put("IdServer", 0);
-                    jsonArray1.put(jsonObject1);
-                    jsonObject.put("data", jsonArray1);
-                    jsonArray.put(jsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, sendDataUrl, jsonArray, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if(response.length() > 0){
-                            try {
-                                JSONObject dataArray = (JSONObject) response.get(0);
-                                JSONArray array = (JSONArray) dataArray.get("data");
-                                JSONObject data = (JSONObject) array.get(0);
-                                int idServer = data.getInt("IdServer");
-                                databaseAccess.updateHistoryIdServer(insertId, idServer);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if(error != null){
-                            Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
-                        }
-
-                    }
-                });
-                requestQueue.add(request);
-            }else{ //Nếu không có internet hoặc chưa login thì add vô local với sync status = fail
-                databaseAccess.addHistory(wordID, System.currentTimeMillis(), 0, 0,0);
-            }
+            saveHistoryWithoutLocation(wordID, pUserID);
         } else {
             LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
                 @Override
