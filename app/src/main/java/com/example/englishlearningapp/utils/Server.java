@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 public class Server
 {
     public static String backend_host = "https://effectiveenglish.herokuapp.com/";
-	public static String SOCKET_HOST = "http://192.168.1.12:5002/";
+	public static String SOCKET_HOST = "https://englishsocket.herokuapp.com/";
 
     public static String REGISTER_URL = backend_host + "api/hash/addOrUpdate";
     public static String LOGIN_URL = backend_host + "api/hash/login?";
