@@ -848,7 +848,7 @@ public class MeaningActivity extends AppCompatActivity {
             jsonObject1.put("IdUser", loginManager.getUserId());
             jsonObject1.put("IdTopic", topicWord.getTopicId());
             jsonObject1.put("IdWord", topicWord.getWordId());
-            jsonObject1.put("Remembered", 1);
+            jsonObject1.put("IsRemember", 1);
             jsonObject1.put("IsChange", 1);
             jsonObject1.put("IdServer", topicWord.getIdServer());
             jsonArray1.put(jsonObject1);

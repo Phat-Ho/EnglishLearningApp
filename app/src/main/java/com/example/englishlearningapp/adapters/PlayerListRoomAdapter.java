@@ -56,14 +56,20 @@ public class PlayerListRoomAdapter extends BaseAdapter {
         }
 
         //Set data from array list to view holder
+        int loggedId = loginManager.getUserId();
+        if(players.get(0).getId() != loggedId){
+            viewHolder.imgBtnKick.setVisibility(View.INVISIBLE);
+        }
         Player player = (Player) getItem(position);
         if(player.isPlay()){
             viewHolder.txtPlayerName.setText(player.getName());
-            if(loginManager.getUserId() == player.getId()){
+            if(loggedId == player.getId()){
                 Log.d(TAG, "set color: " + player.toString());
                 viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.colorGreen));
+                viewHolder.imgBtnKick.setVisibility(View.INVISIBLE);
             }else{
                 viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.black));
+                viewHolder.imgBtnKick.setVisibility(View.VISIBLE);
             }
         }
         return convertView;

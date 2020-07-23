@@ -715,6 +715,7 @@ public class DatabaseAccess {
         values.put(DatabaseContract.TOPIC_ID, topicId);
         values.put(DatabaseContract.ID_SERVER, 0);
         values.put(DatabaseContract.IS_CHANGE, 0);
+        values.put(DatabaseContract.REMEMBERED, 1);
         return database.insert(DatabaseContract.TOPIC_REMEMBER_TABLE, null, values);
     }
 
@@ -724,6 +725,7 @@ public class DatabaseAccess {
         values.put(DatabaseContract.TOPIC_ID, topicId);
         values.put(DatabaseContract.ID_SERVER, idServer);
         values.put(DatabaseContract.IS_CHANGE, 0);
+        values.put(DatabaseContract.REMEMBERED, 1);
         return database.insert(DatabaseContract.TOPIC_REMEMBER_TABLE, null, values);
     }
 

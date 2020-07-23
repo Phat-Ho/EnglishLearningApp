@@ -161,7 +161,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         dataObject.put("Id", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.ID)));
                         dataObject.put("IdUser", loginManager.getUserId());
                         dataObject.put("IdWord", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.WORD_ID)));
-                        dataObject.put("Remembered", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.REMEMBERED)));
+                        dataObject.put("IdTopic", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.TOPIC_ID)));
+                        dataObject.put("IsRemember", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.REMEMBERED)));
                         dataObject.put("IsChange", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.IS_CHANGE)));
                         dataObject.put("IdServer", topicCursor.getInt(topicCursor.getColumnIndex(DatabaseContract.ID_SERVER)));
                         dataTopicArray.put(dataObject);
@@ -357,7 +358,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int isChange = dataObject.getInt("IsChange");
                                     int wordId = dataObject.getInt("IdWord");
                                     int topicId = dataObject.getInt("IdTopic");
-                                    int isRemembered = dataObject.getInt("Remembered");
+                                    int isRemembered = dataObject.getInt("IsRemember");
                                     int idServer = dataObject.getInt("Id");
                                     databaseAccess.setTopicRemember(wordId, topicId, idServer);
 

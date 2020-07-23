@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +62,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         HandleStartGame();
         globalVariable.mSocket.on("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.once("sendGame", onSendGame);
+        globalVariable.mSocket.on("sendRoomRemove", onSendRoomRemove);
     }
     @Override
     protected void onPause() {
@@ -67,6 +70,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onPause: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
+        globalVariable.mSocket.off("sendRoomRemove", onSendRoomRemove);
     }
 
     @Override
@@ -75,6 +79,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onStop: ");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
+        globalVariable.mSocket.off("sendRoomRemove", onSendRoomRemove);
     }
 
     @Override
@@ -83,6 +88,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy");
         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
         globalVariable.mSocket.off("sendGame", onSendGame);
+        globalVariable.mSocket.off("sendRoomRemove", onSendRoomRemove);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("roomId", roomId);
@@ -100,6 +106,14 @@ public class RoomInfoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Player player = playerList.get(position);
+                JSONObject playerObj = new JSONObject();
+                try {
+                    playerObj.put("roomId", roomId);
+                    playerObj.put("playerId", player.getId());
+                    globalVariable.mSocket.emit("removeMember", playerObj);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -148,6 +162,60 @@ public class RoomInfoActivity extends AppCompatActivity {
             }
         });
     }
+
+    private Emitter.Listener onSendRoomRemove = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "send room info (remove): " + args[0].toString());
+                    JSONObject object = (JSONObject) args[0];
+                    try {
+                        JSONObject roomObj = object.getJSONObject("newRoom");
+                        int removedPlayerId = object.getInt("removedPlayer");
+                        if(removedPlayerId == loginManager.getUserId()){
+                            Toast.makeText(RoomInfoActivity.this, getResources().getString(R.string.kicked), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else{
+                            JSONArray playerArray = roomObj.getJSONArray("players");
+                            int length = playerArray.length();
+                            if(length > 0){
+                                ArrayList<Player> temp = new ArrayList<>();
+                                for (int i = 0; i < length; i++)
+                                {
+                                    int id = playerArray.getJSONObject(i).getInt("playerId");
+                                    String name = playerArray.getJSONObject(i).getString("playerName");
+                                    boolean isPlay = playerArray.getJSONObject(i).getBoolean("isPlay");
+                                    if(id == playerId){
+                                        playerType = isPlay;
+                                    }
+                                    if(isPlay){
+                                        Player player = new Player(id, name, true);
+                                        temp.add(player);
+                                    }
+                                }
+
+                                if(temp.get(0).getId() == loginManager.getUserId()){
+                                    btnStart.setVisibility(View.VISIBLE);
+                                }else{
+                                    btnStart.setVisibility(View.INVISIBLE);
+                                }
+                                playerList.clear();
+                                playerList.addAll(temp);
+                                Log.d(TAG, "player List: " + playerList.toString());
+                                playerAdapter.notifyDataSetChanged();
+                            }
+                            String playerNum = roomObj.getString("numOfPlayers");
+                            txtPlayerNum.setText(playerNum);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onSendRoom = new Emitter.Listener() {
         @Override
@@ -237,6 +305,7 @@ public class RoomInfoActivity extends AppCompatActivity {
                         gameIntent.putExtra("isPlay", playerType);
                         globalVariable.mSocket.off("sendRoomInfo", onSendRoom);
                         globalVariable.mSocket.off("sendGame", onSendGame);
+                        globalVariable.mSocket.off("sendRoomRemove", onSendRoomRemove);
                         startActivity(gameIntent);
                         finish();
                     } catch (JSONException e) {

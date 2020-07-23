@@ -81,4 +81,5 @@
     <string name="date_history">Date:</string>
     <string name="history_game">Game history</string>
     <string name="top_player">Top player</string>
+    <string name="kicked">You have been kicked</string>
 </resources>

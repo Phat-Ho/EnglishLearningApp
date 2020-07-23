@@ -80,4 +80,5 @@
     <string name="date_history">Thời gian:</string>
     <string name="history_game">Lịch sử game</string>
     <string name="top_player">Xếp hạng</string>
+    <string name="kicked">Bạn đã bị kick</string>
 </resources>
