@@ -43,6 +43,11 @@ public class PlayerListRoomAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView == null){
@@ -59,6 +64,8 @@ public class PlayerListRoomAdapter extends BaseAdapter {
         int loggedId = loginManager.getUserId();
         if(players.get(0).getId() != loggedId){
             viewHolder.imgBtnKick.setVisibility(View.INVISIBLE);
+        }else{
+            viewHolder.imgBtnKick.setVisibility(View.VISIBLE);
         }
         Player player = (Player) getItem(position);
         if(player.isPlay()){
@@ -69,7 +76,6 @@ public class PlayerListRoomAdapter extends BaseAdapter {
                 viewHolder.imgBtnKick.setVisibility(View.INVISIBLE);
             }else{
                 viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.black));
-                viewHolder.imgBtnKick.setVisibility(View.VISIBLE);
             }
         }
         return convertView;
