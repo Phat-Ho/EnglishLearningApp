@@ -172,7 +172,6 @@ public class GameActivity extends AppCompatActivity {
                             globalVariable.mSocket.off("sendGame", onSendGame);
                             globalVariable.mSocket.off("sendTimer", onSendTimer);
                             globalVariable.mSocket.off("sendResult", onSendResult);
-                            globalVariable.mSocket.off("sendHistoryWord", onSendHistoryWord);
                             startActivity(historyIntent);
                         }
                     } catch (JSONException e) {
