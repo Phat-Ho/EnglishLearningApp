@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import com.example.englishlearningapp.R;
 import com.example.englishlearningapp.models.Player;
+import com.example.englishlearningapp.utils.GlobalVariable;
 import com.example.englishlearningapp.utils.LoginManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -20,10 +24,14 @@ public class PlayerListRoomAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Player> players;
     private LoginManager loginManager;
+    GlobalVariable globalVariable;
+    int roomId;
 
-    public PlayerListRoomAdapter(Context context, ArrayList<Player> players) {
+    public PlayerListRoomAdapter(Context context, ArrayList<Player> players, int roomId, GlobalVariable globalVariable) {
         this.context = context;
         this.players = players;
+        this.roomId = roomId;
+        this.globalVariable = globalVariable;
         loginManager = new LoginManager(context);
     }
 
@@ -48,7 +56,7 @@ public class PlayerListRoomAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView == null){
             viewHolder = new ViewHolder();
@@ -67,7 +75,7 @@ public class PlayerListRoomAdapter extends BaseAdapter {
         }else{
             viewHolder.imgBtnKick.setVisibility(View.VISIBLE);
         }
-        Player player = (Player) getItem(position);
+        final Player player = (Player) getItem(position);
         if(player.isPlay()){
             viewHolder.txtPlayerName.setText(player.getName());
             if(loggedId == player.getId()){
@@ -78,6 +86,20 @@ public class PlayerListRoomAdapter extends BaseAdapter {
                 viewHolder.txtPlayerName.setTextColor(context.getResources().getColor(R.color.black));
             }
         }
+        viewHolder.imgBtnKick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject playerObj = new JSONObject();
+                try {
+                    playerObj.put("roomId", roomId);
+                    playerObj.put("playerId", player.getId());
+                    globalVariable.mSocket.emit("removeMember", playerObj);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return convertView;
     }
 

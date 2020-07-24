@@ -100,22 +100,8 @@ public class RoomInfoActivity extends AppCompatActivity {
     }
 
     private void SetUpListView() {
-        playerAdapter = new PlayerListRoomAdapter(this, playerList);
+        playerAdapter = new PlayerListRoomAdapter(this, playerList, roomId, globalVariable);
         listViewRoomInfo.setAdapter(playerAdapter);
-        listViewRoomInfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Player player = playerList.get(position);
-                JSONObject playerObj = new JSONObject();
-                try {
-                    playerObj.put("roomId", roomId);
-                    playerObj.put("playerId", player.getId());
-                    globalVariable.mSocket.emit("removeMember", playerObj);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private void GetIntentData() {
