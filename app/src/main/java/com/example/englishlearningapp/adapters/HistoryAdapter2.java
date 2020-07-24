@@ -67,8 +67,15 @@ public class HistoryAdapter2 extends BaseAdapter {
     }
 
     public String getDatetime(long dateTime){
-        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss", Locale.getDefault());
         Date date = new Date(dateTime);
-        return dateFormat.format(date);
+        String dateString = dateFormat.format(date);
+        /*String[] splitString = dateString.split(" ");
+        StringBuilder builder = new StringBuilder();
+        builder.append(splitString[0]);
+        builder.append("  ");
+        builder.append(splitString[1]);
+        String res = builder.toString();*/
+        return dateString;
     }
 }
