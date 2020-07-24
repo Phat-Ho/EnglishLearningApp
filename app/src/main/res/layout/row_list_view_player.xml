@@ -7,27 +7,27 @@
     <ImageView
         android:id="@+id/img_avatar"
         android:src="@drawable/avatar3"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:scaleType="fitXY"
-        android:layout_toLeftOf="@id/txt_player_name_lv_room"
-        android:layout_marginRight="10dp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"/>
 
     <TextView
         android:id="@+id/txt_player_name_lv_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:text="Player name"
         android:textColor="@color/black"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_toRightOf="@id/img_avatar"
+        android:layout_marginLeft="10dp"/>
 
     <ImageButton
         android:id="@+id/img_btn_kick_lv_room"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginVertical="8dp"

@@ -52,6 +52,7 @@ public class RoomListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_list);
         globalVariable = GlobalVariable.getInstance(this);
         databaseAccess = DatabaseAccess.getInstance(this);
+        GlobalVariable.changeStatusBarColor(RoomListActivity.this);
         initView();
         SetUpToolbar();
         loginManager = new LoginManager(this);
