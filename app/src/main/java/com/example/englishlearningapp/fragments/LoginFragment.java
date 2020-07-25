@@ -42,6 +42,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -193,8 +195,8 @@ public class LoginFragment extends Fragment {
         final String email = txtEmail.getText().toString().trim();
         final String password = txtPassword.getText().toString().trim();
 
-        if(email.isEmpty()){
-            textInputLayoutEmail.setError(getString(R.string.please_enter_email));
+        if(isValidEmail(email)){
+            textInputLayoutEmail.setError(getString(R.string.invalid_email));
         } else if (password.isEmpty()){
             textInputLayoutPassword.setError(getString(R.string.please_enter_password));
         } else{
@@ -324,6 +326,18 @@ public class LoginFragment extends Fragment {
         LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
         positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
         positiveButton.setLayoutParams(positiveButtonLL);
+    }
+
+    private boolean isValidEmail(String email){
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.englishlearningapp.models.Topic;
 import com.example.englishlearningapp.utils.DatabaseAccess;
 import com.example.englishlearningapp.utils.DatabaseContract;
 import com.example.englishlearningapp.utils.LoginManager;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -177,12 +179,19 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         JSONObject topicTable = new JSONObject();
         try {
-            favoriteTable.put("table", "TopicRemember");
-            favoriteTable.put("data", dataTopicArray);
+            topicTable.put("table", "TopicRemember");
+            topicTable.put("data", dataTopicArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         bodyJson.put(topicTable);
+
+        //Sync topic table
+        JSONArray listIdServerTopicArray1 = new JSONArray();
+        ArrayList<Topic> topicList = databaseAccess.getTopics();
+        for (Topic topic:topicList) {
+            listIdServerTopicArray1.put(topic.getIdServer());
+        }
         Log.d(TAG, "request body array: " + bodyJson);
         //End initial body json
 
@@ -254,6 +263,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         JSONObject getHistoryJSON = new JSONObject();
         JSONObject getFavoriteJSON = new JSONObject();
         JSONObject getTopicRemember = new JSONObject();
+        JSONObject getTopic = new JSONObject();
+        JSONObject getAV = new JSONObject();
         try {
             getHistoryJSON.put("table", "SearchHistory");
             getHistoryJSON.put("listIds", listIdServerHistoryArray);
@@ -370,6 +381,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                 }
                             }
                         }
+
 
                     } catch (JSONException | ParseException e) {
                         e.printStackTrace();
