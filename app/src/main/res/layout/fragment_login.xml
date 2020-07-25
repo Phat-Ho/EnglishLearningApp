@@ -61,14 +61,16 @@
             app:errorEnabled="true"
             style="@style/Widget.TextInputLayout"
             android:hint="Email"
-            android:textColorHint="@color/colorPrimary">
+            android:textColorHint="@color/colorPrimary"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+               />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

@@ -198,6 +198,8 @@ public class LoginFragment extends Fragment {
         if(!isValidEmail(email)){
             textInputLayoutEmail.setError(getString(R.string.invalid_email));
             if(email.isEmpty()){
+                textInputLayoutEmail.setError(null);
+                textInputLayoutEmail.setErrorEnabled(false);
                 textInputLayoutEmail.setError(getString(R.string.please_enter_email));
             }
         } else if (password.isEmpty()){
