@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -26,10 +27,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
+import java.util.TimeZone;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "NetworkChangeReceiver";
@@ -62,7 +62,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
 
-    private void SyncDatabase(final DatabaseAccess databaseAccess, Context context, int userID) {
+    private void SyncDatabase(final DatabaseAccess databaseAccess, final Context context, int userID) {
         //Request JSON array body
         JSONArray bodyJson = new JSONArray();
         JSONArray listIdServerHistoryArray = new JSONArray();
@@ -78,7 +78,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if(idServer == 0 || isChange == 1) { //Sync if the history word is not saved to server
                     final long dateTimeInMillis = cursor.getLong(cursor.getColumnIndex(DatabaseContract.DATE));
                     Log.d(TAG, "datetime: " + dateTimeInMillis);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(context));
                     String dateString = simpleDateFormat.format(dateTimeInMillis);
                     JSONObject dataObject = new JSONObject();
                     try {
@@ -216,8 +216,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
-                                    int idServer = data.getInt("IdServer");
-                                    int historyId = data.getInt("Id");
+                                    int idServer = data.getInt("Id");
+                                    int historyId = data.getInt("IdWord");
                                     databaseAccess.updateHistoryIdServer(historyId, idServer);
                                 }
                             }
@@ -225,9 +225,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                 int length = array.length();
                                 for (int j = 0; j < length; j++) {
                                     JSONObject data = (JSONObject) array.get(j);
-                                    int idServer = data.getInt("IdServer");
-                                    int favoriteId = data.getInt("Id");
-                                    databaseAccess.updateHistoryIdServer(favoriteId, idServer);
+                                    int idServer = data.getInt("Id");
+                                    int favoriteId = data.getInt("IdWord");
+                                    databaseAccess.updateFavoriteIdServer(favoriteId, idServer);
                                 }
                             }
                             /*if(tableName.equals("TopicRemember")){
@@ -308,8 +308,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int isRemembered = dataObject.getInt("Remembered");
                                     int idServer = dataObject.getInt("Id");
                                     String timeSearch = dataObject.getString("TimeSearch");
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                                    Log.d(TAG, "locale: " + getCurrentLocale(context).getDisplayName());
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", getCurrentLocale(context));
+                                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     Date date = simpleDateFormat.parse(timeSearch);
+                                    Log.d(TAG, "date: " + date);
                                     String location = dataObject.getString("location");
                                     if(isChange == 0){
                                         databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer, location);
@@ -420,5 +423,14 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         });
         requestQueue.add(getDataRequest);
         //End get data from server
+    }
+
+    Locale getCurrentLocale(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
     }
 }

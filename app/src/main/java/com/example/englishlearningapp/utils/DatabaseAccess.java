@@ -378,7 +378,7 @@ public class DatabaseAccess {
     public void updateHistoryIdServer(long id, int idServer){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.ID_SERVER, idServer);
-        String selection = "id = " + id;
+        String selection = "wordId = " + id;
         database.update(DatabaseContract.HISTORY_TABLE, values, selection, null);
     }
 
@@ -528,7 +528,7 @@ public class DatabaseAccess {
     public void updateFavoriteIdServer(long id, int idServer){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.ID_SERVER, idServer);
-        String selection = "id = " + id;
+        String selection = "wordId = " + id;
         database.update(DatabaseContract.FAVORITE_TABLE, values, selection, null);
     }
 
