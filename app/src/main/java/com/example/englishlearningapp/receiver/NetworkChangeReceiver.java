@@ -78,7 +78,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if(idServer == 0 || isChange == 1) { //Sync if the history word is not saved to server
                     final long dateTimeInMillis = cursor.getLong(cursor.getColumnIndex(DatabaseContract.DATE));
                     Log.d(TAG, "datetime: " + dateTimeInMillis);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
                     String dateString = simpleDateFormat.format(dateTimeInMillis);
                     JSONObject dataObject = new JSONObject();
                     try {
@@ -136,7 +136,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }else{
                     listIdServerFavoriteArray.put(idServer);
                 }
-            }while (cursor.moveToNext());
+            }while (favoriteCursor.moveToNext());
         }
 
         JSONObject favoriteTable = new JSONObject();
@@ -174,7 +174,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }else{
                     listIdServerTopicArray.put(idServer);
                 }
-            }while (cursor.moveToNext());
+            }while (topicCursor.moveToNext());
         }
 
         JSONObject topicTable = new JSONObject();
@@ -187,11 +187,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         bodyJson.put(topicTable);
 
         //Sync topic table
-        JSONArray listIdServerTopicArray1 = new JSONArray();
+        /*JSONArray listIdServerTopicArray1 = new JSONArray();
         ArrayList<Topic> topicList = databaseAccess.getTopics();
         for (Topic topic:topicList) {
             listIdServerTopicArray1.put(topic.getIdServer());
-        }
+        }*/
         Log.d(TAG, "request body array: " + bodyJson);
         //End initial body json
 
@@ -202,7 +202,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         JsonArrayRequest sendDataRequest = new JsonArrayRequest(Request.Method.POST, url, bodyJson, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.d(TAG, "onResponse: " + response);
+                Log.d(TAG, "onResponse send data: " + response);
                 int resLength = response.length();
                 if(resLength == 0){
                     //Do nothing
@@ -230,7 +230,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     databaseAccess.updateHistoryIdServer(favoriteId, idServer);
                                 }
                             }
-                            if(tableName.equals("TopicRemember")){
+                            /*if(tableName.equals("TopicRemember")){
                                 int length = array.length();
                                 for(int j = 0; j< length; j++){
                                     JSONObject data = (JSONObject)array.get(j);
@@ -238,7 +238,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int topicRememberId = data.getInt("Id");
                                     databaseAccess.updateTopicRememberIdServer(topicRememberId, idServer);
                                 }
-                            }
+                            }*/
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -249,7 +249,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if(error != null){
-                    Log.e("Error: ", error.getMessage() == null ? "null pointer" : error.getMessage());
+                    Log.e("Error send data: ", error.getMessage() == null ? "null pointer" : error.getMessage());
                 }
             }
         });
@@ -275,6 +275,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             getTopicRemember.put("table", "TopicRemember");
             getTopicRemember.put("listIds", listIdServerTopicArray);
             getDataBodyArray.put(getTopicRemember);
+            /*getTopic.put("table", "Topic");
+            getTopic.put("listIds", listIdServerTopicArray1);
+            getDataBodyArray.put(getTopic);*/
             Log.d(TAG, "getDataBody: " + getDataBodyArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -382,6 +385,25 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             }
                         }
 
+                        if(tableName.equals("Topic")){
+                            if(length == 0){
+                                //Do nothing
+                            }else{
+                                for(int j = 0;j < length;j++){
+                                    JSONObject dataObject = (JSONObject) dataArray.get(j);
+                                    String name = dataObject.getString("NameTopic");
+                                    String nameVie = dataObject.getString("Translate");
+                                    String image = dataObject.getString("Image");
+                                    int idServer = dataObject.getInt("Id");
+                                    Topic topic = new Topic();
+                                    topic.setTopicId(idServer);
+                                    topic.setTopicName(name);
+                                    topic.setTopicNameVie(nameVie);
+                                    topic.setTopicImage(image);
+                                    databaseAccess.addTopic(topic);
+                                }
+                            }
+                        }
 
                     } catch (JSONException | ParseException e) {
                         e.printStackTrace();

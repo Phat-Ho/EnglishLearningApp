@@ -692,11 +692,25 @@ public class DatabaseAccess {
                 topic.setTopicNameVie(cursor.getString(cursor.getColumnIndex("translated")));
                 topic.setActive(cursor.getInt(cursor.getColumnIndex("active")));
                 topic.setWordCount(cursor.getInt(cursor.getColumnIndex("wordCount")));
+                topic.setIdServer(cursor.getInt(cursor.getColumnIndex("IdServer")));
                 list.add(topic);
             }while (cursor.moveToNext());
         }
         cursor.close();
         return list;
+    }
+
+    public long addTopic(Topic topic){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ID, topic.getIdServer());
+        values.put("topicName", topic.getTopicName());
+        values.put("translated", topic.getTopicNameVie());
+        values.put("wordCount", topic.getWordCount());
+        values.put("active", 1);
+        values.put("IdServer", topic.getIdServer());
+        values.put("imageLink", topic.getTopicImage());
+
+        return database.insert("topic", null, values);
     }
 
    /* public int getWordCountByTopicId(int topicId){

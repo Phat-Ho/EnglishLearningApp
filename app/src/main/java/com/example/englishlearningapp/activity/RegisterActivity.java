@@ -61,6 +61,8 @@ public class RegisterActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(isValidPassword(registerPassword.getText().toString())){
                     registerTextInputPassword.setError(null);
+                }else{
+                    registerTextInputPassword.setError(getResources().getString(R.string.invalid_password));
                 }
                 return false;
             }
@@ -71,6 +73,18 @@ public class RegisterActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(isValidEmail(registerEmail.getText().toString())){
                     registerTextInputEmail.setError(null);
+                }else{
+                    registerTextInputEmail.setError(getResources().getString(R.string.invalid_email));
+                }
+                return false;
+            }
+        });
+
+        txtRegisterName.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(!txtRegisterName.getText().toString().isEmpty()){
+                    txtRegisterNameLayout.setError(null);
                 }
                 return false;
             }
@@ -106,6 +120,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         //Kiểm chứng email và password
+        if(password.isEmpty()){
+            registerTextInputPassword.setError(getResources().getString(R.string.please_enter_password));
+        }
         if (email.isEmpty()){
             registerTextInputEmail.setError(getResources().getString(R.string.please_enter_email));
         } else {

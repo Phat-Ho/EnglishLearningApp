@@ -195,7 +195,7 @@ public class LoginFragment extends Fragment {
         final String email = txtEmail.getText().toString().trim();
         final String password = txtPassword.getText().toString().trim();
 
-        if(isValidEmail(email)){
+        if(!isValidEmail(email)){
             textInputLayoutEmail.setError(getString(R.string.invalid_email));
         } else if (password.isEmpty()){
             textInputLayoutPassword.setError(getString(R.string.please_enter_password));
