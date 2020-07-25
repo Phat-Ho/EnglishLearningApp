@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
@@ -277,7 +278,8 @@ public class HomeFragment extends Fragment {
 
     public void saveHistoryWithoutLocation(final int wordID, final int pUserID){
         final long currentDateTime = System.currentTimeMillis();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(getActivity()));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
@@ -374,6 +376,15 @@ public class HomeFragment extends Fragment {
 
     }
 
+    Locale getCurrentLocale(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
+    }
+
     public void getAddress(double lat, double lng, int wordID, int pUserID) {
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
@@ -381,7 +392,8 @@ public class HomeFragment extends Fragment {
             Address obj = addresses.get(0);
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(getActivity()));
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){

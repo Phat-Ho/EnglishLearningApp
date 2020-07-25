@@ -76,6 +76,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class MeaningActivity extends AppCompatActivity {
     private static final String TAG = "MeaningActivity";
@@ -488,7 +489,8 @@ public class MeaningActivity extends AppCompatActivity {
 
     public void saveHistoryWithoutLocation(final int wordID, final int pUserID){
         final long currentDateTime = System.currentTimeMillis();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(this) && pUserID > 0){
@@ -549,6 +551,15 @@ public class MeaningActivity extends AppCompatActivity {
         }
     }
 
+    Locale getCurrentLocale(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void saveHistory(final int wordID, final int pUserID)
     {
@@ -591,7 +602,8 @@ public class MeaningActivity extends AppCompatActivity {
             Address obj = addresses.get(0);
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(this) && pUserID > 0){
@@ -734,7 +746,8 @@ public class MeaningActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         HistoryWord history = databaseAccess.getHistoryByWordId(wordId);
         final long searchTime = history.getSearchTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(searchTime);
         //Initial request body
         JSONArray jsonArray = new JSONArray();
