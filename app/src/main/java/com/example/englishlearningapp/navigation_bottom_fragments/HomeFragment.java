@@ -279,7 +279,6 @@ public class HomeFragment extends Fragment {
     public void saveHistoryWithoutLocation(final int wordID, final int pUserID){
         final long currentDateTime = System.currentTimeMillis();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(getActivity()));
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){
@@ -393,7 +392,6 @@ public class HomeFragment extends Fragment {
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(getActivity()));
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(getActivity()) && pUserID > 0){

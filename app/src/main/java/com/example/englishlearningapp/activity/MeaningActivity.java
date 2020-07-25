@@ -490,7 +490,6 @@ public class MeaningActivity extends AppCompatActivity {
     public void saveHistoryWithoutLocation(final int wordID, final int pUserID){
         final long currentDateTime = System.currentTimeMillis();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(currentDateTime);
         //Nếu có internet và đã login thì add vô server vào local với sync status = success
         if(Server.haveNetworkConnection(this) && pUserID > 0){
@@ -603,7 +602,6 @@ public class MeaningActivity extends AppCompatActivity {
             String location = obj.getAddressLine(0);
             final long currentDateTime = System.currentTimeMillis();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateString = simpleDateFormat.format(currentDateTime);
             //Nếu có internet và đã login thì add vô server vào local với sync status = success
             if(Server.haveNetworkConnection(this) && pUserID > 0){
@@ -747,7 +745,6 @@ public class MeaningActivity extends AppCompatActivity {
         HistoryWord history = databaseAccess.getHistoryByWordId(wordId);
         final long searchTime = history.getSearchTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", getCurrentLocale(this));
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateString = simpleDateFormat.format(searchTime);
         //Initial request body
         JSONArray jsonArray = new JSONArray();

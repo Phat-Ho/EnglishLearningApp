@@ -308,11 +308,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int isRemembered = dataObject.getInt("Remembered");
                                     int idServer = dataObject.getInt("Id");
                                     String timeSearch = dataObject.getString("TimeSearch");
-                                    Log.d(TAG, "locale: " + getCurrentLocale(context).getDisplayName());
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", getCurrentLocale(context));
                                     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     Date date = simpleDateFormat.parse(timeSearch);
-                                    Log.d(TAG, "date: " + date);
+                                    Log.d(TAG, "date: " + date + " time search: " + timeSearch);
                                     String location = dataObject.getString("location");
                                     if(isChange == 0){
                                         databaseAccess.addHistory(wordId, date.getTime(), userId, isRemembered, idServer, location);
@@ -377,7 +376,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int topicId = dataObject.getInt("IdTopic");
                                     int isRemembered = dataObject.getInt("IsRemember");
                                     int idServer = dataObject.getInt("Id");
-                                    databaseAccess.setTopicRemember(wordId, topicId, idServer);
+                                    if(isChange == 1){
+                                        if(databaseAccess.getTopicRememberWordByIdServer(idServer).getId() != 0){
+                                            databaseAccess.setTopicRemember(wordId, topicId, idServer);
+                                        }
+                                    }
 
                                     if(isRemembered == 1){
                                         if(databaseAccess.getRememberedWordByWordId(wordId).getId() == 0){
