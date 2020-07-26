@@ -2,6 +2,8 @@ package com.example.englishlearningapp.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,39 +58,97 @@ public class RegisterActivity extends AppCompatActivity {
                 Register();
             }
         });
-        registerPassword.setOnKeyListener(new View.OnKeyListener() {
+        registerPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(isValidPassword(registerPassword.getText().toString())){
                     registerTextInputPassword.setError(null);
                 }else{
                     registerTextInputPassword.setError(getResources().getString(R.string.invalid_password));
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+//        registerPassword.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if(isValidPassword(registerPassword.getText().toString())){
+//                    registerTextInputPassword.setError(null);
+//                }else{
+//                    registerTextInputPassword.setError(getResources().getString(R.string.invalid_password));
+//                }
+//                return false;
+//            }
+//        });
 
-        registerEmail.setOnKeyListener(new View.OnKeyListener() {
+        registerEmail.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(isValidEmail(registerEmail.getText().toString())){
                     registerTextInputEmail.setError(null);
                 }else{
                     registerTextInputEmail.setError(getResources().getString(R.string.invalid_email));
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+//        registerEmail.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if(isValidEmail(registerEmail.getText().toString())){
+//                    registerTextInputEmail.setError(null);
+//                }else{
+//                    registerTextInputEmail.setError(getResources().getString(R.string.invalid_email));
+//                }
+//                return false;
+//            }
+//        });
 
-        txtRegisterName.setOnKeyListener(new View.OnKeyListener() {
+        txtRegisterName.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!txtRegisterName.getText().toString().isEmpty()){
                     txtRegisterNameLayout.setError(null);
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+//        txtRegisterName.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if(!txtRegisterName.getText().toString().isEmpty()){
+//                    txtRegisterNameLayout.setError(null);
+//                }
+//                return false;
+//            }
+//        });
 
         btnLoginWithAccount.setOnClickListener(new View.OnClickListener() {
             @Override
