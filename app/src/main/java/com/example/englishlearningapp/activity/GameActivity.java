@@ -84,6 +84,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         globalVariable = GlobalVariable.getInstance(this);
+        GlobalVariable.changeStatusBarColor(this);
         loginManager = new LoginManager(this);
         databaseAccess = DatabaseAccess.getInstance(this);
         gamePopup = new Dialog(this);

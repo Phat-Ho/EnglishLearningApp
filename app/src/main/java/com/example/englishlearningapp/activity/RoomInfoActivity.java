@@ -53,6 +53,7 @@ public class RoomInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_info);
         globalVariable = GlobalVariable.getInstance(this);
+        GlobalVariable.changeStatusBarColor(this);
         loginManager = new LoginManager(this);
         databaseAccess = DatabaseAccess.getInstance(this);
         initView();
