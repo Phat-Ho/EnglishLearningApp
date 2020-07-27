@@ -167,6 +167,7 @@ public class RoomListActivity extends AppCompatActivity {
                         int roomId = roomObj.getInt("id");
                         String roomOwner = roomObj.getString("owner");
                         String roomName = roomObj.getString("name");
+                        int numOfPlayers = roomObj.getInt("numOfPlayers");
                         int time = roomObj.getInt("time");
                         int length = playerArray.length();
                         if(length > 0){
@@ -186,6 +187,7 @@ public class RoomListActivity extends AppCompatActivity {
                             Intent roomInfoIntent = new Intent(RoomListActivity.this, RoomInfoActivity.class);
                             roomInfoIntent.putExtra("roomId", roomId);
                             roomInfoIntent.putExtra("playerList", temp);
+                            roomInfoIntent.putExtra("playerNum", numOfPlayers);
                             roomInfoIntent.putExtra("roomOwner", roomOwner);
                             roomInfoIntent.putExtra("roomName", roomName);
                             roomInfoIntent.putExtra("isPlay", playerType);
