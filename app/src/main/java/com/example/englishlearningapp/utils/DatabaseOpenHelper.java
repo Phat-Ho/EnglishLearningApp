@@ -8,7 +8,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     private static final String DATABASE_NAME = "dict_hh.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 11;
     private static final String TAG = "DatabaseOpenHelper";
     public final Context context;
 
