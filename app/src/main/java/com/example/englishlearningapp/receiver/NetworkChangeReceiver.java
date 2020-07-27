@@ -309,7 +309,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                     int idServer = dataObject.getInt("Id");
                                     String timeSearch = dataObject.getString("TimeSearch");
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", getCurrentLocale(context));
-                                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     Date date = simpleDateFormat.parse(timeSearch);
                                     Log.d(TAG, "date: " + date + " time search: " + timeSearch);
                                     String location = dataObject.getString("location");
