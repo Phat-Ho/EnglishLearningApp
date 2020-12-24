@@ -25,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -86,6 +87,7 @@ public class MeaningActivity extends AppCompatActivity {
     ImageButton imgBtnPronounce;
     AutoCompleteTextView txtMeaningSearch;
     Toolbar meaningToolbar;
+    Button button;
     TextToSpeech tts;
     LikeButton likeBtn;
     ImageView imgMeaning;
