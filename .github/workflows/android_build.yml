@@ -1,0 +1,23 @@
+name: Android Build #Tên của action sẽ được hiển thị trong github
+
+on: #Các sự kiện xảy ra để kích hoạt action
+  push
+jobs: #Các công việc sẽ làm trong action này
+  build:
+
+    runs-on: ubuntu-latest #Enviroment: Phiên bản ubuntu thường sẽ đi kèm với android SDK
+
+    steps:
+      - uses: action/checkout@v1 # Action được cung cấp sẵn bởi github
+
+      - name: Set Up JDK
+        uses: action/setup-java@v1 # Action được cung cấp sẵn bởi github
+        with:
+          java-version: 1.8
+
+      - name: Run Tests
+        run: ./gradlew test # dòng lệnh chạy trên terminal
+
+      - name: Build Project
+        run: ./gradlew assemble # dòng lệnh build trên terminal của Android Studio
+
